@@ -1,0 +1,7 @@
+﻿@page "/customer/{customerId:int}"
+<h3>CustomerPage</h3>
+<GroupList CustomerId="customerId" />
+
+@code {
+    [Parameter] public int customerId { get; set; }
+}
