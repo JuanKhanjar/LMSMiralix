@@ -1,14 +1,6 @@
-﻿using LMS.BusinessCore.Entities;
-using LMS.BusinessUseCases.PluginsInterfaces;
+﻿using LMS.BusinessUseCases.PluginsInterfaces;
 using LMS.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Scaffolding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Group = LMS.BusinessCore.Entities.Group;
 
 namespace LMS.SqlServer.Repositories
@@ -47,16 +39,22 @@ namespace LMS.SqlServer.Repositories
 
             return newGroup;
         }
-
+        /// <summary>
+        /// Get A list<Group> 
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns>A list of customer's Groups including all Group's Products</returns>
         public async Task<List<Group>> GetGroupsForCustomerAsync(int customerId)
         {
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             return await _dbContext.Groups
-             .Where(g => g.CustomerId == customerId)
-             .ToListAsync();
+                .Where(g => g.CustomerId == customerId)
+                .Include(g => g.GroupProducts) // Include related GroupProducts
+                .ToListAsync();
         }
 
-        public async Task<Group> GetGroupWithProductsAsync(int customerId, int groupId)
+
+        public async Task<Group?> GetGroupWithProductsAsync(int customerId, int groupId)
         {
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             return await _dbContext.Groups

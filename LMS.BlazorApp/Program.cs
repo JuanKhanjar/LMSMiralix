@@ -1,8 +1,12 @@
 using LMS.BlazorApp.Areas.Identity;
 using LMS.BlazorApp.Data;
+using LMS.BusinessUseCases.GroupProductUC;
+using LMS.BusinessUseCases.GroupProductUC.GroupProductUCInterfaces;
 using LMS.BusinessUseCases.GroupUC;
 using LMS.BusinessUseCases.GroupUC.GroupUCInterfaces;
 using LMS.BusinessUseCases.PluginsInterfaces;
+using LMS.BusinessUseCases.PurchasedProductsUC;
+using LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces;
 using LMS.SqlServer.Data;
 using LMS.SqlServer.Repositories;
 using Microsoft.AspNetCore.Components;
@@ -39,7 +43,14 @@ namespace LMS.BlazorApp
             builder.Services.AddTransient<IGetGroupWithProductsUC, GetGroupWithProductsUC>();
             builder.Services.AddTransient<IGetGroupsForCustomerUC, GetGroupsForCustomerUC>();
 
+
+            builder.Services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
+            builder.Services.AddTransient<IGetPurchasedProductsByCustomerIdUC, GetPurchasedProductsByCustomerIdUC>();
+
+            builder.Services.AddScoped<IGroupProductRepository, GroupProductRepository>();
+            builder.Services.AddTransient<IGetGroupProductsByGroupIdUC, GetGroupProductsByGroupIdUC>();
             
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
