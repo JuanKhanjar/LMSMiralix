@@ -4,6 +4,6 @@ namespace LMS.BusinessUseCases.GroupUC.GroupUCInterfaces
 {
     public interface IGetGroupWithProductsUC
     {
-        Task<Group> ExecuteAsync(int customerId, int groupId);
+        Task<Group?> ExecuteAsync(int customerId, int groupId);
     }
 }

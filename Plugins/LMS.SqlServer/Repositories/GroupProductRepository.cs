@@ -23,5 +23,6 @@ namespace LMS.SqlServer.Repositories
             .ToListAsync();
             return groupProducts;
         }
+
     }
 }

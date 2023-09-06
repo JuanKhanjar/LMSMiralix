@@ -17,7 +17,11 @@ namespace LMS.BusinessCore.Entities
         public int CustomerId { get; set; }
 
         // Navigation property
-        public Customer Customer { get; set; }
-        public List<GroupProduct> GroupProducts { get; set; }
+        public Customer? Customer { get; set; }
+        public List<GroupProduct>? GroupProducts { get; set; }
+        public Group()
+        {
+            GroupProducts = new List<GroupProduct>();
+        }
     }
 }

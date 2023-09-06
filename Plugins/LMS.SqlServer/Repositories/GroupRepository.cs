@@ -59,6 +59,7 @@ namespace LMS.SqlServer.Repositories
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             return await _dbContext.Groups
             .Include(g => g.GroupProducts)
+            .ThenInclude(gp=>gp.Product)
             .FirstOrDefaultAsync(g => g.CustomerId == customerId && g.GroupId == groupId);
         }
     }

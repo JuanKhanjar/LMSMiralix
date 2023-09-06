@@ -15,7 +15,12 @@ namespace LMS.BusinessCore.Entities
         public int AddedQuantity { get; set; }
 
         // Navigation properties
-        public Group? Group { get; set; }
-        public Product? Product { get; set; }
+        public virtual Group? Group { get; set; } 
+        public virtual Product? Product { get; set; }
+        public GroupProduct()
+        {
+            Group = new Group();
+            Product=new Product();
+        }
     }
 }

@@ -10,8 +10,4 @@
     <ProjectReference Include="..\LMS.BusinessCore\LMS.BusinessCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CustomerUC\CustomerUCInterfaces\" />
-  </ItemGroup>
-
 </Project>

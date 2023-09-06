@@ -17,7 +17,7 @@ namespace LMS.BusinessUseCases.GroupUC
         {
             _groupRepository = groupRepository;
         }
-        public async Task<Group> ExecuteAsync(int customerId, int groupId)
+        public async Task<Group?> ExecuteAsync(int customerId, int groupId)
         {
             return await _groupRepository.GetGroupWithProductsAsync(customerId, groupId);
         }

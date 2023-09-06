@@ -19,7 +19,28 @@ namespace LMS.BusinessUseCases.PurchasedProductsUC
             _purchasedProductRepository = purchasedProductRepository;
         }
 
-        public async Task<IEnumerable<PurchasedProductDto>> ExecuteAsync(int customerId)
+        //public async Task<IEnumerable<PurchasedProductDto>> ExecuteAsync(int customerId)
+        //{
+        //    if (customerId <= 0)
+        //    {
+        //        throw new ArgumentException("Invalid customerId. CustomerId must be greater than 0.");
+        //    }
+        //    IEnumerable<Product> purchasedProducts = await _purchasedProductRepository.GetPurchasedProductsByCustomerIdAsync(customerId);
+        //    if (purchasedProducts == null || purchasedProducts.Count() == 0)
+        //    {
+        //        throw new NotFiniteNumberException("No purchased products were found");
+        //    }
+        //    IEnumerable<PurchasedProductDto> purchasedProductDtos = purchasedProducts.Select(p => new PurchasedProductDto
+        //    {
+        //        ProductId = p.ProductId,
+        //        ProductName = p.ProductName,
+        //        ProductPrice = p.ProductPrice,
+        //        PurchasedQty = p.PurchasedQty
+        //    }).ToList();
+        //    return purchasedProductDtos;
+        //}
+
+        public async Task<IEnumerable<Product>> ExecuteAsync(int customerId)
         {
             if (customerId <= 0)
             {
@@ -30,14 +51,8 @@ namespace LMS.BusinessUseCases.PurchasedProductsUC
             {
                 throw new NotFiniteNumberException("No purchased products were found");
             }
-            IEnumerable<PurchasedProductDto> purchasedProductDtos = purchasedProducts.Select(p => new PurchasedProductDto
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                ProductPrice = p.ProductPrice,
-                PurchasedQty = p.PurchasedQty
-            }).ToList();
-            return purchasedProductDtos;
+            
+            return purchasedProducts;
         }
     }
 }

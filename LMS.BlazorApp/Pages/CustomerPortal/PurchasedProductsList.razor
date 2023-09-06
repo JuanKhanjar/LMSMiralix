@@ -48,7 +48,7 @@
     [Parameter]
     public int customerId { get; set; } = 1;
 
-    private IEnumerable<PurchasedProductDto>? purchasedProducts = new List<PurchasedProductDto>();
+    private IEnumerable<Product>? purchasedProducts = new List<Product>();
 
     protected override async Task OnParametersSetAsync()
     {

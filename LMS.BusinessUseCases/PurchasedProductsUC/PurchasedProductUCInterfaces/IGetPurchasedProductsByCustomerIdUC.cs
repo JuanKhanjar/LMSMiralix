@@ -1,9 +1,10 @@
-﻿using LMS.BusinessUseCases.Dtos.PurchaseProducts;
+﻿using LMS.BusinessCore.Entities;
+using LMS.BusinessUseCases.Dtos.PurchaseProducts;
 
 namespace LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces
 {
     public interface IGetPurchasedProductsByCustomerIdUC
     {
-        Task<IEnumerable<PurchasedProductDto>> ExecuteAsync(int customerId);
+        Task<IEnumerable<Product>> ExecuteAsync(int customerId);
     }
 }

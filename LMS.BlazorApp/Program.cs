@@ -1,5 +1,7 @@
 using LMS.BlazorApp.Areas.Identity;
 using LMS.BlazorApp.Data;
+using LMS.BusinessUseCases.CustomerUC;
+using LMS.BusinessUseCases.CustomerUC.CustomerUCInterfaces;
 using LMS.BusinessUseCases.GroupProductUC;
 using LMS.BusinessUseCases.GroupProductUC.GroupProductUCInterfaces;
 using LMS.BusinessUseCases.GroupUC;
@@ -42,14 +44,18 @@ namespace LMS.BlazorApp
             builder.Services.AddTransient<ICreateGroupUC, CreateGroupUC>();
             builder.Services.AddTransient<IGetGroupWithProductsUC, GetGroupWithProductsUC>();
             builder.Services.AddTransient<IGetGroupsForCustomerUC, GetGroupsForCustomerUC>();
-
+            
 
             builder.Services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
             builder.Services.AddTransient<IGetPurchasedProductsByCustomerIdUC, GetPurchasedProductsByCustomerIdUC>();
 
             builder.Services.AddScoped<IGroupProductRepository, GroupProductRepository>();
             builder.Services.AddTransient<IGetGroupProductsByGroupIdUC, GetGroupProductsByGroupIdUC>();
-            
+
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddTransient<IGetCustomerWithGroupsAndProductsUC, GetCustomerWithGroupsAndProductsUC>();
+
+
 
             var app = builder.Build();
 
