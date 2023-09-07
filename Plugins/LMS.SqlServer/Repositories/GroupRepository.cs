@@ -18,27 +18,32 @@ namespace LMS.SqlServer.Repositories
         {
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             var customer = await _dbContext.Customers.FindAsync(customerId) ?? throw new ArgumentException("Customer not found.");
+
+            // Generate a random 3-digit number from 111 to 999
+            var random = new Random();
+            var eanNumber = random.Next(111, 1000);
+
+            // Get the current year and take the last two digits
+            var currentYear = DateTime.Now.Year % 100;
+
+            // Create the EAN using the specified format
+            var ean = $"{customer.CustomerName[0]}{customer.CustomerName[^1]}{eanNumber:D3}{currentYear:D2}";
+
             var newGroup = new Group
             {
                 GroupName = groupName,
                 CustomerId = customerId,
-                Customer = customer
+                Customer = customer,
+                EAN = ean
             };
-
-            var groupNameInitial = groupName.First().ToString().ToUpper();
-            var groupCount = _dbContext.Groups.Count(g => g.CustomerId == customerId) + 1;
-            var eanNumber = new Random().Next(111, 1000); // Generate a random 3-digit number from 111 to 999
-            var lastCustomerInitial = customer.CustomerName.First();
-
-            var ean = $"{groupNameInitial}{eanNumber:D3}{lastCustomerInitial}";
-
-            newGroup.EAN = ean;
 
             _dbContext.Groups.Add(newGroup);
             await _dbContext.SaveChangesAsync();
 
             return newGroup;
         }
+
+
         /// <summary>
         /// Get A list<Group> 
         /// </summary>
@@ -49,12 +54,18 @@ namespace LMS.SqlServer.Repositories
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             return await _dbContext.Groups
                 .Where(g => g.CustomerId == customerId)
-                .Include(g => g.GroupProducts) // Include related GroupProducts
+                .Include(g => g.GroupProducts)
+                .ThenInclude(gp=>gp.Product)
                 .ToListAsync();
         }
 
-
-        public async Task<Group?> GetGroupWithProductsAsync(int customerId, int groupId)
+        /// <summary>
+        /// Get a Spesific Group Including All its Group Products 
+        /// </summary>
+        /// <param name="customerId">int</param>
+        /// <param name="groupId">int</param>
+        /// <returns>Group</returns>
+        public async Task<Group?> CreateGroupDetailsIncludingItsProductsAsync(int customerId, int groupId)
         {
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             return await _dbContext.Groups

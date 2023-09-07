@@ -13,6 +13,17 @@ namespace LMS.SqlServer.Repositories
         {
             _dbContextFactory = dbContextFactory;
         }
+
+        public Task<Customer?> GetCustomerByIdAsync(int customerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Customer?> GetCustomerByIdAsync(string customerEamil)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Customer?> GetCustomerWithGroupsAndProductsAsync(int customerId)
         {
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();

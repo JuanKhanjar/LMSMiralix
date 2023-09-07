@@ -3,27 +3,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.BusinessCore.Entities
 {
-    public class Product
+    public class PurchasedProduct
     {
         [Key]
         public int ProductId { get; set; }
 
-        [Required]
-        public string ProductName { get; set; }
+        [Required(ErrorMessage = "Product name is required")]
+        public string? ProductName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Product price is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Product price must be greater than 0")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal ProductPrice { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Purchased quantity is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Purchased quantity must be non-negative")]
         public int PurchasedQty { get; set; }
 
         public int CustomerId { get; set; }
 
         // Navigation property
-        public Customer Customer { get; set; }
-        public List<GroupProduct> GroupProducts { get; set; }
+        public Customer Customer { get; set; } = new Customer();
+        public List<GroupProduct> GroupProducts { get; set; } = new List<GroupProduct>();
     }
+
 }

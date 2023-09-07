@@ -1,5 +1,4 @@
 ﻿using LMS.BusinessCore.Entities;
-using LMS.BusinessUseCases.Dtos.PurchaseProducts;
 using LMS.BusinessUseCases.PluginsInterfaces;
 using LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces;
 using System;
@@ -40,13 +39,13 @@ namespace LMS.BusinessUseCases.PurchasedProductsUC
         //    return purchasedProductDtos;
         //}
 
-        public async Task<IEnumerable<Product>> ExecuteAsync(int customerId)
+        public async Task<IEnumerable<PurchasedProduct>> ExecuteAsync(int customerId)
         {
             if (customerId <= 0)
             {
                 throw new ArgumentException("Invalid customerId. CustomerId must be greater than 0.");
             }
-            IEnumerable<Product> purchasedProducts = await _purchasedProductRepository.GetPurchasedProductsByCustomerIdAsync(customerId);
+            IEnumerable<PurchasedProduct> purchasedProducts = await _purchasedProductRepository.GetPurchasedProductsByCustomerIdAsync(customerId);
             if (purchasedProducts == null || purchasedProducts.Count() == 0)
             {
                 throw new NotFiniteNumberException("No purchased products were found");

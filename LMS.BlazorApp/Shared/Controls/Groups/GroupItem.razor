@@ -33,7 +33,7 @@ else
     [Parameter] public int CustomerId { get; set; }
     [Parameter] public int GroupId { get; set; }
 
-    private Group group { get; set; } = new Group();
+    private Group? group { get; set; } = new Group();
 
     protected override async Task OnInitializedAsync()
     {

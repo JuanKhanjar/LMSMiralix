@@ -2,7 +2,7 @@
 @using LMS.BusinessUseCases.CustomerUC.CustomerUCInterfaces;
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
 
-@using LMS.BusinessUseCases.Dtos.PurchaseProducts;
+
 @using LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces;
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
 
@@ -12,19 +12,19 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="m-0">@_customer.CustomerName / @_customer.CustomerId</h5>
-                </div>
-                <div class="card-body">
-                    @if (_customer != null)
-                    {
+                @if (_customer != null)
+                {
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="m-0">@_customer?.CustomerName / @_customer?.CustomerId</h5>
+                    </div>
+
+                    <div class="card-body">
                         @if (_customer.Groups != null && _customer.Groups.Any())
                         {
                             @foreach (var group in _customer.Groups)
                             {
                                 <div class="card p-2">
                                     <details>
-
                                         <summary>
                                             <div class="card-header bg-secondary text-white">
                                                 <h6 class="m-0">Group ID: @group.GroupId</h6>
@@ -66,27 +66,29 @@
                                 </div>
                             }
                         }
-                    }
-                    else
-                    {
-                        <p>Customer not found.</p>
-                    }
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card-header ">
+                        <h5>Custoner Not Found</h5>
+                    </div>
+                }
+
             </div>
         </div>
         <div class="col-md-8">
             <table class="table">
                 <thead>
                     <tr>
-
                         <th>Type</th>
                         <th>Cost</th>
                         <th>Remaining</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @if (purchasedProducts != null)
-                    {
+                @if (purchasedProducts != null && purchasedProducts.Any())
+                {
+                    <tbody>
                         @foreach (var product in purchasedProducts)
                         {
                             <tr>
@@ -95,14 +97,16 @@
                                 <td>@product.PurchasedQty</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
+                    </tbody>
+                }
+                else
+                {
+                    <tbody>
                         <tr>
-                            <td colspan="4">No purchased products found.</td>
+                            <td colspan="3">No purchased products found.</td>
                         </tr>
-                    }
-                </tbody>
+                    </tbody>
+                }
             </table>
             <div class="btn btn-success d-flex justify-content-end">Add</div>
         </div>
@@ -114,19 +118,22 @@
 @code {
     [Parameter]
     public int customerId { get; set; }
-    private Customer _customer = new Customer();
+    private Customer? _customer = new Customer();
 
-
-    private List<Product>? purchasedProducts = new List<Product>();
+    private List<PurchasedProduct>? purchasedProducts = new List<PurchasedProduct>();
 
     protected override async Task OnInitializedAsync()
     {
-        _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
-        if (_customer != null)
+        if (customerId > 0)
         {
-            purchasedProducts = (await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId)).ToList();
+            _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
+            if (_customer != null)
+            {
+                purchasedProducts = (await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId)).ToList();
+            }
         }
     }
+
 
     private void EditGroup(int groupId)
     {

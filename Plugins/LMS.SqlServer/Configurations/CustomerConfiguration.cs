@@ -25,7 +25,7 @@ namespace LMS.SqlServer.Configurations
             );
 
             // Define relationships
-            builder.HasMany(c => c.Products)
+            builder.HasMany(c => c.PurchasedProduct)
                 .WithOne(p => p.Customer)
                 .HasForeignKey(p => p.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);

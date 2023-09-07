@@ -1,17 +1,13 @@
 ﻿@page "/group-products/{groupId:int}"
-@using LMS.BusinessUseCases.Dtos.GroupProducts;
-@using LMS.BusinessUseCases.Extensions.GroupProductEX;
+
 @using LMS.BusinessUseCases.GroupProductUC.GroupProductUCInterfaces;
 @inject IGetGroupProductsByGroupIdUC _IGetGroupProductsByGroupIdUC
-<h3>Group Products for Group @groupId</h3>
-<h3>TotalQuantity @groupProducts.CalculateTotalQuantity()</h3>
+<h3>Group Products for Group ID @groupId</h3>
+<h3>TotalQuantity: </h3>
 
-<table class="table">
-
+<table class="table card">
     <thead>
         <tr>
-
-
             <th>Type</th>
             <th>Cost</th>
             <th>Remaining</th>
@@ -25,8 +21,8 @@
             @foreach (var groupProduct in groupProducts)
             {
                 <tr>
-                    <td>@groupProduct.ProdcutName</td>
-                    <td>@groupProduct.Price</td>
+                    <td>@groupProduct.Product.ProductName</td>
+                    <td>@groupProduct.Product.ProductPrice</td>
                     <td>@groupProduct.AddedQuantity</td>
                     <td>
                         <input type="number" min="0"
@@ -37,7 +33,6 @@
                     <td>
                         <button class="btn btn-danger">Delete</button>
                     </td>
-
                 </tr>
             }
         }
@@ -52,14 +47,14 @@
 </table>
 
 @code {
+
     [Parameter]
     public int groupId { get; set; } 
 
-    private IEnumerable<GroupProductDto> groupProducts = new List<GroupProductDto>();
+    private IEnumerable<GroupProduct> groupProducts = new List<GroupProduct>();
 
     protected override async Task OnInitializedAsync()
     {
-        groupId = 1;
         try
         {
             // Call the GetGroupProductsByGroupIdUC to retrieve group products.

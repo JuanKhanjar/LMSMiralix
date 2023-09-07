@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LMS.ServiceExtensions\LMS.ServiceExtensions.csproj" />
     <ProjectReference Include="..\Plugins\LMS.SqlServer\LMS.SqlServer.csproj" />
   </ItemGroup>
 

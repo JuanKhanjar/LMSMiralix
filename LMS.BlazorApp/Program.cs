@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using LMS.ServiceExtensions;
 
 namespace LMS.BlazorApp
 {
@@ -39,21 +40,21 @@ namespace LMS.BlazorApp
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            builder.Services.AddRegisterServices();
+            //builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+            //builder.Services.AddTransient<ICreateGroupUC, CreateGroupUC>();
+            //builder.Services.AddTransient<IGetGroupWithProductsUC, GetGroupWithProductsUC>();
+            //builder.Services.AddTransient<IGetGroupsForCustomerUC, GetGroupsForCustomerUC>();
 
-            builder.Services.AddScoped<IGroupRepository, GroupRepository>();
-            builder.Services.AddTransient<ICreateGroupUC, CreateGroupUC>();
-            builder.Services.AddTransient<IGetGroupWithProductsUC, GetGroupWithProductsUC>();
-            builder.Services.AddTransient<IGetGroupsForCustomerUC, GetGroupsForCustomerUC>();
-            
 
-            builder.Services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
-            builder.Services.AddTransient<IGetPurchasedProductsByCustomerIdUC, GetPurchasedProductsByCustomerIdUC>();
+            //builder.Services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
+            //builder.Services.AddTransient<IGetPurchasedProductsByCustomerIdUC, GetPurchasedProductsByCustomerIdUC>();
 
-            builder.Services.AddScoped<IGroupProductRepository, GroupProductRepository>();
-            builder.Services.AddTransient<IGetGroupProductsByGroupIdUC, GetGroupProductsByGroupIdUC>();
+            //builder.Services.AddScoped<IGroupProductRepository, GroupProductRepository>();
+            //builder.Services.AddTransient<IGetGroupProductsByGroupIdUC, GetGroupProductsByGroupIdUC>();
 
-            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            builder.Services.AddTransient<IGetCustomerWithGroupsAndProductsUC, GetCustomerWithGroupsAndProductsUC>();
+            //builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            //builder.Services.AddTransient<IGetCustomerWithGroupsAndProductsUC, GetCustomerWithGroupsAndProductsUC>();
 
 
 

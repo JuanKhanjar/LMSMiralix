@@ -1,11 +1,10 @@
 ﻿@page "/purchased-products/{customerId:int}"
-@using LMS.BusinessUseCases.Dtos.PurchaseProducts;
 @using LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces;
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
 <h3>Purchased Products for Customer @customerId - Name </h3>
 
 <!--Purchased Products For a Login Customer-->
-<table class="table">
+<table class="table card">
     <thead>
         <tr>
 
@@ -45,14 +44,23 @@
 <div class="btn btn-success">Add</div>
 
 @code {
-    [Parameter]
-    public int customerId { get; set; } = 1;
 
-    private IEnumerable<Product>? purchasedProducts = new List<Product>();
+    [Parameter]
+    public int customerId { get; set; }
+
+    private IEnumerable<PurchasedProduct>? purchasedProducts = new List<PurchasedProduct>();
 
     protected override async Task OnParametersSetAsync()
     {
-        // Call your service or repository method to fetch purchased products for the customer.
-        purchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+        if (customerId > 0)
+        {
+            // Call your service or repository method to fetch purchased products for the customer.
+            purchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+        }
+        else
+        {
+            purchasedProducts = new List<PurchasedProduct>();
+        }
+
     }
 }

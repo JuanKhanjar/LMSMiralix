@@ -3,6 +3,7 @@ using LMS.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.SqlServer.Migrations
 {
     [DbContext(typeof(LMSDbContext))]
-    partial class LMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230906160543_UpdateEntites")]
+    partial class UpdateEntites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,7 +167,7 @@ namespace LMS.SqlServer.Migrations
             modelBuilder.Entity("LMS.BusinessCore.Entities.PurchasedProduct", b =>
                 {
                     b.HasOne("LMS.BusinessCore.Entities.Customer", "Customer")
-                        .WithMany("PurchasedProduct")
+                        .WithMany("Products")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -176,7 +179,7 @@ namespace LMS.SqlServer.Migrations
                 {
                     b.Navigation("Groups");
 
-                    b.Navigation("PurchasedProduct");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("LMS.BusinessCore.Entities.Group", b =>

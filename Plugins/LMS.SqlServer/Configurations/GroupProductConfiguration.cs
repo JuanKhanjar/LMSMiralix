@@ -22,7 +22,7 @@ namespace LMS.SqlServer.Configurations
 
             builder.HasOne(gp => gp.Product)
                 .WithMany(p => p.GroupProducts)
-                .HasForeignKey(gp => gp.ProductId)
+                .HasForeignKey(gp => gp.PurchasedProductId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

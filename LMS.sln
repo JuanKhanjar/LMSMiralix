@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.SqlServer", "Plugins\LM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.BlazorApp", "LMS.BlazorApp\LMS.BlazorApp.csproj", "{65918332-1D4D-4B0C-B7DB-ACA355653B59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.ServiceExtensions", "LMS.ServiceExtensions\LMS.ServiceExtensions.csproj", "{2A065945-D35A-4A95-9F8F-C93257D5128F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{65918332-1D4D-4B0C-B7DB-ACA355653B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65918332-1D4D-4B0C-B7DB-ACA355653B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65918332-1D4D-4B0C-B7DB-ACA355653B59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A065945-D35A-4A95-9F8F-C93257D5128F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A065945-D35A-4A95-9F8F-C93257D5128F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A065945-D35A-4A95-9F8F-C93257D5128F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A065945-D35A-4A95-9F8F-C93257D5128F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

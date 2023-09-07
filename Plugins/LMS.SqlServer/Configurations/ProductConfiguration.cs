@@ -9,16 +9,14 @@ using System.Threading.Tasks;
 
 namespace LMS.SqlServer.Configurations
 {
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class ProductConfiguration : IEntityTypeConfiguration<PurchasedProduct>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public void Configure(EntityTypeBuilder<PurchasedProduct> builder)
         {
             builder.HasKey(p => p.ProductId);
 
-            
-
             builder.HasOne(p => p.Customer)
-                .WithMany(c => c.Products)
+                .WithMany(c => c.PurchasedProduct)
                 .HasForeignKey(p => p.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

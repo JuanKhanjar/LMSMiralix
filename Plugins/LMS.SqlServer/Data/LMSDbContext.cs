@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LMS.BusinessCore.Entities;
+﻿using LMS.BusinessCore.Entities;
 using LMS.SqlServer.Configurations;
 using Microsoft.EntityFrameworkCore;
 namespace LMS.SqlServer.Data
@@ -11,7 +6,7 @@ namespace LMS.SqlServer.Data
     public class LMSDbContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<PurchasedProduct> PurchasedProducts { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupProduct> GroupProducts { get; set; }
 

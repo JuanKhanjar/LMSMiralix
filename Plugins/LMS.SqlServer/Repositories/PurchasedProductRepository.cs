@@ -13,12 +13,18 @@ namespace LMS.SqlServer.Repositories
         {
             _dbContextFactory = dbContextFactory;
         }
-        public async Task<IEnumerable<Product>> GetPurchasedProductsByCustomerIdAsync(int customerId)
+        /// <summary>
+        /// Get A list of customer Purchased Products
+        /// </summary>
+        /// <param name="customerId">int</param>
+        /// <returns>A list<PurchasedProduct></returns>
+        public async Task<IEnumerable<PurchasedProduct>> GetPurchasedProductsByCustomerIdAsync(int customerId)
         {
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
 
-            var purchasedProducts = await _dbContext.Products
+            var purchasedProducts = await _dbContext.PurchasedProducts
                 .Where(p => p.CustomerId == customerId && p.PurchasedQty > 0)
+                .OrderBy(p=>p.PurchasedQty)
                 .ToListAsync();
             return purchasedProducts;
         }

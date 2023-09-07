@@ -1,5 +1,4 @@
 ﻿using LMS.BusinessCore.Entities;
-using LMS.BusinessUseCases.Dtos.PurchaseProducts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +12,8 @@ namespace LMS.BusinessUseCases.PluginsInterfaces
         /// <summary>
         /// This Method Will Return A list of Products that a spesific Customer had purchased
         /// </summary>
-        /// <param name="customerId"></param>
+        /// <param name="customerId">int</param>
         /// <returns>List of objects of type Product </returns>
-        Task<IEnumerable<Product>> GetPurchasedProductsByCustomerIdAsync(int customerId);
+        Task<IEnumerable<PurchasedProduct>> GetPurchasedProductsByCustomerIdAsync(int customerId);
     }
 }
