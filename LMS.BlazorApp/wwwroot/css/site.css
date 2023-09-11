@@ -1,7 +1,7 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Rajdhani', Helvetica, Arial, sans-serif;
 }
 
 h1:focus {
@@ -70,24 +70,91 @@ a, .btn-link {
 
 
 details {
-    font: 16px "Open Sans", Calibri, sans-serif;
     width: auto;
+    border-radius: 10px;
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: left;
+    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+    background: rgba(255, 255, 255, 1);
+    transition: max-height 0.3s ease;
 }
 
     details > summary {
         padding: 2px 6px;
         width: auto;
-        background-color: white;
+        background: rgba(241, 241, 241, 1);
         border: none;
-        box-shadow: 3px 3px 4px #ecf0f1;
+        box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
         cursor: pointer;
-        list-style: none;
     }
 
-details > p {
-    border-radius: 0 0 10px 10px;
-    background-color: #ddd;
-    padding: 2px 6px;
-    margin: 0;
-    box-shadow: 3px 3px 4px black;
+  /*  details > table {
+        width: 400px;
+        height: 56px;
+        border-radius: 10px;
+        background: rgba(241, 241, 241, 1);
+        box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+    }*/
+.leftLayOut {
+    width: 566px;
+    height: 982px;
+    border-radius: 10px;
+   
+    border: 1px solid rgba(211, 211, 211, 1);
+    box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
+}
+.purchaseProductLayOut {
+    width: 601px;
+    height: 423px;
+    top: 259px;
+    left: 648px;
+    border: 1px solid rgba(211, 211, 211, 1);
+    border-radius: 0px 0px 10px 10px;
+    background: rgba(255, 255, 255, 1);
+}
+.headerFont {
+    font-family: Rajdhani;
+    color: rgba(78, 78, 78, 1);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 26px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+.tableHeader {
+    width: 400px;
+    height: 50px;
+    border: 10px;
+    border-radius: 0px 0px 10px 10px;
+    background: rgba(241, 241, 241, 1);
+    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+}
+.tableBody {
+    width: 431px;
+    height: auto;
+    background: rgba(255, 255, 255, 1);
+}
+.inputGroupName {
+    width: 340px;
+    height: 37px;
+    top: 255px;
+    left: 648px;
+    border-radius: 10px;
+    border: 1px solid rgba(171, 171, 171, 1);
+}
+.inputGroupEAN {
+    width: 122px;
+    height: 37px;
+    top: 255px;
+    left: 1007px;
+    border-radius: 10px;
+    border: 1px solid rgba(171, 171, 171, 1);
+}
+.btn1 {
+    width: 22px;
+    height: 22px;
 }

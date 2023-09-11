@@ -1,0 +1,75 @@
+﻿@page "/create-group/{customerId:int}"
+@inject ICreateGroupUC _ICreateGroupUC
+@inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
+@using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
+@using LMS.BusinessUseCases.GroupUCs.GroupUCInterfaces;
+@using Microsoft.AspNetCore.Components.Forms;
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+<h3>Welcome :@_customer.CustomerName</h3>
+<div class="card p-4 mb-2">
+    <h6>Create a group and then Click edit to add Products</h6>
+</div>
+<div class="card p-2">
+    <EditForm Model="_groupModel" OnValidSubmit="CreateGroupAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="GroupName">Group Name:</label>
+            <InputText id="GroupName" @bind-Value="_groupModel.GroupName" class="form-control" />
+            <ValidationMessage For="@(() => _groupModel.GroupName)" />
+        </div>
+
+        <div class="form-group m-2 p-2">
+            <button type="submit" class="btn btn-success">Create Group</button>
+        </div>
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public int customerId { get; set; }
+    private Customer? _customer = new Customer();
+    private Group _groupModel = new Group();
+    protected override async Task OnInitializedAsync()
+    {
+        _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
+    }
+    private async Task ShowSweetAlertAsync(string title, string text, SweetAlertMessageType type)
+    {
+        await JSRuntime.InvokeVoidAsync("showSweetAlert", title, text, type.ToString().ToLowerInvariant());
+    }
+    public enum SweetAlertMessageType
+    {
+        Success,
+        Error,
+        Warning,
+        Info
+    }
+
+    private async Task CreateGroupAsync()
+    {
+        try
+        {
+            Group? result = await _ICreateGroupUC.ExcecuteAsync(customerId, _groupModel.GroupName);
+            if (result!=null)
+            {
+                // Group created successfully, navigate to a success page or perform other actions
+                await ShowSweetAlertAsync("Success", "Group created successfully!", SweetAlertMessageType.Success);
+                NavigationManager.NavigateTo($"/customer/{customerId}", forceLoad: true);
+            }
+            else
+            {
+                // Group creation failed, show error notification
+                await ShowSweetAlertAsync("Error", "Group creation failed.", SweetAlertMessageType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions, log errors, or display error messages
+        }
+    }
+}
+

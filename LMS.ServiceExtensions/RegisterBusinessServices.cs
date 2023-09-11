@@ -1,6 +1,8 @@
 ﻿
 using LMS.BusinessUseCases.CustomerUCs;
 using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
+using LMS.BusinessUseCases.GroupUCs;
+using LMS.BusinessUseCases.GroupUCs.GroupUCInterfaces;
 using LMS.BusinessUseCases.PluginInterfaces;
 using LMS.BusinessUseCases.PurchasedProductsUCs;
 using LMS.BusinessUseCases.PurchasedProductsUCs.PurchasedProductsUCsInterfaces;
@@ -24,6 +26,9 @@ namespace LMS.ServiceExtensions
 
             services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
             services.AddTransient<IGetPurchasedProductsByCustomerIdUC, GetPurchasedProductsByCustomerIdUC>();
+
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddTransient<ICreateGroupUC, CreateGroupUC>();
         }
     }
 }

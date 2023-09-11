@@ -114,6 +114,15 @@ namespace LMS.SqlServer.Repositories
 
             using (LMSDbContext _dbContext = _dbContextFactory.CreateDbContext())
             {
+                // Check if a group with the same name already exists for the customer
+                bool groupExists = await _dbContext.Groups
+                    .AnyAsync(g => g.CustomerId == customerId && g.GroupName == groupName);
+
+                if (groupExists)
+                {
+                    _logger.LogError("Group with the same name already exists for customer.");
+                    throw new InvalidOperationException("A group with the same name already exists for this customer.");
+                }
                 // Generate EAN as per the specified format
                 string ean = GenerateEAN(groupName);
 
@@ -132,6 +141,7 @@ namespace LMS.SqlServer.Repositories
                 return group;
             }
         }
+
         public async Task<bool> UpdateGroupNameAsync(int groupId, string newGroupName)
         {
             if (string.IsNullOrWhiteSpace(newGroupName))
