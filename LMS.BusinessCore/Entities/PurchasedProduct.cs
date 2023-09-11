@@ -9,7 +9,7 @@ namespace LMS.BusinessCore.Entities
         public int ProductId { get; set; }
 
         [Required(ErrorMessage = "Product name is required")]
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; }
 
         [Required(ErrorMessage = "Product price is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Product price must be greater than 0")]
@@ -22,9 +22,9 @@ namespace LMS.BusinessCore.Entities
 
         public int CustomerId { get; set; }
 
-        // Navigation property
-        public Customer Customer { get; set; } = new Customer();
-        public List<GroupProduct> GroupProducts { get; set; } = new List<GroupProduct>();
+        // Navigation properties should be nullable
+        public virtual Customer? Customer { get; set; }
+        public virtual ICollection<GroupProduct> GroupProducts { get; set; } = new List<GroupProduct>();
     }
 
 }

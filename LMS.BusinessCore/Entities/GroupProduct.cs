@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.BusinessCore.Entities
 {
@@ -14,8 +15,8 @@ namespace LMS.BusinessCore.Entities
         [Range(1, int.MaxValue, ErrorMessage = "Added quantity must be at least 1")]
         public int AddedQuantity { get; set; }
 
-        // Navigation properties
-        public virtual Group Group { get; set; } = new Group();
-        public virtual PurchasedProduct Product { get; set; } = new PurchasedProduct();
+        // Navigation properties should be nullable
+        public virtual Group? Group { get; set; }        
+        public virtual PurchasedProduct? PurchasedProduct { get; set; }
     }
 }

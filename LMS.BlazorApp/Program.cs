@@ -1,23 +1,9 @@
 using LMS.BlazorApp.Areas.Identity;
 using LMS.BlazorApp.Data;
-using LMS.BusinessUseCases.CustomerUC;
-using LMS.BusinessUseCases.CustomerUC.CustomerUCInterfaces;
-using LMS.BusinessUseCases.GroupProductUC;
-using LMS.BusinessUseCases.GroupProductUC.GroupProductUCInterfaces;
-using LMS.BusinessUseCases.GroupUC;
-using LMS.BusinessUseCases.GroupUC.GroupUCInterfaces;
-using LMS.BusinessUseCases.PluginsInterfaces;
-using LMS.BusinessUseCases.PurchasedProductsUC;
-using LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces;
-using LMS.SqlServer.Data;
-using LMS.SqlServer.Repositories;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
 using LMS.ServiceExtensions;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMS.BlazorApp
 {
@@ -35,12 +21,10 @@ namespace LMS.BlazorApp
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            builder.Services.AddDbContextFactory<LMSDbContext>(options =>
-              options.UseSqlServer(builder.Configuration.GetConnectionString("LMSConnection")));
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            builder.Services.AddRegisterServices();
+            builder.Services.AddRegisterServices(builder.Configuration);
             //builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             //builder.Services.AddTransient<ICreateGroupUC, CreateGroupUC>();
             //builder.Services.AddTransient<IGetGroupWithProductsUC, GetGroupWithProductsUC>();

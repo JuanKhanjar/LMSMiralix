@@ -1,32 +1,51 @@
 ﻿using LMS.BusinessCore.Entities;
-using LMS.BusinessUseCases.PluginsInterfaces;
+using LMS.BusinessUseCases.PluginInterfaces;
 using LMS.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LMS.SqlServer.Repositories
 {
     public class PurchasedProductRepository : IPurchasedProductRepository
     {
         private readonly IDbContextFactory<LMSDbContext> _dbContextFactory;
+        private readonly ILogger<PurchasedProductRepository> _logger;
 
-        public PurchasedProductRepository(IDbContextFactory<LMSDbContext> dbContextFactory)
+        public PurchasedProductRepository(IDbContextFactory<LMSDbContext> dbContextFactory, ILogger<PurchasedProductRepository> logger)
         {
             _dbContextFactory = dbContextFactory;
+            _logger = logger;
         }
-        /// <summary>
-        /// Get A list of customer Purchased Products
-        /// </summary>
-        /// <param name="customerId">int</param>
-        /// <returns>A list<PurchasedProduct></returns>
-        public async Task<IEnumerable<PurchasedProduct>> GetPurchasedProductsByCustomerIdAsync(int customerId)
+        public async Task<IEnumerable<PurchasedProduct>?> GetPurchasedProductsByCustomerIdAsync(int customerId)
         {
-            using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
+            if (customerId <= 0)
+            {
+                _logger.LogError("Invalid customerId provided: {CustomerId}", customerId);
+                throw new ArgumentException("Invalid customerId provided.", nameof(customerId));
+            }
 
-            var purchasedProducts = await _dbContext.PurchasedProducts
-                .Where(p => p.CustomerId == customerId && p.PurchasedQty > 0)
-                .OrderBy(p=>p.PurchasedQty)
-                .ToListAsync();
-            return purchasedProducts;
+            using (LMSDbContext _dbContext = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    // Retrieve all PurchasedProducts for the specified customer with PurchasedQty > 0
+                    var purchasedProducts = await _dbContext.PurchasedProducts
+                        .Where(pp => pp.CustomerId == customerId && pp.PurchasedQty > 0)
+                        .ToListAsync();
+
+                    return purchasedProducts;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while fetching PurchasedProducts for customerId: {CustomerId}", customerId);
+                    throw; // Rethrow the exception for handling at a higher level
+                }
+            }
         }
     }
 }

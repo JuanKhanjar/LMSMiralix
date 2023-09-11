@@ -1,144 +1,490 @@
 ﻿@page "/customer/{customerId:int}"
-@using LMS.BusinessUseCases.CustomerUC.CustomerUCInterfaces;
+@using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
+@using LMS.BusinessCore.Extensions.GroupExtentionsMethods;
+@using LMS.BusinessUseCases.PurchasedProductsUCs.PurchasedProductsUCsInterfaces;
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
-
-
-@using LMS.BusinessUseCases.PurchasedProductsUC.PurchasedProductUCInterfaces;
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
-
-@inject NavigationManager navigationManager
+@using LMS.BlazorApp.Extensions;
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                @if (_customer != null)
-                {
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="m-0">@_customer?.CustomerName / @_customer?.CustomerId</h5>
-                    </div>
-
-                    <div class="card-body">
-                        @if (_customer.Groups != null && _customer.Groups.Any())
-                        {
-                            @foreach (var group in _customer.Groups)
-                            {
-                                <div class="card p-2">
-                                    <details>
-                                        <summary>
-                                            <div class="card-header bg-secondary text-white">
-                                                <h6 class="m-0">Group ID: @group.GroupId</h6>
-                                                <p class="m-0">Group Name: @group.GroupName</p>
-                                                <p class="m-0">EAN: @group.EAN</p>
-                                            </div>
-                                        </summary>
-                                        <div class="card-body">
-                                            <table class="table table-striped table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Type</th>
-                                                        <th>Cost</th>
-                                                        <th>Remaining</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (group != null && group.GroupProducts != null && group.GroupProducts.Any())
-                                                    {
-                                                        foreach (var product in group.GroupProducts)
-                                                        {
-                                                            <tr>
-                                                                <td>@(product?.Product?.ProductName)</td>
-                                                                <td>@(product?.Product?.ProductPrice.ToString("C"))</td>
-                                                                <td>@(product?.Product?.PurchasedQty)</td>
-                                                            </tr>
-                                                        }
-                                                    }
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="d-flex justify-content-between p-2">
-                                            <button class="btn btn-outline-secondary" @onclick="(()=>EditGroup(group.GroupId))">Edit</button>
-
-                                            <button class="btn btn-outline-danger">Delete </button>
-                                        </div>
-                                    </details>
-                                </div>
-                            }
-                        }
-                    </div>
-                }
-                else
-                {
-                    <div class="card-header ">
-                        <h5>Custoner Not Found</h5>
-                    </div>
-                }
-
+        <div class="col-md-4 card">
+            <!-- Customer Info Card -->
+            <div class="card m-4 p-2">
+                <p class="card-text">Customer ID: @_customer.CustomerId</p>
+                <p class="card-text">Customer Name: @_customer.CustomerName</p>
             </div>
+
+            <!-- List of Groups -->
+            @foreach (var group in customerGroups)
+            {
+                <!--HGroup Header-->
+                <div class="card mb-4 p-2">
+                    <details>
+                        <summary>
+                            <div class="card-body d-flex justify-content-between align-content-between">
+                                <h5 class="card-title">@_customer.CustomerName @group.GroupName</h5>
+                                <p class="card-text">EAN: @group.EAN</p>
+                                <div>Total:@group.GetTotalPriceForAgroup().ToString("c2")/(@group.GetTotalQuantityForAgroup())</div>
+                            </div>
+                        </summary>
+
+                        <!-- Group Products -->
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Cost</th>
+                                        <th>Remaining</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in group.GroupProducts)
+                                    {
+                                        <tr>
+                                            <td>@product.PurchasedProduct.ProductName</td>
+                                            <td>@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
+                                            <td>@product.AddedQuantity</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-between p-2">
+                                <button class="btn btn-outline-secondary" @onclick="()=>ShowGroupDetails(group.GroupId)">Edit</button>
+                                <button class="btn btn-outline-danger" @onclick="()=>ShowGroupDetails(group.GroupId)">Delete</button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            }
         </div>
-        <div class="col-md-8">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Cost</th>
-                        <th>Remaining</th>
-                    </tr>
-                </thead>
-                @if (purchasedProducts != null && purchasedProducts.Any())
+        <!-- Group Detalis -->
+        <div class="col-md-8 card">
+
+            @if (selectedGroupDto != null)
+            {
+                @if (displayGroupProducts == false)
                 {
-                    <tbody>
-                        @foreach (var product in purchasedProducts)
-                        {
+                    <div class="card m-4 p-2">
+                        <div class="card-body">
+                            <EditForm Model="selectedGroupDto" OnValidSubmit="UpdateGroupAsync" class="d-flex justify-content-between align-items-center">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                <div class="form-group d-flex align-items-center">
+                                    <label for="GroupName" class="mr-2">Group Name:</label>
+                                    <InputText id="GroupName" @bind-Value="selectedGroupDto.GroupName" class="form-control" />
+                                    <ValidationMessage For="@(() => selectedGroupDto.GroupName)" class="disabled" />
+                                </div>
+                                <div class="form-group d-flex align-items-center">
+                                    <label for="EANName" class="mr-2">EAN:</label>
+                                    <InputText id="EANName" @bind-Value="selectedGroupDto.EAN" class="form-control" />
+                                    <ValidationMessage For="@(() => selectedGroupDto.EAN)" class="disabled" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-outline-success">Update Group</button>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+
+
+                    <!-- GroupProduct Table -->
+                    <h5 class="mt-4">Group Products</h5>
+                    <table class="table table-borderless">
+                        <thead>
                             <tr>
-                                <td>@product.ProductName</td>
-                                <td>@product.ProductPrice</td>
-                                <td>@product.PurchasedQty</td>
+                                <th>Type</th>
+                                <th>Cost</th>
+                                <th>Remaining</th>
+                                <th>Quantity</th>
+                                <th></th>
                             </tr>
-                        }
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in selectedGroupDto.GroupProductsDto)
+                            {
+                                <tr>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.ProductPrice</td>
+                                    <td>@product.AddedQty</td>
+                                    <td>
+                                        <input type="number"
+                                   @key="product.PurchasedProductId"
+                                               min="0"
+                                   @bind-value="@product.InputProductQuantity" />
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(product)">Delete</button>
+                                        </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <div>Total:@selectedGroupDto.CalculateTotalPrice().ToString("c2")/(@selectedGroupDto.CalculateTotalQuantity())</div>
+                    </table>
+                    <!-- Purchased Products Table -->
+                    <h5 class="mt-4">Purchased Products</h5>
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Cost</th>
+                                <th>Remaining</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Purchasedproduct in purchasedProductDtos)
+                            {
+                                <tr>
+                                    <td>@Purchasedproduct.ProductName</td>
+                                    <td>@Purchasedproduct.ProductPrice</td>
+                                    <td>@Purchasedproduct.PurchasedQty</td>
+                                    <td><input 
+                                        @key="Purchasedproduct.PurchasedProductId"
+                                        type="number" 
+                                        min="0" 
+                                        @bind-value="@Purchasedproduct.InputPurchasedtQuantity" /></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-end p-2">
+                        <button class="btn btn-outline-secondary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
+                    </div>
                 }
                 else
                 {
-                    <tbody>
-                        <tr>
-                            <td colspan="3">No purchased products found.</td>
-                        </tr>
-                    </tbody>
+                    <!-- Purchased Products Table -->
+                    <h5 class="mt-4">Purchased Products</h5>
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Cost</th>
+                                <th>Remaining</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Purchasedproduct in purchasedProductDtos)
+                            {
+                                <tr>
+                                    <td>@Purchasedproduct.ProductName</td>
+                                    <td>@Purchasedproduct.ProductPrice</td>
+                                    <td>@Purchasedproduct.PurchasedQty</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-end p-2">
+                        <button class="btn btn-outline-secondary" @*@onclick="()=>CreateGroup()" *@>Create Group</button>
+                    </div>
                 }
-            </table>
-            <div class="btn btn-success d-flex justify-content-end">Add</div>
+            }
         </div>
-
     </div>
 </div>
 
 
 @code {
+    #region Param
     [Parameter]
     public int customerId { get; set; }
     private Customer? _customer = new Customer();
-
-    private List<PurchasedProduct>? purchasedProducts = new List<PurchasedProduct>();
-
+    private Group selectedGroup = new Group();
+    private IEnumerable<Group> customerGroups = new List<Group>();
+    private IEnumerable<PurchasedProduct> _PurchasedProducts = new List<PurchasedProduct>();
+    private bool displayGroupProducts = true; // Flag to control GroupProduct Table display
+    #endregion
     protected override async Task OnInitializedAsync()
     {
-        if (customerId > 0)
+        await LoadData();
+        //// Fetch the customer's groups from the repository
+        //_customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
+        //if (_customer != null)
+        //{
+        //    customerGroups = _customer.Groups.ToList();
+        //    _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+        //}
+    }
+
+    #region Dto Interacts Mehtods And Param
+
+    private GroupDto? selectedGroupDto = new GroupDto();
+    private IEnumerable<GroupDto> customerGroupsDto = new List<GroupDto>();
+    private List<GroupProductDto>? groupProductDtos = new List<GroupProductDto>();
+    private List<PurchasedProductDto>? purchasedProductDtos = new List<PurchasedProductDto>();
+    private async Task LoadData()
+    {
+        // Fetch the customer's groups from the repository
+        _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
+        if (_customer != null)
         {
-            _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
-            if (_customer != null)
+            customerGroups = _customer.Groups.ToList();
+            if (customerGroups != null)
             {
-                purchasedProducts = (await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId)).ToList();
+                customerGroupsDto = _customer.Groups.Select(group => new GroupDto
+                    {
+                        GroupId = group.GroupId,
+                        GroupName = group.GroupName,
+                        EAN = group.EAN,
+                        CustomerId = customerId,
+                        GroupProductsDto = group.GroupProducts.Select(gp => new GroupProductDto
+                        {
+                            GroupId = gp.GroupId,
+                            PurchasedProductId = gp.PurchasedProductId,
+                            ProductName = gp.PurchasedProduct.ProductName,
+                            ProductPrice = gp.PurchasedProduct.ProductPrice,
+                            AddedQty = gp.AddedQuantity,
+                            InputProductQuantity = 0 // Set the default value as needed
+                        }).ToList()
+                    }).ToList();
             }
+            _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+        }
+
+        // Convert Group and Product to DTOs
+        selectedGroupDto = new GroupDto
+            {
+                GroupId = selectedGroup?.GroupId ?? 0,
+                GroupName = selectedGroup?.GroupName,
+                EAN = selectedGroup?.EAN,
+                CustomerId = customerId,//same login customer
+                GroupProductsDto = selectedGroup?.GroupProducts?.Select(gp => new GroupProductDto
+                {
+                    GroupId = selectedGroup?.GroupId ?? 0,
+                    PurchasedProductId = gp.PurchasedProductId,
+                    ProductName = gp.PurchasedProduct?.ProductName,
+                    ProductPrice = gp.PurchasedProduct?.ProductPrice ?? 0.00M,
+                    AddedQty = gp.AddedQuantity,
+                    InputProductQuantity = 0 // Set the default value as needed
+                }).ToList() ?? new List<GroupProductDto>()
+            };
+
+        purchasedProductDtos = _PurchasedProducts?.Select(p => new PurchasedProductDto
+            {
+                PurchasedProductId = p.ProductId,
+                ProductName = p.ProductName,
+                ProductPrice = p.ProductPrice,
+                PurchasedQty = p.PurchasedQty,
+                CustomerId = customerId,//same login customer
+                InputPurchasedtQuantity = 0 // Set the default value as needed
+            }).ToList() ?? new List<PurchasedProductDto>();
+    }
+    #endregion
+    #region Manpulate
+    private void UpdateGroupProductQuantities(GroupProductDto groupProduct)
+    {
+        // Find the corresponding PurchasedProductDto using PurchasedProductId
+        PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
+
+        // Ensure the input quantity is within the valid range
+        if (groupProduct.InputProductQuantity > 0 && groupProduct.InputProductQuantity <= purchasedProduct.PurchasedQty)
+        {
+            if (purchasedProduct != null)
+            {
+                // Update the AddedQty for the selected GroupProductDto
+                groupProduct.AddedQty += groupProduct.InputProductQuantity;
+
+                // Update the PurchasedQty for the corresponding PurchasedProductDto
+                purchasedProduct.PurchasedQty -= groupProduct.InputProductQuantity;
+                groupProduct.InputProductQuantity = 0;
+
+                // Create a ProductChangeDto object to track the change
+                //ProductChangeDto change = new ProductChangeDto
+                //    {
+                //        CustomerId = customerId,
+                //        GroupId = groupProduct.GroupId,
+                //        ProductId = groupProduct.PurchasedProductId,
+                //        UpdatedGroupProductAddedQty = groupProduct.inpuProductQuantity,
+                //        UpdatedPurchasedQty = groupProduct.inpuProductQuantity
+                //    };
+
+                //// Add the change to the list
+                //productChanges.Add(change);
+
+                // Trigger a UI update to reflect the changes in the table
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            // Implement logic to show a JavaScript alert or validation error.
         }
     }
 
-
-    private void EditGroup(int groupId)
+    private void RemoveProduct(GroupProductDto product)
     {
-        // Navigate to the group detail page with customer and group IDs
-        navigationManager.NavigateTo($"/group/{customerId}/{groupId}");
+        // Find the corresponding PurchasedProduct by ProductId
+        PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == product.PurchasedProductId);
+
+        if (purchasedProduct != null)
+        {
+            // Add the removed quantity back to PurchasedQty
+            purchasedProduct.PurchasedQty += product.AddedQty;
+        }
+
+        // Remove the product from the list
+        selectedGroupDto.GroupProductsDto. Remove(product);
+      
+        // Set AddedQty to 0 for the removed product
+        product.AddedQty = 0;
     }
+    private void UpdatePurchasedQuantities(GroupDto selectedGroupDto)
+    {
+        // Create a copy of purchasedProductDtos
+        var purchasedProductDtosCopy = purchasedProductDtos.ToList();
+        foreach (PurchasedProductDto purchasedProduct in purchasedProductDtosCopy)
+        {
+
+            // Ensure the input quantity is within the valid range
+            if (purchasedProduct.InputPurchasedtQuantity > 0 && purchasedProduct.InputPurchasedtQuantity <= purchasedProduct.PurchasedQty)
+            {
+                // Calculate the change based on the input quantity
+                int change = purchasedProduct.PurchasedQty - purchasedProduct.InputPurchasedtQuantity;
+
+                // Find and update the corresponding product in the GroupProductsDto list
+                GroupProductDto? groupProductToUpdate = selectedGroupDto.GroupProductsDto.FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
+
+                if (groupProductToUpdate != null)
+                {
+                    // Update the AddedQty for the selected product in the GroupProductsDto list
+                    groupProductToUpdate.AddedQty += purchasedProduct.InputPurchasedtQuantity;
+
+                    // Update the PurchasedQty for the current product
+                    purchasedProduct.PurchasedQty = change;
+                    purchasedProduct.InputPurchasedtQuantity = 0;
+                    //if (purchasedProduct.PurchasedQty<=0)
+                    //{
+                    //    purchasedProductDtos.Remove(purchasedProduct);
+                    //}
+                    //// Create a ProductChangeDto object to track the change for this product
+                    //var changeDto = new ProductChangeDto
+                    //    {
+                    //        CustomerId = purchasedProduct.CustomerId,
+                    //        GroupId = group.GroupId,
+                    //        ProductId = purchasedProduct.ProductId,
+                    //        UpdatedGroupProductAddedQty = purchasedProduct.inpuPurchasedtQuantity,
+                    //        UpdatedPurchasedQty = change
+                    //    };
+
+                    //// Add the change to the list
+                    //productChanges.Add(changeDto);
+                }
+                else
+                {
+                    // If the corresponding product doesn't exist in the GroupProductsDto list, create a new one
+                    GroupProductDto newGroupProduct = new GroupProductDto
+                        {
+                            GroupId = selectedGroupDto.GroupId,
+                            PurchasedProductId = purchasedProduct.PurchasedProductId,
+                            ProductName = purchasedProduct.ProductName,
+                            ProductPrice = purchasedProduct.ProductPrice,
+                            AddedQty = purchasedProduct.InputPurchasedtQuantity,
+                            InputProductQuantity=0
+                        };
+
+                    purchasedProduct.PurchasedQty = change;
+
+                    // Add the new GroupProductDto to the list
+                    selectedGroupDto.GroupProductsDto.Add(newGroupProduct);
+
+                    // Create a ProductChangeDto object to track the change for this product
+                    //var changeDto = new ProductChangeDto
+                    //    {
+                    //        CustomerId = purchasedProduct.CustomerId,
+                    //        GroupId = group.GroupId,
+                    //        ProductId = purchasedProduct.ProductId,
+                    //        UpdatedGroupProductAddedQty = purchasedProduct.inpuPurchasedtQuantity,
+                    //        UpdatedPurchasedQty = change * -1 // To indicate a subtraction
+                    //    };
+
+                    //// Add the change to the list
+                    //productChanges.Add(changeDto);
+                }
+            }
+        }
+
+        // Trigger a UI update to reflect the changes in the table
+        StateHasChanged();
+    }
+    #endregion
+    #region Methods
+    private void ShowGroupDetails(int groupId)
+    {
+        if (groupId > 0)
+        {
+            // Find the selected group and set it as the selectedGroup
+            selectedGroupDto = customerGroupsDto.FirstOrDefault(g => g.GroupId == groupId);
+            displayGroupProducts = false; // Hide GroupProduct Table
+        }
+        else
+        {
+            // Clear the selectedGroup and show the GroupProduct Table
+            selectedGroupDto = new GroupDto();
+            displayGroupProducts = true;
+        }
+    }
+
+    private async Task UpdateGroupAsync()
+    {
+        //try
+        //{
+        //    var result = await GroupRepository.CreateGroupAsync(groupModel);
+        //    if (result)
+        //    {
+        //        // Group created successfully, navigate to a success page or perform other actions
+        //    }
+        //    else
+        //    {
+        //        // Handle the case where group creation failed
+        //    }
+        //}
+        //catch (Exception ex)
+        //{
+        //    // Handle exceptions, log errors, or display error messages
+        //}
+    }
+    #endregion
+
+    #region Dto Classes
+    public class GroupDto
+    {
+        public int GroupId { get; set; }//pk
+        public string? GroupName { get; set; }
+        public string? EAN { get; set; }
+        public int CustomerId { get; set; }//fk
+        public List<GroupProductDto> GroupProductsDto { get; set; } = new List<GroupProductDto>();
+    }
+
+    public class GroupProductDto
+    {
+        public int GroupId { get; set; }//fk
+        public int PurchasedProductId { get; set; }//fk
+        public string? ProductName { get; set; }
+        public decimal ProductPrice { get; set; }
+        public int AddedQty { get; set; }
+        public int InputProductQuantity { get; set; }
+    }
+
+    public class PurchasedProductDto
+    {
+        public int PurchasedProductId { get; set; }//pk
+        public string? ProductName { get; set; }
+        public decimal ProductPrice { get; set; }
+        public int PurchasedQty { get; set; }
+        public int CustomerId { get; set; }//fk
+        public int InputPurchasedtQuantity { get; set; }
+    }
+
+    public class ProductChangeDto
+    {
+        public int CustomerId { get; set; }
+        public int GroupId { get; set; }
+        public int ProductId { get; set; }
+        public int UpdatedGroupProductAddedQty { get; set; }
+        public int UpdatedPurchasedQty { get; set; }
+    }
+    #endregion
 
 }
