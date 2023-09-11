@@ -10,7 +10,7 @@
 @inject IJSRuntime JSRuntime
 
 <div class="">
-    <div class="row ">
+    <div class="row">
         <div class="col-md-4  leftLayOut">
             <!-- Customer Info Card -->
             <div class=" m-4 p-2">
@@ -66,7 +66,7 @@
             }
         </div>
         <!-- Group Detalis -->
-        <div class="col-md-8">
+        <div class="col-md-8 ">
 
             @if (selectedGroupDto != null)
             {
@@ -80,7 +80,7 @@
                                 <div class="form-group d-flex align-items-center">
                                     <label for="GroupName" class="mr-2">Group Name:</label>
                                     <InputText id="GroupName" @bind-Value="selectedGroupDto.GroupName" class="form-control inputGroupName" />
-                                    <ValidationMessage For="@(() => selectedGroupDto.GroupName)"/>
+                                    <ValidationMessage For="@(() => selectedGroupDto.GroupName)" />
                                 </div>
                                 <div class="form-group d-flex align-items-center">
                                     <label for="EANName" class="mr-2">EAN:</label>
@@ -91,7 +91,7 @@
                                     <button type="submit" class="btn btn-outline-danger"><i class="fa fa-trash"></i></button>
                                 </div>
                             </EditForm>
-                            
+
                         </div>
                     </div>
 
@@ -99,7 +99,7 @@
                         <!-- GroupProduct Table -->
                         <h5 class="mt-4">Group Products</h5>
                         <table class="table table-borderless ">
-                            <thead>
+                            <thead class="tableHeader">
                                 <tr>
                                     <th>Type</th>
                                     <th>Cost</th>
@@ -108,7 +108,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="tableBody">
                                 @foreach (var product in selectedGroupDto.GroupProductsDto)
                                 {
                                     <tr>
@@ -131,9 +131,8 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="3">
-                                        
                                     </td>
-                                    <td >
+                                    <td>
                                         Total:@selectedGroupDto.CalculateTotalPrice().ToString("c2")/(@selectedGroupDto.CalculateTotalQuantity())
                                     </td>
                                 </tr>
@@ -143,15 +142,16 @@
                         <!-- Purchased Products Table -->
                         <h5 class="mt-4">Purchased Products</h5>
                         <table class="table table-borderless">
-                            <thead>
+                            <thead class="tableHeader">
                                 <tr>
                                     <th>Type</th>
                                     <th>Cost</th>
                                     <th>Remaining</th>
                                     <th>Quantity</th>
+                                    <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="tableBody">
                                 @foreach (var Purchasedproduct in purchasedProductDtos)
                                 {
                                     <tr>
@@ -164,13 +164,22 @@
                                                    min="0"
                                             @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
                                         </td>
+                                        <td></td>
                                     </tr>
                                 }
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
+                                    </td>
+                                </tr>
+
+                            </tfoot>
                         </table>
-                        <div class="d-flex justify-content-end p-2">
-                            <button class="btn btn-outline-secondary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
-                        </div>
+
                     </div>
                 }
                 else
@@ -180,14 +189,14 @@
                         <h4 class="mt-4">Licenser til tildeling (12)</h4>
                         <h5 class="">  Licenser kan redigeres til d.20 marts. </h5>
                         <table class="table table-borderless">
-                            <thead>
+                            <thead class="tableHeader">
                                 <tr>
                                     <th>Type</th>
                                     <th>Cost</th>
                                     <th>Remaining</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="tableBody">
                                 @foreach (var Purchasedproduct in purchasedProductDtos)
                                 {
                                     <tr>
