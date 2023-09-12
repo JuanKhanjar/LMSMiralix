@@ -1,7 +1,11 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Rajdhani', Helvetica, Arial, sans-serif;
+    padding:0;
+    margin:0;
+    height:100vh;
+
 }
 
 h1:focus {
@@ -70,41 +74,58 @@ a, .btn-link {
 
 
 details {
-    width: auto;
     border-radius: 10px;
     font-family: Rajdhani;
     font-size: 18px;
     font-weight: 700;
     line-height: 23px;
-    letter-spacing: 0em;
-    text-align: left;
     box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
     background: rgba(255, 255, 255, 1);
     transition: max-height 0.3s ease;
 }
 
-    details > summary {
-        padding: 2px 6px;
-        width: auto;
-       
-        border: none;
-        box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
-        cursor: pointer;
-        
+summary {
+    padding: 10px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: .3em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color .3s;
+    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+}
+    summary:hover {
+        background: rgba(201, 201, 201, 0.25);
     }
 
-  /*  details > table {
-        width: 400px;
-        height: 56px;
-        border-radius: 10px;
-        background: rgba(241, 241, 241, 1);
-        box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
-    }*/
-.leftLayOut {
-    width: 566px;
-    height: 982px;
+    summary::after {
+        content: "\25B2";
+        margin-right: 4px;
+        width: 24px;
+        height: 24px;
+    }
+/* Define the arrow when details are closed */
+details:not([open]) summary::after {
+    content: "\25BC";
+}
+
+/* Add the animation for open and close */
+details[open] summary ~ * {
+    animation: sweep .5s ease-in-out;
+}
+
+ @keyframes sweep{
+     from{
+         opacity:0; margin-top:-10px;
+     }
+    to {
+        opacity: 1;
+        margin-top: 0px;
+    }
+ }
+
+
+.leftLayOut {  
     border-radius: 10px;
-   
     border: 1px solid rgba(211, 211, 211, 1);
     box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
 }
@@ -115,15 +136,7 @@ details {
     border: 1px solid rgba(211, 211, 211, 1);
     box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
 }
-.purchaseProductLayOut {
-    width: 601px;
-    height: 423px;
-    top: 259px;
-    left: 648px;
-    border: 1px solid rgba(211, 211, 211, 1);
-    border-radius: 0px 0px 10px 10px;
-    background: rgba(255, 255, 255, 1);
-}
+
 .headerFont {
     font-family: Rajdhani;
     color: rgba(78, 78, 78, 1);
@@ -133,19 +146,14 @@ details {
     letter-spacing: 0em;
     text-align: left;
 }
-.tableHeader {
-    width: 400px;
-    height: 50px;
-    border: 10px;
-    border-radius: 0px 0px 10px 10px;
-    background: rgba(241, 241, 241, 1);
-    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+
+.inputNumber {
+    width: 101px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid rgba(46, 119, 229, 1);
 }
-.tableBody {
-    width: 431px;
-    height: auto;
-    background: rgba(255, 255, 255, 1);
-}
+
 .inputGroupName {
     width: 340px;
     height: 37px;
@@ -162,7 +170,5 @@ details {
     border-radius: 10px;
     border: 1px solid rgba(171, 171, 171, 1);
 }
-.btn1 {
-    width: 22px;
-    height: 22px;
-}
+
+
