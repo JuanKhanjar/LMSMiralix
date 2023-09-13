@@ -11,7 +11,7 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-md-5 card ">
             <!-- Customer Info Card -->
@@ -67,7 +67,7 @@
             }
         </div>
         <!-- Group Detalis -->
-        <div class="col-md-7 card">
+        <div class="col-md-7">
             @if (selectedGroupDto != null)
             {
                 @if (displayGroupProducts == false)
@@ -114,8 +114,8 @@
                     <h5 class="mt-4 p-2 headerFont">Selected Licenses</h5>
                     <!-- GroupProduct Table -->
                     <div class="m-4">
-                        <div class="row ">
-                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline fw-bolder font-Rajdhani fs-6 bg-light p-2">
+                        <div class="row mx-2 ">
+                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline headerFont bg-light p-2 ">
                                 <div class="col-sm-3 ">
                                     Type
                                 </div>
@@ -135,7 +135,7 @@
                         </div>
                         <div class="row ">
                             <div class="col-sm-12">
-                                <table class="table table-borderless  fs-7">
+                                <table class="table table-borderless">
                                     <tbody>
                                         @foreach (var product in selectedGroupDto.GroupProductsDto)
                                         {
@@ -175,10 +175,10 @@
 
 
                     <!-- Purchased Products Table -->
-                    <h5 class="mt-4 headerFont">Choose from licenses</h5>
+                    <h5 class="mt-4 p-2 headerFont">Choose from licenses</h5>
                     <div class="m-4">
-                        <div class="row ">
-                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline fw-bolder font-Rajdhani fs-6 bg-light p-2">
+                        <div class="row mx-2 ">
+                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline headerFont fs-7 bg-light p-2">
                                 <div class="col-sm-3 ">
                                     Type
                                 </div>
@@ -199,7 +199,7 @@
 
                         <div class="row ">
                             <div class="col-sm-12">
-                                <table class="table table-borderless  fs-7">
+                                <table class="table table-borderless">
                                     <tbody>
                                         @foreach (var Purchasedproduct in purchasedProductDtos)
                                         {
@@ -223,7 +223,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end m-2">
-                                <button class=" btnUndo mx-3 rounded-pill">Disgard</button>
+                                <button class=" btnUndo mx-3 rounded-pill" @onclick="undoChanges">Disgard</button>
                                 <button class=" btnSave">Save</button>
                             </div>
                         </div>
@@ -235,9 +235,9 @@
                         <!-- Purchased Products Table -->
                         <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
                         <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
-                        <table class="table table-borderless  ">
-                            <thead class="bg-light fw-bold fs-6">
-                                <tr>
+                        <table class="table">
+                            <thead class="bg-black">
+                                <tr class="headerFont ">
                                     <th>Type</th>
                                     <th>Cost</th>
                                     <th>Remaining</th>
@@ -272,7 +272,11 @@
     {
         await LoadData();
     }
-
+    private async Task  undoChanges()
+    {
+        await LoadData();
+        ShowGroupDetails(selectedGroup.GroupId);
+    }
     #region Param
     [Parameter]
     public int customerId { get; set; }
@@ -504,6 +508,11 @@
                     //// Add the change to the list
                     //productChanges.Add(changeDto);
                 }
+            }else
+            {
+                ShowValidationError($"Ugyldig inputmængde!:\nYor reached the the total available  for  product: {(purchasedProduct.PurchasedQty)}\nPlease check your Product amout.");
+                purchasedProduct.InputPurchasedtQuantity=0;
+                StateHasChanged();
             }
         }
 

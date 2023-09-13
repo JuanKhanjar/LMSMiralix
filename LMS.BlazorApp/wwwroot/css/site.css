@@ -4,8 +4,6 @@ html, body {
     font-family: 'Rajdhani', Helvetica, Arial, sans-serif;
     padding: 0;
     margin: 0;
-    width: 1512px;
-    height: 1079px;
 }
 
 h1:focus {
@@ -130,11 +128,12 @@ details[open] summary ~ * {
 .headerFont {
     font-family: Rajdhani;
     color: rgba(78, 78, 78, 1);
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 26px;
     letter-spacing: 0em;
     text-align: left;
+    border-radius: 20px 20px 0px 0px;
 }
 .header2Font {
     font-family: Rajdhani;
@@ -146,6 +145,7 @@ details[open] summary ~ * {
     text-align: left;
 }
 .inputNumber {
+    text-align:center;
     width: 101px;
     height: 32px;
     border-radius: 10px;
@@ -169,14 +169,9 @@ details[open] summary ~ * {
     border: 1px solid rgba(171, 171, 171, 1);
 }
 
-.styled-nav {
-    width: 1512px;
-    height: 88px;
+.styledNav {
     border-radius: 0px 0px 30px 30px;
-    text-decoration:none;
-    color:white;
     box-shadow: 0px 2px 7px 0px #99999940;
-    background-color: #273D20;
 }
 
 .addBtn {

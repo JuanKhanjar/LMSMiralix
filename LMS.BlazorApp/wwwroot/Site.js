@@ -31,29 +31,6 @@ function showValidationError(message) {
     });
 }
 
-//function showModal(groupId) {
-//    console.log("Modal show method called for groupId: " + groupId);
-//    var modal = document.getElementById('exampleModal' + groupId);
-//    if (modal) {
-//        modal.style.display = "block";
-//    }
-//}
-
-//function hideModal(groupId) {
-//    console.log("Modal hide method called for groupId: " + groupId);
-//    var modal = document.getElementById('exampleModal' + groupId);
-//    if (modal) {
-//        modal.style.display = "none";
-//        return true;
-//    }
-//    return false;
-//}
-
-
-
-//window.showConfirmation = function (message) {
-//    return confirm(message);
-//};
 
 //Update Confirmation
 function showSweetAlertConfirmation(message) {
