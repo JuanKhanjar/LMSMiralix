@@ -2,10 +2,10 @@
 
 html, body {
     font-family: 'Rajdhani', Helvetica, Arial, sans-serif;
-    padding:0;
-    margin:0;
-    height:100vh;
-
+    padding: 0;
+    margin: 0;
+    width: 1512px;
+    height: 1079px;
 }
 
 h1:focus {
@@ -127,19 +127,6 @@ details[open] summary ~ * {
  }
 
 
-.leftLayOut {  
-    border-radius: 10px;
-    border: 1px solid rgba(211, 211, 211, 1);
-    box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
-}
-.rightLayOut {
-    width: auto;
-    height: 982px;
-    border-radius: 10px;
-    border: 1px solid rgba(211, 211, 211, 1);
-    box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
-}
-
 .headerFont {
     font-family: Rajdhani;
     color: rgba(78, 78, 78, 1);
@@ -182,3 +169,72 @@ details[open] summary ~ * {
     border: 1px solid rgba(171, 171, 171, 1);
 }
 
+.styled-nav {
+    width: 1512px;
+    height: 88px;
+    border-radius: 0px 0px 30px 30px;
+    text-decoration:none;
+    color:white;
+    box-shadow: 0px 2px 7px 0px #99999940;
+    background-color: #273D20;
+}
+
+.addBtn {
+    width: 113px;
+    height: 39px;
+    top: 847px;
+    left: 1267px;
+    border:none;
+    border-radius: 10px;
+    background: #2E77E5;
+    color: #FFFFFF;
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+.btnUndo {
+    width: 139px;
+    height: 39px;
+    top: 912px;
+    left: 1195px;
+    border: none;
+    border-radius: 20px;
+    background: #F1F1F1;
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+.btnSave {
+    width: 113px;
+    height: 39px;
+    top: 912px;
+    left: 1351px;
+    border: none;
+    border-radius: 20px;
+    background: #273D20;
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    color:white;
+}
+.btnAddGroup {
+    top: 897px;
+    left: 1300px;
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    background: #273D20;
+    color: #FFFFFF;
+}

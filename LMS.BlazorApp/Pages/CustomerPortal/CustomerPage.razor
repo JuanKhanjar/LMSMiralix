@@ -93,7 +93,6 @@
                                             <label for="EANName">EAN:</label>
                                             <input type="text" id="EANName" value="@selectedGroupDto.EAN" class="form-control inputGroupEAN bg-white" disabled />
                                         </div>
-
                                     </div>
                                     <div class="form-group col-md-2 d-flex justify-content-evenly p-3">
                                         <button type="submit"
@@ -116,7 +115,7 @@
                     <!-- GroupProduct Table -->
                     <div class="m-4">
                         <div class="row ">
-                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline fw-bolder font-Rajdhani fs-5 bg-light p-2">
+                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline fw-bolder font-Rajdhani fs-6 bg-light p-2">
                                 <div class="col-sm-3 ">
                                     Type
                                 </div>
@@ -136,7 +135,7 @@
                         </div>
                         <div class="row ">
                             <div class="col-sm-12">
-                                <table class="table table-borderless fw-bold">
+                                <table class="table table-borderless  fs-7">
                                     <tbody>
                                         @foreach (var product in selectedGroupDto.GroupProductsDto)
                                         {
@@ -179,7 +178,7 @@
                     <h5 class="mt-4 headerFont">Choose from licenses</h5>
                     <div class="m-4">
                         <div class="row ">
-                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline fw-bolder font-Rajdhani fs-5 bg-light p-2">
+                            <div class="col-sm-11 d-flex justify-content-sm-between align-baseline fw-bolder font-Rajdhani fs-6 bg-light p-2">
                                 <div class="col-sm-3 ">
                                     Type
                                 </div>
@@ -200,7 +199,7 @@
 
                         <div class="row ">
                             <div class="col-sm-12">
-                                <table class="table table-borderless fw-bold">
+                                <table class="table table-borderless  fs-7">
                                     <tbody>
                                         @foreach (var Purchasedproduct in purchasedProductDtos)
                                         {
@@ -218,36 +217,33 @@
                                             </tr>
                                         }
                                     </tbody>
-                                    @* <tr>
-                            <td>
-                            </td>
-                            <td class="d-flex justify-content-end">
-                            <button class="btn btn-outline-primary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
-                            </td>
-                            </tr>*@
                                 </table>
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-outline-primary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
+                                    <button class=" addBtn" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
                                 </div>
+                            </div>
+                            <div class="d-flex justify-content-end m-2">
+                                <button class=" btnUndo mx-3 rounded-pill">Disgard</button>
+                                <button class=" btnSave">Save</button>
                             </div>
                         </div>
                     </div>
                 }
                 else
                 {
-                    <div class="card m-4 p-2 ">
+                    <div class="card m-2 p-2 ">
                         <!-- Purchased Products Table -->
-                        <h4 class="mt-4 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
+                        <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
                         <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
-                        <table class="table table-borderless">
-                            <thead class="tableHeader">
+                        <table class="table table-borderless  ">
+                            <thead class="bg-light fw-bold fs-6">
                                 <tr>
                                     <th>Type</th>
                                     <th>Cost</th>
                                     <th>Remaining</th>
                                 </tr>
                             </thead>
-                            <tbody class="tableBody">
+                            <tbody class="">
                                 @foreach (var Purchasedproduct in purchasedProductDtos)
                                 {
                                     <tr>
@@ -258,8 +254,8 @@
                                 }
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-end p-2">
-                            <button class="btn btn-outline-secondary" @onclick="()=>CreateGroup()">Create Group</button>
+                        <div class="d-flex justify-content-end ">
+                            <button class="btnAddGroup rounded-pill" @onclick="()=>CreateGroup()">Create Group</button>
                         </div>
                     </div>
                 }
@@ -358,7 +354,7 @@
     #region Manpulate
     private async Task UpdateGroupAsync()
     {
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Are you sure you want to update to: {selectedGroupDto.GroupName}?");
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}?");
 
         if (confirmed)
         {
