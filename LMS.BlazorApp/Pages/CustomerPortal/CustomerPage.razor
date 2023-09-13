@@ -11,7 +11,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4 card ">
+        <div class="col-md-5 card ">
             <!-- Customer Info Card -->
             <div class=" m-4 p-2">
                 <p class="headerFont">Grupper (@customerGroups.Count())</p>
@@ -19,23 +19,25 @@
             <!-- List of Groups -->
             @foreach (var group in customerGroups)
             {
-                <div class=" mb-4 p-2">
+                <div class=" mb-4">
                     <details>
                         <!--Group Header-->
-                        <summary class="d-flex justify-content-between">
-                            <div class="row d-flex justify-content-between">
-                                <div class="card-title">@_customer.CustomerName @group.GroupName</div>
-                                <div class="card-text">EAN: @group.EAN</div>
-                            </div>
-                            <div class="row d-flex justify-content-between">
-                                Total: @group.GetTotalPriceForAgroup().ToString("c2") / (@group.GetTotalQuantityForAgroup())
+                        <summary class="d-flex justify-content-between header2Font">
+                            <div class="row row-cols-3">
+                                <div class="col m-0">@_customer.CustomerName @group.GroupName </div>
+                                <div class="col m-0"></div>
+                                <div class="col m-0">EAN:<span class="text-secondary mx-4">@group.EAN</span> </div>
+
+                                <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
+                                <div class="col mx-0">(@group.GetTotalQuantityForAgroup()) licenses</div>
+                                <div class="col m-0"></div>
                             </div>
                         </summary>
 
                         <!-- Group Products -->
                         <div class="card-body">
                             <table class="table table-borderless ">
-                                <thead class="tableHeader">
+                                <thead class="bg-light">
                                     <tr>
                                         <th>Type</th>
                                         <th>Cost</th>
@@ -63,14 +65,14 @@
             }
         </div>
         <!-- Group Detalis -->
-        <div class="col-md-8 card">
+        <div class="col-md-7 card">
             @if (selectedGroupDto != null)
             {
                 @if (displayGroupProducts == false)
                 {
                     <!-- Form Group -->
                     <div class="m-4">
-                        <p class="headerFont">Licenser til tildeling (12)</p>
+                        <p class="header2Font">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.InputPurchasedtQuantity))</p>
                         <p>Licenser kan redigeres til d.20 marts.</p>
                     </div>
                     <div class="m-3 d-flex">
@@ -135,10 +137,10 @@
                                                 <td>@product.AddedQty</td>
                                                 <td>
                                                     <input type="number" class="inputNumber"
-                                                    @key="product.PurchasedProductId"
+                                               @key="product.PurchasedProductId"
                                                            min="0"
-                                                    @bind-value="@product.InputProductQuantity"
-                                                    @oninput="() => UpdateGroupProductQuantities(product)" />
+                                               @bind-value="@product.InputProductQuantity"
+                                               @oninput="() => UpdateGroupProductQuantities(product)" />
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(product)"><i class="fa fa-trash"></i></button>
@@ -146,17 +148,17 @@
                                             </tr>
                                         }
                                     </tbody>
-                                   
-                                        @*<tr>
-                                            <td colspan="4">
-                                            </td>
-                                            <td class="d-flex justify-content-end">
-                                                Total:@selectedGroupDto.CalculateTotalPrice().ToString("c2")/(@selectedGroupDto.CalculateTotalQuantity())
-                                            </td>
-                                            <td>
-                                            </td>
-                                        </tr>*@
-                                    
+
+                                    @*<tr>
+                            <td colspan="4">
+                            </td>
+                            <td class="d-flex justify-content-end">
+                            Total:@selectedGroupDto.CalculateTotalPrice().ToString("c2")/(@selectedGroupDto.CalculateTotalQuantity())
+                            </td>
+                            <td>
+                            </td>
+                            </tr>*@
+
                                 </table>
 
                             </div>
@@ -201,19 +203,19 @@
                                                     <input @key="Purchasedproduct.PurchasedProductId" class="inputNumber"
                                                            type="number"
                                                            min="0"
-                                                    @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
+                                               @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
                                                 </td>
-                                               <td></td>
+                                                <td></td>
                                             </tr>
                                         }
                                     </tbody>
-                                   @* <tr>
-                                        <td>
-                                        </td>
-                                        <td class="d-flex justify-content-end">
-                                            <button class="btn btn-outline-primary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
-                                        </td>
-                                    </tr>*@
+                                    @* <tr>
+                            <td>
+                            </td>
+                            <td class="d-flex justify-content-end">
+                            <button class="btn btn-outline-primary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
+                            </td>
+                            </tr>*@
                                 </table>
                                 <div class="d-flex justify-content-end">
                                     <button class="btn btn-outline-primary" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
@@ -226,8 +228,8 @@
                 {
                     <div class="card m-4 p-2 ">
                         <!-- Purchased Products Table -->
-                        <h4 class="mt-4">Licenser til tildeling (12)</h4>
-                        <h5 class="">  Licenser kan redigeres til d.20 marts. </h5>
+                        <h4 class="mt-4 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
+                        <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
                         <table class="table table-borderless">
                             <thead class="tableHeader">
                                 <tr>
