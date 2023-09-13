@@ -1,9 +1,12 @@
 ﻿@page "/customer/{customerId:int}"
 @using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
 @using LMS.BusinessCore.Extensions.GroupExtentionsMethods;
+@using LMS.BusinessUseCases.GroupUCs.GroupUCInterfaces;
+@using LMS.BlazorApp.Shared.Controls;
 @using LMS.BusinessUseCases.PurchasedProductsUCs.PurchasedProductsUCsInterfaces;
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
+@inject IUpdateGroupNameUC _IUpdateGroupNameUC
 @using LMS.BlazorApp.Extensions;
 @inject NavigationManager NavigationManager
 
@@ -94,7 +97,12 @@
 
                                     </div>
                                     <div class="form-group col-md-2 d-flex justify-content-evenly p-3">
-                                        <button type="submit" class="btn btn-outline-success mx-4"><i class="fa fa-save"></i></button>
+                                        <button type="submit"
+                                                class="btn btn-outline-success mx-4">
+                                                
+                                            
+                                            <i class="fa fa-save"></i>
+                                        </button>
                                         <button type="submit" class="btn btn-outline-danger "><i class="fa fa-trash"></i></button>
                                     </div>
                                 </div>
@@ -137,10 +145,10 @@
                                                 <td>@product.AddedQty</td>
                                                 <td>
                                                     <input type="number" class="inputNumber"
-                                               @key="product.PurchasedProductId"
+                                                    @key="product.PurchasedProductId"
                                                            min="0"
-                                               @bind-value="@product.InputProductQuantity"
-                                               @oninput="() => UpdateGroupProductQuantities(product)" />
+                                                    @bind-value="@product.InputProductQuantity"
+                                                    @oninput="() => UpdateGroupProductQuantities(product)" />
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(product)"><i class="fa fa-trash"></i></button>
@@ -203,7 +211,7 @@
                                                     <input @key="Purchasedproduct.PurchasedProductId" class="inputNumber"
                                                            type="number"
                                                            min="0"
-                                               @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
+                                                    @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -258,8 +266,10 @@
         </div>
     </div>
 </div>
-
-
+@if (IsModalActive == true)
+{
+    <ConfirmationModal @ref="confirmationModal"></ConfirmationModal>
+}
 @code {
     #region Param
     [Parameter]
@@ -502,24 +512,55 @@
 
     private async Task UpdateGroupAsync()
     {
-        //try
-        //{
-        //    var result = await GroupRepository.CreateGroupAsync(groupModel);
-        //    if (result)
-        //    {
-        //        // Group created successfully, navigate to a success page or perform other actions
-        //    }
-        //    else
-        //    {
-        //        // Handle the case where group creation failed
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
-        //    // Handle exceptions, log errors, or display error messages
-        //}
+        IsModalActive = true;
+        await ShowModal();
+        
+    }
+    private ConfirmationModal confirmationModal=new ConfirmationModal ();
+    private bool IsModalActive = false;
+
+    private async Task ShowModal()
+    {
+        var message = $"Are you sure you want to Update the Group Name\n{(selectedGroupDto.GroupName)}?";
+        await JSRuntime.InvokeVoidAsync("showModal", message);
+        var result = await confirmationModal.ShowAsync(message);
+        await JSRuntime.InvokeVoidAsync("hideModal");
+
+        if (result)
+        {
+
+            // User confirmed, perform the action
+            // Add your logic here
+        }
+        else
+        {
+            // User canceled
+        }
     }
     #endregion
+
+    #region Modal
+   
+    private async Task ConfirmChange()
+    {
+        // Hide the modal dialog using the custom JavaScript method
+        await JSRuntime.InvokeVoidAsync("hideModal", selectedGroupDto.GroupId);
+        // Execute the update operation and await the result
+        var result = await _IUpdateGroupNameUC.ExcecuteAsync(selectedGroupDto.GroupId, selectedGroupDto.GroupName);
+
+        // Check if the update was successful
+        if (result)
+        {
+            // Group name updated successfully
+            await JSRuntime.InvokeVoidAsync("hideModal", selectedGroupDto.GroupId);
+        }
+        else
+        {
+            // Handle the case where group name update failed
+        }
+    }
+    #endregion
+
     private void ShowValidationError(string message)
     {
         JSRuntime.InvokeVoidAsync("showValidationError", message);

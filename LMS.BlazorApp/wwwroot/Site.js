@@ -31,4 +31,55 @@ function showValidationError(message) {
     });
 }
 
+//function showModal(groupId) {
+//    console.log("Modal show method called for groupId: " + groupId);
+//    var modal = document.getElementById('exampleModal' + groupId);
+//    if (modal) {
+//        modal.style.display = "block";
+//    }
+//}
+
+//function hideModal(groupId) {
+//    console.log("Modal hide method called for groupId: " + groupId);
+//    var modal = document.getElementById('exampleModal' + groupId);
+//    if (modal) {
+//        modal.style.display = "none";
+//        return true;
+//    }
+//    return false;
+//}
+
+
+function showModal(message) {
+    return new Promise((resolve) => {
+        var modal = document.querySelector('.modal-overlay');
+        if (modal) {
+            modal.style.display = 'flex';
+            var modalComponent = document.querySelector('.modal');
+            if (modalComponent) {
+                modalComponent.style.display = 'block';
+            }
+            document.querySelector('.modal-content p').textContent = message;
+        }
+        resolve(); // Ensure the promise is resolved
+    });
+}
+
+function hideModal() {
+    return new Promise((resolve) => {
+        var modal = document.querySelector('.modal-overlay');
+        if (modal) {
+            modal.style.display = 'none';
+            var modalComponent = document.querySelector('.modal');
+            if (modalComponent) {
+                modalComponent.style.display = 'none';
+            }
+        }
+        resolve(); // Ensure the promise is resolved
+    });
+}
+
+
+
+
 

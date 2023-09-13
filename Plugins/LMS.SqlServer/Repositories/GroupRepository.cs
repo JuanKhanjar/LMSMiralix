@@ -152,7 +152,7 @@ namespace LMS.SqlServer.Repositories
 
             using (LMSDbContext _dbContext = _dbContextFactory.CreateDbContext())
             {
-                var groupToUpdate = await _dbContext.Groups.FindAsync(groupId);
+                Group? groupToUpdate = await _dbContext.Groups.FindAsync(groupId);
 
                 if (groupToUpdate == null)
                 {

@@ -29,6 +29,7 @@ namespace LMS.ServiceExtensions
 
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddTransient<ICreateGroupUC, CreateGroupUC>();
+            services.AddTransient<IUpdateGroupNameUC, UpdateGroupNameUC>();
         }
     }
 }
