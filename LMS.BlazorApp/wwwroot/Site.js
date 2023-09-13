@@ -50,32 +50,28 @@ function showValidationError(message) {
 //}
 
 
-function showModal(message) {
-    return new Promise((resolve) => {
-        var modal = document.querySelector('.modal-overlay');
-        if (modal) {
-            modal.style.display = 'flex';
-            var modalComponent = document.querySelector('.modal');
-            if (modalComponent) {
-                modalComponent.style.display = 'block';
-            }
-            document.querySelector('.modal-content p').textContent = message;
-        }
-        resolve(); // Ensure the promise is resolved
+
+//window.showConfirmation = function (message) {
+//    return confirm(message);
+//};
+
+//Update Confirmation
+function showSweetAlertConfirmation(message) {
+    return Swal.fire({
+        title: 'Confirmation',
+        text: message,
+        icon: 'question',
+        showCancelButton: true,
+    }).then((result) => {
+        return result.isConfirmed;
     });
 }
-
-function hideModal() {
-    return new Promise((resolve) => {
-        var modal = document.querySelector('.modal-overlay');
-        if (modal) {
-            modal.style.display = 'none';
-            var modalComponent = document.querySelector('.modal');
-            if (modalComponent) {
-                modalComponent.style.display = 'none';
-            }
-        }
-        resolve(); // Ensure the promise is resolved
+//Notification for Update
+function showSweetAlertSuccess(title, message) {
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'success'
     });
 }
 
