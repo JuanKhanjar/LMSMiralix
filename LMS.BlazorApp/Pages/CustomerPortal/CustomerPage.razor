@@ -460,50 +460,24 @@
         // Find the corresponding PurchasedProductDto using PurchasedProductId
         PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
 
-        if (purchasedProduct == null || purchasedProduct.PurchasedQty <= 0)
+        if (purchasedProduct != null && purchasedProduct.PurchasedQty > 0)
         {
-            // Skip processing if the purchasedProduct is null or has no quantity
-            return;
-        }
+            int inputQuantity = groupProduct.InputProductQuantity;
 
-        int inputQuantity = groupProduct.InputProductQuantity;
-        int currentGroupProductQty = groupProduct.AddedQty;
-        int currentPurchasedProductQty = purchasedProduct.PurchasedQty;
-
-        if (IsValidInputQuantity(inputQuantity, currentPurchasedProductQty))
-        {
-            // Update the AddedQty for the selected GroupProductDto
-            currentGroupProductQty += inputQuantity;
-            groupProduct.AddedQty = currentGroupProductQty;
-
-            // Update the PurchasedQty for the corresponding PurchasedProductDto
-            currentPurchasedProductQty -= inputQuantity;
-            purchasedProduct.PurchasedQty = currentPurchasedProductQty;
-
-            // Create a ProductChangeDto object to track the change
-            ProductChangeDto change = new ProductChangeDto
-                {
-                    CustomerId = customerId,
-                    GroupId = groupProduct.GroupId,
-                    ProductId = groupProduct.PurchasedProductId,
-                    UpdatedGroupProductAddedQty = currentGroupProductQty,
-                    UpdatedPurchasedQty = currentPurchasedProductQty
-                };
-
-            // Add the change to the list
-            ProductChangesDto.Add(change);
+            if (IsValidInputQuantity(inputQuantity, purchasedProduct.PurchasedQty))
+            {
+                UpdateQuantities(groupProduct, purchasedProduct, inputQuantity);
+                TrackChange(groupProduct.GroupId, purchasedProduct.PurchasedProductId, groupProduct.AddedQty, purchasedProduct.PurchasedQty);
+            }
+            else
+            {
+                ShowValidationError($"Invalid input quantity!\nYou've reached the total availability for License:\n{purchasedProduct.ProductName} which is now: {purchasedProduct.PurchasedQty}\nPlease check the amount.");
+            }
 
             // Reset the input quantity
             groupProduct.InputProductQuantity = 0;
 
             // Trigger a UI update to reflect the changes in the table
-            StateHasChanged();
-        }
-        else
-        {
-            // Show a validation error using JavaScript interop
-            ShowValidationError($"Invalid input quantity!\nYou've reached the total availability for License:\n{purchasedProduct.ProductName} which is now: {currentPurchasedProductQty}\nPlease check the amount.");
-            //groupProduct.InputProductQuantity = 0;
             StateHasChanged();
         }
     }
@@ -623,31 +597,52 @@
     #region Dto Classes
     public class GroupDto
     {
-        public int GroupId { get; set; }//pk
-        public string? GroupName { get; set; }
-        public string? EAN { get; set; }
-        public int CustomerId { get; set; }//fk
+        public int GroupId { get; set; }
+        public string GroupName { get; set; }
+        public string EAN { get; set; }
+        public int CustomerId { get; set; }
         public List<GroupProductDto> GroupProductsDto { get; set; } = new List<GroupProductDto>();
+
+        public GroupDto()
+        {
+            // Set default values in the constructor
+            CustomerId = 0;
+            GroupProductsDto = new List<GroupProductDto>();
+        }
     }
 
     public class GroupProductDto
     {
-        public int GroupId { get; set; }//fk
-        public int PurchasedProductId { get; set; }//fk
-        public string? ProductName { get; set; }
+        public int GroupId { get; set; }
+        public int PurchasedProductId { get; set; }
+        public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
         public int AddedQty { get; set; }
         public int InputProductQuantity { get; set; }
+
+        public GroupProductDto()
+        {
+            // Set default values in the constructor
+            AddedQty = 0;
+            InputProductQuantity = 0;
+        }
     }
 
     public class PurchasedProductDto
     {
-        public int PurchasedProductId { get; set; }//pk
-        public string? ProductName { get; set; }
+        public int PurchasedProductId { get; set; }
+        public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
         public int PurchasedQty { get; set; }
-        public int CustomerId { get; set; }//fk
+        public int CustomerId { get; set; }
         public int InputPurchasedtQuantity { get; set; }
+
+        public PurchasedProductDto()
+        {
+            // Set default values in the constructor
+            PurchasedQty = 0;
+            InputPurchasedtQuantity = 0;
+        }
     }
 
     public class ProductChangeDto
