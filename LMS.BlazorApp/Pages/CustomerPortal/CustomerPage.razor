@@ -457,30 +457,21 @@
     }
     private void UpdateGroupProductQuantities(GroupProductDto groupProduct)
     {
-        // Find the corresponding PurchasedProductDto using PurchasedProductId
-        PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
+        var purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
 
-        if (purchasedProduct != null && purchasedProduct.PurchasedQty > 0)
+        if (purchasedProduct != null && IsValidInputQuantity(groupProduct.InputProductQuantity, purchasedProduct.PurchasedQty))
         {
-            int inputQuantity = groupProduct.InputProductQuantity;
-
-            if (IsValidInputQuantity(inputQuantity, purchasedProduct.PurchasedQty))
-            {
-                UpdateQuantities(groupProduct, purchasedProduct, inputQuantity);
-                TrackChange(groupProduct.GroupId, purchasedProduct.PurchasedProductId, groupProduct.AddedQty, purchasedProduct.PurchasedQty);
-            }
-            else
-            {
-                ShowValidationError($"Invalid input quantity!\nYou've reached the total availability for License:\n{purchasedProduct.ProductName} which is now: {purchasedProduct.PurchasedQty}\nPlease check the amount.");
-            }
-
-            // Reset the input quantity
+            UpdateQuantities(groupProduct, purchasedProduct, groupProduct.InputProductQuantity);
+            TrackChange(groupProduct.GroupId, purchasedProduct.PurchasedProductId, groupProduct.AddedQty, purchasedProduct.PurchasedQty);
             groupProduct.InputProductQuantity = 0;
-
-            // Trigger a UI update to reflect the changes in the table
-            StateHasChanged();
+            StateHasChanged(); // Trigger UI update
+        }
+        else
+        {
+            ShowValidationError($"Invalid input quantity for {purchasedProduct.ProductName}. Please check the amount.");
         }
     }
+
     private void UpdatePurchasedQuantities(GroupDto selectedGroup)
     {
         foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
