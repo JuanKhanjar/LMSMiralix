@@ -1,4 +1,5 @@
 ﻿@page "/customer/{customerId:int}"
+@using LMS.BlazorApp.ExtensionsMethods;
 @using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
 @using LMS.BusinessCore.Extensions.GroupExtentionsMethods;
 @using LMS.BusinessUseCases.GroupUCs.GroupUCInterfaces;
@@ -145,12 +146,12 @@
                                                 <td>@product.AddedQty</td>
                                                 <td>
                                                     <input type="number" class="inputNumber"
-                                                    @key="product.PurchasedProductId"
-                                                    @bind-value="@product.InputProductQuantity"
-                                                    @oninput="() => UpdateGroupProductQuantities(product)" />
+                                               @key="product.PurchasedProductId"
+                                               @bind-value="@product.InputProductQuantity"
+                                               @oninput=" (e)=> UpdateGroupProductQuantities(product.PurchasedProductId, Convert.ToInt32(e.Value))" />
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(product)"><i class="fa fa-trash"></i></button>
+                                                    <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(product.PurchasedProductId)"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>
                                         }
@@ -210,7 +211,7 @@
                                                     <input @key="Purchasedproduct.PurchasedProductId" class="inputNumber"
                                                            type="number"
                                                            min="0"
-                                                    @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
+                                               @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -344,7 +345,7 @@
             LoadCustomerGroups();
 
             // Load and map purchased products
-            LoadPurchasedProducts();
+            await LoadPurchasedProducts();
         }
     }
     private void LoadCustomerGroups()
@@ -355,7 +356,7 @@
             customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group)).ToList();
         }
     }
-    private async void LoadPurchasedProducts()
+    private async Task LoadPurchasedProducts()
     {
         _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
         if (_PurchasedProducts != null)
@@ -375,7 +376,7 @@
                 GroupId = group.GroupId,
                 GroupName = group.GroupName,
                 EAN = group.EAN,
-                CustomerId = customerId, // You may need to set this based on your requirements
+                CustomerId = customerId,
                 GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList()
             };
     }
@@ -392,8 +393,8 @@
                 PurchasedProductId = groupProduct.PurchasedProductId,
                 ProductName = groupProduct.PurchasedProduct?.ProductName,
                 ProductPrice = groupProduct.PurchasedProduct?.ProductPrice ?? 0.00M,
-                AddedQty = groupProduct.AddedQuantity,
-                InputProductQuantity = 0 // Set the default value as needed
+                AddedQty = groupProduct.AddedQuantity
+
             };
     }
     private PurchasedProductDto MapToPurchasedProductDto(PurchasedProduct purchasedProduct)
@@ -409,8 +410,7 @@
                 ProductName = purchasedProduct.ProductName,
                 ProductPrice = purchasedProduct.ProductPrice,
                 PurchasedQty = purchasedProduct.PurchasedQty,
-                CustomerId = customerId, // You may need to set this based on your requirements
-                InputPurchasedtQuantity = 0 // Set the default value as needed
+                CustomerId = customerId
             };
     }
     #endregion
@@ -418,7 +418,7 @@
     #region Manpulate
     private async Task UpdateGroupAsync()
     {
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}?");
+        bool confirmed = await JSRuntime.ShowSweetAlertConfirmationAsync($"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}?");
 
         if (confirmed)
         {
@@ -426,7 +426,7 @@
             if (result)
             {
                 // Update was successful, show a success notification
-                await JSRuntime.InvokeVoidAsync("showSweetAlertSuccess", "Update Successful", "The group name has been updated successfully.");
+                await JSRuntime.ShowSweetAlertSuccessAsync("Update Successful", "The group name has been updated successfully.");
             }
         }
         else
@@ -437,38 +437,37 @@
     #endregion
 
     #region User Interacting
-    private void RemoveProduct(GroupProductDto product)
+    private void RemoveProduct(int productId)
     {
+        var groupProduct = selectedGroupDto.GroupProductsDto.FirstOrDefault(p => p.PurchasedProductId == productId);
+        var purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == productId);
 
-        // Find the corresponding PurchasedProduct by ProductId
-        PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == product.PurchasedProductId);
-
-        if (purchasedProduct != null && purchasedProduct.PurchasedProductId>0)
+        if (groupProduct != null && purchasedProduct != null)
         {
             // Add the removed quantity back to PurchasedQty
-            purchasedProduct.PurchasedQty += product.AddedQty;
+            purchasedProduct.PurchasedQty += groupProduct.AddedQty;
+
+            // Remove the product from the list
+            selectedGroupDto.GroupProductsDto.Remove(groupProduct);
         }
-
-        // Remove the product from the list
-        selectedGroupDto.GroupProductsDto.Remove(product);
-
-        // Set AddedQty to 0 for the removed product
-        product.AddedQty = 0;
     }
-    private void UpdateGroupProductQuantities(GroupProductDto groupProduct)
-    {
-        var purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
 
-        if (purchasedProduct != null && IsValidInputQuantity(groupProduct.InputProductQuantity, purchasedProduct.PurchasedQty))
+
+    private void UpdateGroupProductQuantities(int groupProductId, int inputQuantity)
+    {
+        var groupProduct = selectedGroupDto.GroupProductsDto.FirstOrDefault(p => p.PurchasedProductId == groupProductId);
+        PurchasedProductDto? purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
+
+        if (purchasedProduct != null && IsValidInputQuantity(inputQuantity, purchasedProduct.PurchasedQty))
         {
-            UpdateQuantities(groupProduct, purchasedProduct, groupProduct.InputProductQuantity);
+            UpdateQuantities(groupProduct, purchasedProduct, inputQuantity);
             TrackChange(groupProduct.GroupId, purchasedProduct.PurchasedProductId, groupProduct.AddedQty, purchasedProduct.PurchasedQty);
-            groupProduct.InputProductQuantity = 0;
-            StateHasChanged(); // Trigger UI update
+
+            StateHasChanged();
         }
         else
         {
-            ShowValidationError($"Invalid input quantity for {purchasedProduct.ProductName}. Please check the amount.");
+            Task.FromResult(ShowValidationError($"Invalid input quantity for {purchasedProduct.ProductName}. Please check the amount."));
         }
     }
 
@@ -481,12 +480,14 @@
                 // Skip processing if the purchasedProduct quantity is not greater than zero
                 continue;
             }
-            // Retrieve the corresponding product in the GroupProductsDto list
-            GroupProductDto groupProductToUpdate = selectedGroup.GroupProductsDto
-             .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
 
-            if (groupProductToUpdate != null && groupProductToUpdate.AddedQty <= purchasedProduct.PurchasedQty)
+            // Retrieve the corresponding product in the GroupProductsDto list
+            GroupProductDto? groupProductToUpdate = selectedGroup.GroupProductsDto
+                .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
+
+            if (groupProductToUpdate != null)
             {
+                // The product is already in the list, update quantities
                 int inputQuantity = purchasedProduct.InputPurchasedtQuantity;
 
                 if (IsValidInputQuantity(inputQuantity, purchasedProduct.PurchasedQty))
@@ -494,19 +495,17 @@
                     UpdateQuantities(groupProductToUpdate, purchasedProduct, inputQuantity);
                     TrackChange(selectedGroup.GroupId, purchasedProduct.PurchasedProductId, groupProductToUpdate.AddedQty, purchasedProduct.PurchasedQty);
                 }
-                else
-                {
-                    ShowValidationError($"Invalid input quantity!\nYou've reached the total availability for License:\n{purchasedProduct.ProductName} which is now: {purchasedProduct.PurchasedQty}\nPlease check the amount.");
-                }
             }
             else
             {
+                // The product is not in the list, add it
                 CreateNewGroupProduct(selectedGroup, purchasedProduct);
             }
         }
 
         StateHasChanged();
     }
+
     #endregion
 
     #region Helper Methods
@@ -517,9 +516,10 @@
     }
 
     private void UpdateQuantities(GroupProductDto groupProduct, PurchasedProductDto purchasedProduct, int inputQuantity)
-    {
-        purchasedProduct.PurchasedQty -= inputQuantity;
+    { 
         groupProduct.AddedQty += inputQuantity;
+        purchasedProduct.PurchasedQty -= inputQuantity;
+        groupProduct.InputProductQuantity = 0;
         purchasedProduct.InputPurchasedtQuantity = 0;
     }
 
@@ -573,9 +573,9 @@
     }
     #endregion
 
-    private void ShowValidationError(string message)
+    private async Task ShowValidationError(string message)
     {
-        JSRuntime.InvokeVoidAsync("showValidationError", message);
+        await JSRuntime.ShowValidationErrorAsync(message);
     }
 
     private void CreateGroup()
