@@ -24,8 +24,8 @@ function showNotification(message, type) {
 
 function showValidationError(message) {
     Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
+        icon: 'warning',
+        title: 'Check Validation',
         text: message,
         confirmButtonText: 'OK'
     });

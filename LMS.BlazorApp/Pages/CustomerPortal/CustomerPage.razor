@@ -11,7 +11,7 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-5 card ">
             <!-- Customer Info Card -->
@@ -145,10 +145,9 @@
                                                 <td>@product.AddedQty</td>
                                                 <td>
                                                     <input type="number" class="inputNumber"
-                                               @key="product.PurchasedProductId"
-                                                           min="0"
-                                               @bind-value="@product.InputProductQuantity"
-                                               @oninput="() => UpdateGroupProductQuantities(product)" />
+                                                    @key="product.PurchasedProductId"
+                                                    @bind-value="@product.InputProductQuantity"
+                                                    @oninput="() => UpdateGroupProductQuantities(product)" />
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(product)"><i class="fa fa-trash"></i></button>
@@ -211,7 +210,7 @@
                                                     <input @key="Purchasedproduct.PurchasedProductId" class="inputNumber"
                                                            type="number"
                                                            min="0"
-                                               @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
+                                                    @bind-value="@Purchasedproduct.InputPurchasedtQuantity" />
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -264,7 +263,45 @@
     </div>
 </div>
 
+<div>
+    @if (ProductChangesDto != null && ProductChangesDto.Any())
+    {
+        <table class="table">
+            @foreach (var group in ProductChangesDto.GroupBy(p => p.ProductId))
+            {
+                <thead class="bg-black">
+                    <tr class="headerFont">
+                        <th>Product Id: @group.Key</th>
+                    </tr>
+                </thead>
+                <thead class="bg-black">
+                    <tr class="headerFont">
 
+                        <th>CustomerId</th>
+                        <th>GroupId</th>
+                        <th>UpdatedGroupProductAddedQty</th>
+                        <th>UpdatedPurchasedQty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in group)
+                    {
+                        <tr>
+                            <td>@item.CustomerId</td>
+                            <td>@item.GroupId</td>
+                            <td>@item.UpdatedGroupProductAddedQty</td>
+                            <td>@item.UpdatedPurchasedQty</td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No data available.</p>
+    }
+</div>
 
 @code {
 
@@ -272,7 +309,7 @@
     {
         await LoadData();
     }
-    private async Task  undoChanges()
+    private async Task undoChanges()
     {
         await LoadData();
         ShowGroupDetails(selectedGroup.GroupId);
@@ -295,63 +332,86 @@
     private IEnumerable<GroupDto> customerGroupsDto = new List<GroupDto>();
     private List<GroupProductDto>? groupProductDtos = new List<GroupProductDto>();
     private List<PurchasedProductDto>? purchasedProductDtos = new List<PurchasedProductDto>();
+    private List<ProductChangeDto>? ProductChangesDto = new List<ProductChangeDto>();
 
     private async Task LoadData()
     {
-        // Fetch the customer's groups from the repository
+        // Load customer data, groups, and purchased products
         _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
         if (_customer != null)
         {
-            customerGroups = _customer.Groups.ToList();
-            if (customerGroups != null)
-            {
-                customerGroupsDto = _customer.Groups.Select(group => new GroupDto
-                    {
-                        GroupId = group.GroupId,
-                        GroupName = group.GroupName,
-                        EAN = group.EAN,
-                        CustomerId = customerId,
-                        GroupProductsDto = group.GroupProducts.Select(gp => new GroupProductDto
-                        {
-                            GroupId = gp.GroupId,
-                            PurchasedProductId = gp.PurchasedProductId,
-                            ProductName = gp.PurchasedProduct.ProductName,
-                            ProductPrice = gp.PurchasedProduct.ProductPrice,
-                            AddedQty = gp.AddedQuantity,
-                            InputProductQuantity = 0 // Set the default value as needed
-                        }).ToList()
-                    }).ToList();
-            }
-            _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+            // Load and map customer groups
+            LoadCustomerGroups();
+
+            // Load and map purchased products
+            LoadPurchasedProducts();
+        }
+    }
+    private void LoadCustomerGroups()
+    {
+        customerGroups = _customer.Groups.ToList();
+        if (customerGroups != null)
+        {
+            customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group)).ToList();
+        }
+    }
+    private async void LoadPurchasedProducts()
+    {
+        _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+        if (_PurchasedProducts != null)
+        {
+            purchasedProductDtos = _PurchasedProducts.Select(p => MapToPurchasedProductDto(p)).ToList();
+        }
+    }
+    private GroupDto MapToGroupDto(Group group)
+    {
+        if (group == null)
+        {
+            return null;
         }
 
-        // Convert Group and Product to DTOs
-        selectedGroupDto = new GroupDto
+        return new GroupDto
             {
-                GroupId = selectedGroup?.GroupId ?? 0,
-                GroupName = selectedGroup?.GroupName,
-                EAN = selectedGroup?.EAN,
-                CustomerId = customerId,//same login customer
-                GroupProductsDto = selectedGroup?.GroupProducts?.Select(gp => new GroupProductDto
-                {
-                    GroupId = selectedGroup?.GroupId ?? 0,
-                    PurchasedProductId = gp.PurchasedProductId,
-                    ProductName = gp.PurchasedProduct?.ProductName,
-                    ProductPrice = gp.PurchasedProduct?.ProductPrice ?? 0.00M,
-                    AddedQty = gp.AddedQuantity,
-                    InputProductQuantity = 0 // Set the default value as needed
-                }).ToList() ?? new List<GroupProductDto>()
+                GroupId = group.GroupId,
+                GroupName = group.GroupName,
+                EAN = group.EAN,
+                CustomerId = customerId, // You may need to set this based on your requirements
+                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList()
             };
+    }
+    private GroupProductDto MapToGroupProductDto(GroupProduct groupProduct)
+    {
+        if (groupProduct == null)
+        {
+            return null;
+        }
 
-        purchasedProductDtos = _PurchasedProducts?.Select(p => new PurchasedProductDto
+        return new GroupProductDto
             {
-                PurchasedProductId = p.ProductId,
-                ProductName = p.ProductName,
-                ProductPrice = p.ProductPrice,
-                PurchasedQty = p.PurchasedQty,
-                CustomerId = customerId,//same login customer
+                GroupId = groupProduct.GroupId,
+                PurchasedProductId = groupProduct.PurchasedProductId,
+                ProductName = groupProduct.PurchasedProduct?.ProductName,
+                ProductPrice = groupProduct.PurchasedProduct?.ProductPrice ?? 0.00M,
+                AddedQty = groupProduct.AddedQuantity,
+                InputProductQuantity = 0 // Set the default value as needed
+            };
+    }
+    private PurchasedProductDto MapToPurchasedProductDto(PurchasedProduct purchasedProduct)
+    {
+        if (purchasedProduct == null)
+        {
+            return null;
+        }
+
+        return new PurchasedProductDto
+            {
+                PurchasedProductId = purchasedProduct.ProductId,
+                ProductName = purchasedProduct.ProductName,
+                ProductPrice = purchasedProduct.ProductPrice,
+                PurchasedQty = purchasedProduct.PurchasedQty,
+                CustomerId = customerId, // You may need to set this based on your requirements
                 InputPurchasedtQuantity = 0 // Set the default value as needed
-            }).ToList() ?? new List<PurchasedProductDto>();
+            };
     }
     #endregion
 
@@ -374,56 +434,16 @@
             // The user clicked "Cancel," do nothing or show a message.
         }
     }
+    #endregion
 
-    private void UpdateGroupProductQuantities(GroupProductDto groupProduct)
-    {
-        // Find the corresponding PurchasedProductDto using PurchasedProductId
-        PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
-        groupProduct.InputProductQuantity = 1;
-        // Ensure the input quantity is within the valid range
-        if (groupProduct.InputProductQuantity > 0 && groupProduct.InputProductQuantity <= purchasedProduct.PurchasedQty)
-        {
-            if (purchasedProduct != null)
-            {
-                // Update the AddedQty for the selected GroupProductDto
-                groupProduct.AddedQty += groupProduct.InputProductQuantity;
-
-                // Update the PurchasedQty for the corresponding PurchasedProductDto
-                purchasedProduct.PurchasedQty -= groupProduct.InputProductQuantity;
-                groupProduct.InputProductQuantity = 0;
-
-                // Create a ProductChangeDto object to track the change
-                //ProductChangeDto change = new ProductChangeDto
-                //    {
-                //        CustomerId = customerId,
-                //        GroupId = groupProduct.GroupId,
-                //        ProductId = groupProduct.PurchasedProductId,
-                //        UpdatedGroupProductAddedQty = groupProduct.inpuProductQuantity,
-                //        UpdatedPurchasedQty = groupProduct.inpuProductQuantity
-                //    };
-
-                //// Add the change to the list
-                //productChanges.Add(change);
-
-                // Trigger a UI update to reflect the changes in the table
-                StateHasChanged();
-            }
-        }
-        else
-        {
-            // Show a validation error using JavaScript interop
-            ShowValidationError($"Ugyldig inputmængde!:\nYor reached the the total available  for  product: {(purchasedProduct.PurchasedQty)} . Please check amout.");
-            groupProduct.InputProductQuantity = 0;
-            StateHasChanged();
-        }
-    }
-
+    #region User Interacting
     private void RemoveProduct(GroupProductDto product)
     {
+
         // Find the corresponding PurchasedProduct by ProductId
         PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == product.PurchasedProductId);
 
-        if (purchasedProduct != null)
+        if (purchasedProduct != null && purchasedProduct.PurchasedProductId>0)
         {
             // Add the removed quantity back to PurchasedQty
             purchasedProduct.PurchasedQty += product.AddedQty;
@@ -435,89 +455,137 @@
         // Set AddedQty to 0 for the removed product
         product.AddedQty = 0;
     }
-
-    private void UpdatePurchasedQuantities(GroupDto selectedGroupDto)
+    private void UpdateGroupProductQuantities(GroupProductDto groupProduct)
     {
-        // Create a copy of purchasedProductDtos
-        var purchasedProductDtosCopy = purchasedProductDtos.ToList();
-        foreach (PurchasedProductDto purchasedProduct in purchasedProductDtosCopy)
+        // Find the corresponding PurchasedProductDto using PurchasedProductId
+        PurchasedProductDto purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
+
+        if (purchasedProduct == null || purchasedProduct.PurchasedQty <= 0)
         {
+            // Skip processing if the purchasedProduct is null or has no quantity
+            return;
+        }
 
-            // Ensure the input quantity is within the valid range
-            if (purchasedProduct.InputPurchasedtQuantity > 0 && purchasedProduct.InputPurchasedtQuantity <= purchasedProduct.PurchasedQty)
-            {
-                // Calculate the change based on the input quantity
-                int change = purchasedProduct.PurchasedQty - purchasedProduct.InputPurchasedtQuantity;
+        int inputQuantity = groupProduct.InputProductQuantity;
+        int currentGroupProductQty = groupProduct.AddedQty;
+        int currentPurchasedProductQty = purchasedProduct.PurchasedQty;
 
-                // Find and update the corresponding product in the GroupProductsDto list
-                GroupProductDto? groupProductToUpdate = selectedGroupDto.GroupProductsDto.FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
+        if (IsValidInputQuantity(inputQuantity, currentPurchasedProductQty))
+        {
+            // Update the AddedQty for the selected GroupProductDto
+            currentGroupProductQty += inputQuantity;
+            groupProduct.AddedQty = currentGroupProductQty;
 
-                if (groupProductToUpdate != null)
+            // Update the PurchasedQty for the corresponding PurchasedProductDto
+            currentPurchasedProductQty -= inputQuantity;
+            purchasedProduct.PurchasedQty = currentPurchasedProductQty;
+
+            // Create a ProductChangeDto object to track the change
+            ProductChangeDto change = new ProductChangeDto
                 {
-                    // Update the AddedQty for the selected product in the GroupProductsDto list
-                    groupProductToUpdate.AddedQty += purchasedProduct.InputPurchasedtQuantity;
+                    CustomerId = customerId,
+                    GroupId = groupProduct.GroupId,
+                    ProductId = groupProduct.PurchasedProductId,
+                    UpdatedGroupProductAddedQty = currentGroupProductQty,
+                    UpdatedPurchasedQty = currentPurchasedProductQty
+                };
 
-                    // Update the PurchasedQty for the current product
-                    purchasedProduct.PurchasedQty = change;
-                    purchasedProduct.InputPurchasedtQuantity = 0;
-                    //if (purchasedProduct.PurchasedQty<=0)
-                    //{
-                    //    purchasedProductDtos.Remove(purchasedProduct);
-                    //}
-                    //// Create a ProductChangeDto object to track the change for this product
-                    //var changeDto = new ProductChangeDto
-                    //    {
-                    //        CustomerId = purchasedProduct.CustomerId,
-                    //        GroupId = group.GroupId,
-                    //        ProductId = purchasedProduct.ProductId,
-                    //        UpdatedGroupProductAddedQty = purchasedProduct.inpuPurchasedtQuantity,
-                    //        UpdatedPurchasedQty = change
-                    //    };
+            // Add the change to the list
+            ProductChangesDto.Add(change);
 
-                    //// Add the change to the list
-                    //productChanges.Add(changeDto);
+            // Reset the input quantity
+            groupProduct.InputProductQuantity = 0;
+
+            // Trigger a UI update to reflect the changes in the table
+            StateHasChanged();
+        }
+        else
+        {
+            // Show a validation error using JavaScript interop
+            ShowValidationError($"Invalid input quantity!\nYou've reached the total availability for License:\n{purchasedProduct.ProductName} which is now: {currentPurchasedProductQty}\nPlease check the amount.");
+            //groupProduct.InputProductQuantity = 0;
+            StateHasChanged();
+        }
+    }
+    private void UpdatePurchasedQuantities(GroupDto selectedGroup)
+    {
+        foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
+        {
+            if (purchasedProduct.PurchasedQty <= 0)
+            {
+                // Skip processing if the purchasedProduct quantity is not greater than zero
+                continue;
+            }
+            // Retrieve the corresponding product in the GroupProductsDto list
+            GroupProductDto groupProductToUpdate = selectedGroup.GroupProductsDto
+             .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
+
+            if (groupProductToUpdate != null && groupProductToUpdate.AddedQty <= purchasedProduct.PurchasedQty)
+            {
+                int inputQuantity = purchasedProduct.InputPurchasedtQuantity;
+
+                if (IsValidInputQuantity(inputQuantity, purchasedProduct.PurchasedQty))
+                {
+                    UpdateQuantities(groupProductToUpdate, purchasedProduct, inputQuantity);
+                    TrackChange(selectedGroup.GroupId, purchasedProduct.PurchasedProductId, groupProductToUpdate.AddedQty, purchasedProduct.PurchasedQty);
                 }
                 else
                 {
-                    // If the corresponding product doesn't exist in the GroupProductsDto list, create a new one
-                    GroupProductDto newGroupProduct = new GroupProductDto
-                        {
-                            GroupId = selectedGroupDto.GroupId,
-                            PurchasedProductId = purchasedProduct.PurchasedProductId,
-                            ProductName = purchasedProduct.ProductName,
-                            ProductPrice = purchasedProduct.ProductPrice,
-                            AddedQty = purchasedProduct.InputPurchasedtQuantity,
-                            InputProductQuantity = 0
-                        };
-
-                    purchasedProduct.PurchasedQty = change;
-
-                    // Add the new GroupProductDto to the list
-                    selectedGroupDto.GroupProductsDto.Add(newGroupProduct);
-
-                    // Create a ProductChangeDto object to track the change for this product
-                    //var changeDto = new ProductChangeDto
-                    //    {
-                    //        CustomerId = purchasedProduct.CustomerId,
-                    //        GroupId = group.GroupId,
-                    //        ProductId = purchasedProduct.ProductId,
-                    //        UpdatedGroupProductAddedQty = purchasedProduct.inpuPurchasedtQuantity,
-                    //        UpdatedPurchasedQty = change * -1 // To indicate a subtraction
-                    //    };
-
-                    //// Add the change to the list
-                    //productChanges.Add(changeDto);
+                    ShowValidationError($"Invalid input quantity!\nYou've reached the total availability for License:\n{purchasedProduct.ProductName} which is now: {purchasedProduct.PurchasedQty}\nPlease check the amount.");
                 }
-            }else
+            }
+            else
             {
-                ShowValidationError($"Ugyldig inputmængde!:\nYor reached the the total available  for  product: {(purchasedProduct.PurchasedQty)}\nPlease check your Product amout.");
-                purchasedProduct.InputPurchasedtQuantity=0;
-                StateHasChanged();
+                CreateNewGroupProduct(selectedGroup, purchasedProduct);
             }
         }
 
-        // Trigger a UI update to reflect the changes in the table
         StateHasChanged();
+    }
+    #endregion
+
+    #region Helper Methods
+
+    private bool IsValidInputQuantity(int inputQuantity, int purchasedQty)
+    {
+        return inputQuantity > 0 && inputQuantity <= purchasedQty;
+    }
+
+    private void UpdateQuantities(GroupProductDto groupProduct, PurchasedProductDto purchasedProduct, int inputQuantity)
+    {
+        purchasedProduct.PurchasedQty -= inputQuantity;
+        groupProduct.AddedQty += inputQuantity;
+        purchasedProduct.InputPurchasedtQuantity = 0;
+    }
+
+    private void TrackChange(int groupId, int productId, int updatedAddedQty, int updatedPurchasedQty)
+    {
+        ProductChangeDto changeDto = new ProductChangeDto
+            {
+                CustomerId = customerId,
+                GroupId = groupId,
+                ProductId = productId,
+                UpdatedGroupProductAddedQty = updatedAddedQty,
+                UpdatedPurchasedQty = updatedPurchasedQty
+            };
+
+        ProductChangesDto.Add(changeDto);
+    }
+
+    private void CreateNewGroupProduct(GroupDto selectedGroup, PurchasedProductDto purchasedProduct)
+    {
+        GroupProductDto newGroupProduct = new GroupProductDto
+            {
+                GroupId = selectedGroup.GroupId,
+                PurchasedProductId = purchasedProduct.PurchasedProductId,
+                ProductName = purchasedProduct.ProductName,
+                ProductPrice = purchasedProduct.ProductPrice,
+                AddedQty = purchasedProduct.InputPurchasedtQuantity,
+                InputProductQuantity = 0
+            };
+
+        selectedGroup.GroupProductsDto.Add(newGroupProduct);
+        TrackChange(selectedGroup.GroupId, purchasedProduct.PurchasedProductId, purchasedProduct.InputPurchasedtQuantity, purchasedProduct.PurchasedQty);
     }
     #endregion
 
@@ -528,6 +596,7 @@
         {
             // Find the selected group and set it as the selectedGroup
             selectedGroupDto = customerGroupsDto.FirstOrDefault(g => g.GroupId == groupId);
+            ProductChangesDto = ProductChangesDto.Where(c => c.CustomerId == customerId && c.GroupId == groupId).ToList();
             displayGroupProducts = false; // Hide GroupProduct Table
         }
         else

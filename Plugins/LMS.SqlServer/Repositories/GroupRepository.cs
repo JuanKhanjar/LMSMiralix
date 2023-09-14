@@ -2,6 +2,7 @@
 using LMS.BusinessUseCases.PluginInterfaces;
 using LMS.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace LMS.SqlServer.Repositories
@@ -265,6 +266,60 @@ namespace LMS.SqlServer.Repositories
                     {
                         // Log an error and roll back the transaction if an exception occurs
                         _logger.LogError(ex, "Error occurred while deleting Group with Products (groupId: {GroupId})", groupId);
+                        transaction.Rollback();
+                        throw; // Rethrow the exception for handling at a higher level
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> DeleteGroupProductsAsync(int groupId)
+        {
+            using (LMSDbContext _dbContext = _dbContextFactory.CreateDbContext())
+            {
+                using (IDbContextTransaction transaction = _dbContext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        // Find the group to be updated, including its associated GroupProducts
+                        Group? groupToUpdate = await _dbContext.Groups
+                            .Include(g => g.GroupProducts)
+                            .FirstOrDefaultAsync(g => g.GroupId == groupId);
+
+                        if (groupToUpdate == null)
+                        {
+                            // Log a warning if the group is not found
+                            _logger.LogWarning("Group not found for groupId: {GroupId}", groupId);
+                            return false; // Return false if the group is not found
+                        }
+
+                        // Iterate through the GroupProducts and add their AddedQuantity to corresponding PurchasedProduct
+                        foreach (GroupProduct groupProduct in groupToUpdate.GroupProducts)
+                        {
+                            PurchasedProduct? purchasedProduct = await _dbContext.PurchasedProducts
+                                .FirstOrDefaultAsync(pp => pp.ProductId == groupProduct.PurchasedProductId);
+
+                            if (purchasedProduct != null)
+                            {
+                                purchasedProduct.PurchasedQty += groupProduct.AddedQuantity;
+                            }
+                        }
+
+                        // Remove all associated GroupProducts from the group
+                        _dbContext.GroupProducts.RemoveRange(groupToUpdate.GroupProducts);
+
+                        // Save changes to apply the deletion and quantity updates
+                        await _dbContext.SaveChangesAsync();
+
+                        // Commit the transaction
+                        transaction.Commit();
+
+                        return true; // Return true to indicate successful deletion of GroupProducts
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log an error and roll back the transaction if an exception occurs
+                        _logger.LogError(ex, "Error occurred while deleting GroupProducts (groupId: {GroupId})", groupId);
                         transaction.Rollback();
                         throw; // Rethrow the exception for handling at a higher level
                     }
