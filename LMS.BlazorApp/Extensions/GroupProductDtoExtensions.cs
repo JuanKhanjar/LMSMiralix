@@ -1,10 +1,11 @@
-﻿using static LMS.BlazorApp.Pages.CustomerPortal.CustomerPage;
+﻿using LMS.BlazorApp.Dtos;
+using static LMS.BlazorApp.Pages.CustomerPortal.CustomerPage;
 
 namespace LMS.BlazorApp.Extensions
 {
     public static class GroupProductDtoExtensions
     {
-        public static decimal CalculateTotalPrice(this GroupProductDto groupProduct)
+        public static decimal CalculateTotalPrice(this Dtos.GroupProductDto groupProduct)
         {
             return groupProduct.ProductPrice * groupProduct.AddedQty;
         }

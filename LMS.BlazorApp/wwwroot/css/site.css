@@ -147,7 +147,9 @@ details[open] summary ~ * {
 .inputNumber {
     text-align:center;
     width: 101px;
-    height: 32px;
+    height: 40px;
+    font-weight:600;
+    font-size:18px;
     border-radius: 10px;
     border: 1px solid rgba(46, 119, 229, 1);
 }

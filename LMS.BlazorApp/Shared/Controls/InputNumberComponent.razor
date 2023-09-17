@@ -1,0 +1,27 @@
+﻿@using LMS.BlazorApp.Dtos;
+
+<div class="input-container">
+    
+    <input @key="groupProduct.PurchasedProductId"
+           type="number"
+           @bind-value="@InputGroupProduct"
+           @oninput="OnInputChange"
+           class="num rounded-5 text-center border-primary"
+           style="width: 121px;" />
+</div>
+
+@code {
+    [Parameter]
+    public int InputGroupProduct { get; set; }
+
+    [Parameter]
+    public GroupProductDto groupProduct { get; set; } = new GroupProductDto();
+
+    [Parameter]
+    public EventCallback<GroupProductDto> UpdateGroupProductQuantity { get; set; }
+
+    private void OnInputChange()
+    {
+        UpdateGroupProductQuantity.InvokeAsync(groupProduct);
+    }
+}

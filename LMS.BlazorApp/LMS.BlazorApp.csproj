@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Plugins\LMS.SqlServer\LMS.SqlServer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Shared\Controls\" />
-  </ItemGroup>
-
 </Project>
