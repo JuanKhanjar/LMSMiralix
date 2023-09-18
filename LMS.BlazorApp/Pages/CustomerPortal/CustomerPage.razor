@@ -146,23 +146,32 @@
                                                 <td>@groupProduct.ProductPrice</td>
                                                 <td>@groupProduct.AddedQty</td>
                                                 <td>
-                                                    <input type="number"
-                                                           max="@GetComparisonQuantity(groupProduct)"
-                                               @bind="groupProduct.InputProductQuantity"
-                                               @oninput="() => UpdateGroupProductQuantity(groupProduct)" />
-                                                </td>
-                                                <td>
-
-                                                    @if (groupProduct.InputProductQuantity > GetComparisonQuantity(groupProduct))
+                                                    <div class="position-relative">
+                                                    <input type="number" 
+                                                        class="inputNumber"
+                                                           id="inputNumber@(groupProduct.PurchasedProductId)"
+                                                           max="@(GetComparisonPurchasedQuantity(groupProduct)+1)"
+                                                    @bind-value="@groupProduct.InputProductQuantity"
+                                                    @oninput="() => UpdateGroupProductQuantity(groupProduct)" />
+                                                    @if (GetComparisonPurchasedQuantity(groupProduct) == 0)
                                                     {
-                                                        <span style="color: red;">Quantity exceeds the comparison amount for this product</span>
-                                                    }
+                                                        <span class=" text-white position-absolute top-50 end-100 translate-middle p-1 bg-danger rounded-pill">
+                                                            @groupProduct.InputProductQuantity
+                                                        </span>
+                                                    }else
+                                                        {
+                                                            <span class=" text-white position-absolute top-50 end-100 translate-middle p-1 bg-success rounded-pill">
+                                                                @groupProduct.InputProductQuantity
+                                                            </span>
+                                                        }
+                                                    </div>
                                                 </td>
+                                                
                                                 <td>
                                                     Input Value: @groupProduct.InputProductQuantity
                                                 </td>
                                                 <td>
-                                                    PP Value: @GetComparisonQuantity(groupProduct)
+                                                    PP Availabelity: @GetComparisonPurchasedQuantity(groupProduct)
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(groupProduct.PurchasedProductId)"><i class="fa fa-trash"></i></button>
@@ -171,11 +180,17 @@
                                         }
                                     </tbody>
 
-                                    <tr>
-                                        <td class="d-flex justify-content-between">
-                                            Total:@selectedGroupDto.GroupProductsDto.Sum(p=> p.ProductPrice * (p.AddedQty+p.InputProductQuantity))
+                                    <tr class="d-flex justify-content-between gap-1">
+                                        <td colspan="2"></td>
+                                        <td class="d-flex justify-content-between align-items-baseline">
+                                            <span>Total:</span>
+                                            <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p=> p.ProductPrice *( p.AddedQty+p.InputProductQuantity)).ToString("c")</span>
+                                            <span>/</span>
+                                            <span>(@selectedGroupDto.GroupProductsDto.Sum(p=> p.AddedQty + p.InputProductQuantity))</span>
+                                            <span>licenser</span>
                                         </td>
                                     </tr>
+
                                 </table>
 
                             </div>
@@ -217,18 +232,33 @@
                                                 <td>@Purchasedproduct.ProductPrice</td>
                                                 <td>@Purchasedproduct.PurchasedQty</td>
                                                 <td>
-                                                    <input type="number" @bind="Purchasedproduct.InputPurchasedtQuantity" min="0" @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
+                                                    <div class="position-relative">
+                                                        <input type="number"
+                                                               class="inputNumber"
+                                                               id="inputNumber@(Purchasedproduct.PurchasedProductId)"
+                                                               min="0"
+                                                               max="@(Purchasedproduct.PurchasedQty - GetComparisonGroupProductQuantity(Purchasedproduct))"
+                                                        @bind="Purchasedproduct.InputPurchasedtQuantity"
+                                                        @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
+
+                                                        @if (Purchasedproduct.PurchasedQty - (GetComparisonGroupProductQuantity(Purchasedproduct) + Purchasedproduct.InputPurchasedtQuantity) == 0)
+                                                        {
+                                                            <span class=" text-white position-absolute top-50 end-100 translate-middle p-1 bg-danger rounded-pill">
+                                                                @Purchasedproduct.InputPurchasedtQuantity
+                                                            </span>
+                                                        }
+                                                    </div>
+
                                                 </td>
                                                 <td>
-
+                                                    GP Value: @GetComparisonGroupProductQuantity(Purchasedproduct)
                                                 </td>
                                             </tr>
                                         }
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-end">
-                                    @*                                    <button class="addBtn" @onclick="()=>UpdatePurchasedQuantities(selectedGroupDto)">Add</button>
-                            *@
+                                    <button class="addBtn" @onclick="()=>AddPurchasedQuantitiesTGroupProduct(selectedGroupDto)">Add</button>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end m-2">
@@ -455,22 +485,19 @@
             // Add the removed quantity back to PurchasedQty
 
             purchasedProduct.PurchasedQty += groupProduct.AddedQty;
-            groupProduct.AddedQty = 0;
-            groupProduct.InputProductQuantity = 0;
+            purchasedProduct.InputPurchasedtQuantity = 0;
             // Remove the product from the list
             selectedGroupDto.GroupProductsDto.Remove(groupProduct);
         }
     }
 
-
-    private async Task UpdateGroupProductQuantity(GroupProductDto groupProductDto)
+    private void UpdateGroupProductQuantity(GroupProductDto groupProductDto)
     {
         groupProductDto.InputProductQuantity = 1;
         PurchasedProductDto? purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProductDto.PurchasedProductId);
-        if (purchasedProduct != null)
+        if (purchasedProduct != null && purchasedProduct.PurchasedQty>0)
         {
-            groupProductDto.AddedQty += groupProductDto.InputProductQuantity;
-            isInputDisabled = false; // Enable the input field
+            purchasedProduct.PurchasedQty -= groupProductDto.InputProductQuantity;
         }
         else
         {
@@ -478,7 +505,7 @@
         }
 
     }
-    private int GetComparisonQuantity(GroupProductDto groupProduct)
+    private int GetComparisonPurchasedQuantity(GroupProductDto groupProduct)
     {
         // Find the corresponding product in the comparisonList
         var matchingComparisonProduct = purchasedProductDtos.FirstOrDefault(comparisonProduct =>
@@ -486,53 +513,89 @@
 
         if (matchingComparisonProduct != null)
         {
-            return matchingComparisonProduct.PurchasedQty;
+            return (matchingComparisonProduct.PurchasedQty);
         }
         else
         {
             return 0; // Return a default value when no matching product is found
         }
     }
+    private int GetComparisonGroupProductQuantity(PurchasedProductDto purchasedProduct)
+    {
+        // Find the corresponding product in the comparisonList
+        var matchingComparisonProduct = selectedGroupDto.GroupProductsDto.FirstOrDefault(comparisonProduct =>
+            comparisonProduct.PurchasedProductId == purchasedProduct.PurchasedProductId);
 
-    private bool isInputDisabled = false;
-
-    private async void UpdatePurchasedProductQuantity(PurchasedProductDto? purchasedProductDto)
+        if (matchingComparisonProduct != null)
+        {
+            return (matchingComparisonProduct.InputProductQuantity);
+        }
+        else
+        {
+            return 0; // Return a default value when no matching product is found
+        }
+    }
+    private void UpdatePurchasedProductQuantity(PurchasedProductDto? purchasedProductDto)
     {
         // Find the corresponding GroupProduct
         var groupProduct = groupProductDtos.FirstOrDefault(gp => gp.PurchasedProductId == purchasedProductDto.PurchasedProductId);
 
         if (groupProduct != null)
         {
-            // Check if the purchased quantity is within a valid range
-            if (purchasedProductDto.InputPurchasedtQuantity > 0 && purchasedProductDto.InputPurchasedtQuantity <= purchasedProductDto.PurchasedQty)
-            {
-                // Update the quantities
-                //groupProduct.AddedQty += purchasedProductDto.InputPurchasedtQuantity;
-                //purchasedProductDto.PurchasedQty -= purchasedProductDto.InputPurchasedtQuantity; // Reset the input field
 
-                // You may want to save changes to your database here
-            }
-            else
-            {
-                // Handle validation error, e.g., show an error message
-            }
+        }
+        else
+        {
+
         }
     }
+    private void AddPurchasedQuantitiesTGroupProduct(GroupDto selectedGroup)
+    {
+        foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
+        {
+            if (purchasedProduct.InputPurchasedtQuantity > 0 && purchasedProduct.PurchasedQty>0)
+            {
+                // Retrieve the corresponding product in the GroupProductsDto list
+                GroupProductDto groupProductToUpdate = selectedGroup.GroupProductsDto
+                 .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
 
+                if (groupProductToUpdate != null)
+                {
+                    groupProductToUpdate.InputProductQuantity += purchasedProduct.InputPurchasedtQuantity;
+                    purchasedProduct.PurchasedQty-=purchasedProduct.InputPurchasedtQuantity;
+                    purchasedProduct.InputPurchasedtQuantity = 0;
+                }
+                else
+                {
+                    //CreateNewGroupProduct(selectedGroup, purchasedProduct);
+                    GroupProductDto newGroupProduct = new GroupProductDto
+                        {
+                            GroupId = selectedGroup.GroupId,
+                            PurchasedProductId = purchasedProduct.PurchasedProductId,
+                            ProductName = purchasedProduct.ProductName,
+                            ProductPrice = purchasedProduct.ProductPrice,
+                            AddedQty = purchasedProduct.InputPurchasedtQuantity,
+                            InputProductQuantity = 0
+                        };
+                    purchasedProduct.PurchasedQty -= purchasedProduct.InputPurchasedtQuantity;
+                    purchasedProduct.InputPurchasedtQuantity = 0;
+                    selectedGroup.GroupProductsDto.Add(newGroupProduct);
+                   
+                }
+            }
+        }
+
+        StateHasChanged();
+    }
 
     #endregion
 
     #region Helper Methods
 
-    private bool IsValidInputQuantity(int inputQuantity, int purchasedQty)
-    {
-        return inputQuantity > 0 && inputQuantity <= purchasedQty;
-    }
-
     private void UpdateQuantities(GroupProductDto groupProduct, PurchasedProductDto purchasedProduct, int inputQuantity)
     {
-        groupProduct.AddedQty += inputQuantity;
-        purchasedProduct.PurchasedQty -= inputQuantity;
+        groupProduct.InputProductQuantity = inputQuantity;
+        purchasedProduct.InputPurchasedtQuantity = 0;
     }
 
     private void TrackChange(int groupId, int productId, int updatedAddedQty, int updatedPurchasedQty)
@@ -558,7 +621,7 @@
                 ProductName = purchasedProduct.ProductName,
                 ProductPrice = purchasedProduct.ProductPrice,
                 AddedQty = purchasedProduct.InputPurchasedtQuantity,
-                InputProductQuantity = 0
+                InputProductQuantity = purchasedProduct.InputPurchasedtQuantity
             };
 
         selectedGroup.GroupProductsDto.Add(newGroupProduct);
