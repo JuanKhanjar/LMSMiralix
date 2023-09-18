@@ -8,9 +8,6 @@
         public int PurchasedQty { get; set; }
         public int CustomerId { get; set; }
         public int InputPurchasedtQuantity { get; set; }
-
-        public PurchasedProductDto()
-        {
-        }
+        public int CompareValue { get; set; }
     }
 }
