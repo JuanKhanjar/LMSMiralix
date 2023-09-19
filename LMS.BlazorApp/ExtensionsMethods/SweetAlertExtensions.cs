@@ -22,11 +22,14 @@ namespace LMS.BlazorApp.ExtensionsMethods
                 title = "Confirmation",
                 text = message,
                 icon = "question",
-                showCancelButton = true
+                showCancelButton = true,
+                confirmButtonText = "OK" // You can customize the button text here
             });
 
             return result;
         }
+
+
 
         public static async Task ShowSweetAlertSuccessAsync(this IJSRuntime jsRuntime, string title, string message)
         {

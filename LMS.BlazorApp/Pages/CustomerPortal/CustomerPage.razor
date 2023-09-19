@@ -13,62 +13,68 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="container-fluid">
+<div class="container-fluid mt-30">
     <div class="row">
+        <!-- Left LayOut -->
         <div class="col-md-5 card ">
             <!-- Customer Info Card -->
             <div class=" m-4 p-2">
                 <p class="headerFont">Grupper (@customerGroups.Count())</p>
             </div>
             <!-- List of Groups -->
-            @foreach (var group in customerGroups)
+            @if (customerGroups!=null)
             {
-                <div class=" mb-4">
-                    <details>
-                        <!--Group Header-->
-                        <summary class="d-flex justify-content-between header2Font">
-                            <div class="row row-cols-3">
-                                <div class="col m-0">@_customer.CustomerName @group.GroupName </div>
-                                <div class="col m-0"></div>
-                                <div class="col m-0">EAN:<span class="text-secondary mx-4">@group.EAN</span> </div>
+                @foreach (var group in customerGroups)
+                {
+                    <div class=" mb-4 p-1">
+                        <details>
+                            <!--Group Header-->
+                            <summary class="d-flex justify-content-between header2Font">
+                                <div class="row row-cols-3">
+                                    <div class="col m-0">@_customer?.CustomerName @group.GroupName </div>
+                                    <div class="col m-0"></div>
+                                    <div class="col m-0">EAN:<span class="text-secondary mx-4">@group.EAN</span> </div>
 
-                                <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
-                                <div class="col mx-0">(@group.GetTotalQuantityForAgroup()) licenses</div>
-                                <div class="col m-0"></div>
-                            </div>
-                        </summary>
+                                    <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
+                                    <div class="col mx-0">(@group.GetTotalQuantityForAgroup()) licenses</div>
+                                    <div class="col m-0"></div>
+                                </div>
+                            </summary>
 
-                        <!-- Group Products -->
-                        <div class="card-body">
-                            <table class="table table-borderless ">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Cost</th>
-                                        <th>Remaining</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="">
-                                    @foreach (var product in group.GroupProducts)
-                                    {
+                            <!-- Group -->
+                            <div class="card-body">
+                                <table class="table table-borderless m-2">
+                                    <thead style="background:#dee2e6;">
                                         <tr>
-                                            <td>@product.PurchasedProduct.ProductName</td>
-                                            <td>@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
-                                            <td>@product.AddedQuantity</td>
+                                            <th>Type</th>
+                                            <th>Cost</th>
+                                            <th>Remaining</th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-between p-2">
-                                <button class="btn btn-outline-secondary" @onclick="()=>ShowGroupDetails(group.GroupId)">Edit</button>
-                                <button class="btn btn-outline-danger" @onclick="()=>ShowGroupDetails(group.GroupId)"><i class="fa fa-trash"></i></button>
+                                    </thead>
+                                    <tbody class="">
+                                        @foreach (var product in group.GroupProducts)
+                                        {
+                                            <tr>
+                                                <td>@product.PurchasedProduct.ProductName</td>
+                                                <td>@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
+                                                <td>@product.AddedQuantity</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-between p-2">
+                                    <button class="btn btn-outline-secondary" @onclick="()=>ShowGroupDetails(group.GroupId)">Edit</button>
+                                    <button class="btn btn-outline-danger" @onclick="()=>ShowGroupDetails(group.GroupId)"><i class="fa fa-trash"></i></button>
+                                </div>
                             </div>
-                        </div>
-                    </details>
-                </div>
+                        </details>
+                    </div>
+                }
             }
+           
+
         </div>
-        <!-- Group Detalis -->
+        <!-- Right LayOut- Group Detalis -->
         <div class="col-md-7">
             @if (selectedGroupDto != null)
             {
@@ -76,8 +82,8 @@
                 {
                     <!-- Form Group -->
                     <div class="m-4">
-                        <p class="header2Font">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.InputPurchasedtQuantity))</p>
-                        <p>Licenser kan redigeres til d.20 marts.</p>
+                        <p class="header2Font">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</p>
+                        <p>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                     </div>
                     <div class="m-3 d-flex">
                         <div class="card-body p-1 ">
@@ -154,8 +160,8 @@
                                                                max="@PP"
                                                                class="inputNumber"
                                                                id="inputNumber@(groupProduct.PurchasedProductId)"
-                                                        @bind-value="@groupProduct.InputProductQuantity"
-                                                        @oninput="() => UpdatePPQuantity(groupProduct)" />
+                                                   @bind-value="@groupProduct.InputProductQuantity"
+                                                   @oninput="() => UpdatePPQuantity(groupProduct)" />
                                                         @if ((PP - groupProduct.InputProductQuantity) == 0 || (groupProduct.AddedQty * -1 == groupProduct.InputProductQuantity))
                                                         {
                                                             <span class=" position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
@@ -177,7 +183,7 @@
                                     </tbody>
 
                                     <tr class="d-flex justify-content-between gap-1">
-                                        <td ></td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -190,7 +196,7 @@
                                             <span>licenser</span>
                                         </td>
                                         <td></td>
-                                       
+
                                     </tr>
 
                                 </table>
@@ -243,8 +249,8 @@
                                                                max="@(Purchasedproduct.PurchasedQty - GP)"
                                                                class="inputNumber"
                                                                id="inputNumber@(Purchasedproduct.PurchasedProductId)"
-                                                        @bind-value="Purchasedproduct.InputPurchasedtQuantity"
-                                                        @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
+                                                   @bind-value="Purchasedproduct.InputPurchasedtQuantity"
+                                                   @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
 
                                                         @if (Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)
                                                         {
@@ -262,22 +268,22 @@
                                     <button class="btn btn-primary rounded-pill px-4 fw-bold" @onclick="()=>AddPurchasedQuantitiesTGroupProduct(selectedGroupDto)">Add</button>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-end m-2">
-                                <button class=" btnUndo mx-3 rounded-pill" @onclick="undoChanges">Disgard</button>
-                                <button class="btn btn-success rounded-pill px-5 fw-bold" @onclick="()=>showChangesToUpdate(selectedGroupDto)">Save</button>
+                            <div class="d-flex justify-content-end m-2 gap-1">
+                                <button class="btn btn-secondary rounded-pill px-5 " @onclick="undoChanges">Disgard</button>
+                                <button class="btn btn-success rounded-pill px-5 " @onclick="()=>showChangesToUpdate(selectedGroupDto)">Save</button>
                             </div>
                         </div>
                     </div>
                 }
                 else
                 {
-                    <div class="card m-2 p-2 ">
+                    <div class="card  p-2 ">
                         <!-- Purchased Products Table -->
                         <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
                         <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
-                        <table class="table">
-                            <thead class="bg-black">
-                                <tr class="headerFont ">
+                        <table class="table table-borderless">
+                            <thead class="">
+                                <tr class="">
                                     <th>Type</th>
                                     <th>Cost</th>
                                     <th>Remaining</th>
@@ -328,6 +334,7 @@
 
 
 @code {
+    private bool isLoading = true;
     private List<Changes> changedGroupProductDtos = new List<Changes>();
     private void showChangesToUpdate(GroupDto? selectedGroupDto)
     {
@@ -385,8 +392,9 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        isLoading = true;
         await LoadData();
-
+        isLoading = false;
     }
     private async Task undoChanges()
     {
@@ -493,20 +501,18 @@
     #region Manpulate
     private async Task UpdateGroupAsync()
     {
-        bool confirmed = await JSRuntime.ShowSweetAlertConfirmationAsync($"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}?");
-
-        if (confirmed)
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}"); if (confirmed)
         {
             var result = await _IUpdateGroupNameUC.ExcecuteAsync(selectedGroupDto.GroupId, selectedGroupDto.GroupName);
             if (result)
             {
                 // Update was successful, show a success notification
-                await JSRuntime.ShowSweetAlertSuccessAsync("Update Successful", "The group name has been updated successfully.");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Update Successful", "The group name has been updated successfully.", "success");
             }
         }
         else
         {
-            // The user clicked "Cancel," do nothing or show a message.
+            await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The group name has not  updated successfully.", "error");
         }
     }
     #endregion

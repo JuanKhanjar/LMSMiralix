@@ -51,6 +51,8 @@ function showSweetAlertSuccess(title, message) {
         icon: 'success'
     });
 }
+// Create a JavaScript function outside of any class
+
 
 
 
