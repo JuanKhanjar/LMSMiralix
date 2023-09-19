@@ -131,7 +131,6 @@
                                     Quantity
                                 </div>
                             </div>
-
                             <div class="col-sm-1">
                             </div>
                         </div>
@@ -141,40 +140,34 @@
                                     <tbody>
                                         @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
                                         {
-                                            int PP = GetComparisonPurchasedQuantity(groupProduct);
+                                            int PP = groupProduct.GetPPAvailability(purchasedProductDtos);
                                             <tr class="d-flex justify-content-sm-between align-baseline ">
                                                 <td>@groupProduct.ProductName</td>
                                                 <td>@groupProduct.ProductPrice</td>
-                                                <td>@groupProduct.AddedQty</td>
+                                                <td>
+                                                    <span>@groupProduct.AddedQty + ( @groupProduct.InputProductQuantity )= @(groupProduct.AddedQty + groupProduct.InputProductQuantity)</span>
+                                                </td>
                                                 <td>
                                                     <div class="position-relative">
                                                         <input type="number"
-                                                               min="@(groupProduct.AddedQty*-1)"
+                                                               min="0"
                                                                max="@PP"
                                                                class="inputNumber"
                                                                id="inputNumber@(groupProduct.PurchasedProductId)"
-                                                   @bind-value="@groupProduct.InputProductQuantity"
-                                                   @oninput="() => UpdateGroupProductQuantity(groupProduct)" />
+                                                        @bind-value="@groupProduct.InputProductQuantity"
+                                                        @oninput="() => UpdatePPQuantity(groupProduct)" />
                                                         @if ((PP - groupProduct.InputProductQuantity) == 0 || (groupProduct.AddedQty * -1 == groupProduct.InputProductQuantity))
                                                         {
-                                                            <span class=" text-white position-absolute top-50 end-100 translate-middle p-1 bg-danger rounded-pill">
-                                                                @groupProduct.InputProductQuantity
+                                                            <span class=" position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+
                                                             </span>
                                                         }
                                                         else
                                                         {
-                                                            <span class=" text-white position-absolute top-50 end-100 translate-middle p-1 bg-success rounded-pill">
-                                                                @groupProduct.InputProductQuantity
+                                                            <span class=" position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
                                                             </span>
                                                         }
                                                     </div>
-                                                </td>
-
-                                                <td>
-                                                    Input Value: @groupProduct.InputProductQuantity
-                                                </td>
-                                                <td>
-                                                    PP Availabelity: @GetComparisonPurchasedQuantity(groupProduct)
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct(groupProduct)"><i class="fa fa-trash"></i></button>
@@ -184,14 +177,20 @@
                                     </tbody>
 
                                     <tr class="d-flex justify-content-between gap-1">
-                                        <td colspan="2"></td>
-                                        <td class="d-flex justify-content-between align-items-baseline">
+                                        <td ></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td colspan="2" class="d-flex justify-content-between align-items-baseline px-3">
                                             <span>Total:</span>
                                             <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p=> p.ProductPrice *( p.AddedQty+p.InputProductQuantity)).ToString("c")</span>
                                             <span>/</span>
                                             <span>(@selectedGroupDto.GroupProductsDto.Sum(p=> p.AddedQty + p.InputProductQuantity))</span>
                                             <span>licenser</span>
                                         </td>
+                                        <td></td>
+                                       
                                     </tr>
 
                                 </table>
@@ -230,41 +229,42 @@
                                     <tbody>
                                         @foreach (var Purchasedproduct in purchasedProductDtos)
                                         {
-                                            int GP = GetComparisonGroupProductQuantity(Purchasedproduct);
-                                            <tr class="d-flex justify-content-sm-between align-baseline ">
+                                            int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
+                                            <tr class="d-flex justify-content-sm-between align-baseline">
                                                 <td>@Purchasedproduct.ProductName</td>
                                                 <td>@Purchasedproduct.ProductPrice</td>
-                                                <td>@Purchasedproduct.PurchasedQty</td>
+                                                <td>
+                                                    <span>@Purchasedproduct.PurchasedQty - ( @GP ) = @(Purchasedproduct.PurchasedQty - GP)</span>
+                                                </td>
                                                 <td>
                                                     <div class="position-relative">
                                                         <input type="number"
+                                                               min="0"
+                                                               max="@(Purchasedproduct.PurchasedQty - GP)"
                                                                class="inputNumber"
                                                                id="inputNumber@(Purchasedproduct.PurchasedProductId)"
-                                                               min="0"
-                                                               max="@(Purchasedproduct.PurchasedQty-GP)"
-                                                   @bind-value="Purchasedproduct.InputPurchasedtQuantity"
-                                                   @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
+                                                        @bind-value="Purchasedproduct.InputPurchasedtQuantity"
+                                                        @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
 
                                                         @if (Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)
                                                         {
-                                                            <span class=" text-white position-absolute top-50 end-100 translate-middle p-1 bg-danger rounded-pill">
-                                                                @Purchasedproduct.InputPurchasedtQuantity
+                                                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
                                                             </span>
                                                         }
                                                     </div>
-
                                                 </td>
+                                                <td></td>
                                             </tr>
                                         }
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-end">
-                                    <button class="addBtn" @onclick="()=>AddPurchasedQuantitiesTGroupProduct(selectedGroupDto)">Add</button>
+                                    <button class="btn btn-primary rounded-pill px-4 fw-bold" @onclick="()=>AddPurchasedQuantitiesTGroupProduct(selectedGroupDto)">Add</button>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end m-2">
                                 <button class=" btnUndo mx-3 rounded-pill" @onclick="undoChanges">Disgard</button>
-                                <button class="btn btn-outline-secondary" @onclick="()=>showChangesToUpdate(selectedGroupDto)">Save</button>
+                                <button class="btn btn-success rounded-pill px-5 fw-bold" @onclick="()=>showChangesToUpdate(selectedGroupDto)">Save</button>
                             </div>
                         </div>
                     </div>
@@ -332,22 +332,42 @@
     private void showChangesToUpdate(GroupDto? selectedGroupDto)
     {
         changedGroupProductDtos.Clear();
+
         if (selectedGroupDto != null)
         {
-            foreach (var groupProductDto in selectedGroupDto.GroupProductsDto)
+            foreach (GroupProductDto groupProduct in selectedGroupDto.GroupProductsDto)
             {
                 // Find the corresponding product in the selectedGroupDto by some identifier (e.g., ID or Name)
-                var correspondingProduct = selectedGroupDto.GroupProductsDto.FirstOrDefault(p => p.PurchasedProductId == groupProductDto.PurchasedProductId);
-                var PP = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProductDto.PurchasedProductId);
-                if (correspondingProduct != null)
+                var GP = selectedGroupDto.GroupProductsDto.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
+                var PP = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
+
+                if (GP != null && PP != null)
                 {
                     var ch = new Changes
                         {
-                            Id = correspondingProduct.PurchasedProductId,
-                            Name = correspondingProduct.ProductName,
-                            GPChangeQuantity = correspondingProduct.InputProductQuantity + correspondingProduct.AddedQty,
-                            PPChangeQuantity = PP.PurchasedQty - correspondingProduct.InputProductQuantity
+                            Id = GP.PurchasedProductId,
+                            Name = GP.ProductName,
+                            GPChangeQuantity = GP.InputProductQuantity + GP.AddedQty,
+                            PPChangeQuantity = 0
+                        };
 
+                    changedGroupProductDtos.Add(ch);
+                }
+            }
+
+            // Now, loop through PurchasedProductDto collection
+            foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
+            {
+                // Check if the PurchasedProductDto is not already in the changes list
+                if (!changedGroupProductDtos.Any(ch => ch.Id == purchasedProduct.PurchasedProductId))
+                {
+                    // Create a Changes object for the PurchasedProductDto
+                    var ch = new Changes
+                        {
+                            Id = purchasedProduct.PurchasedProductId,
+                            Name = purchasedProduct.ProductName,
+                            GPChangeQuantity = 0,  // You can set this to 0 or some default value
+                            PPChangeQuantity = purchasedProduct.PurchasedQty
                         };
 
                     changedGroupProductDtos.Add(ch);
@@ -355,6 +375,7 @@
             }
         }
     }
+
     private class Changes
     {
         public int Id { get; set; }
@@ -388,7 +409,6 @@
     private IEnumerable<GroupDto> customerGroupsDto = new List<GroupDto>();
     private List<GroupProductDto>? groupProductDtos = new List<GroupProductDto>();
     private List<PurchasedProductDto>? purchasedProductDtos = new List<PurchasedProductDto>();
-    private List<ProductChangeDto>? ProductChangesDto = new List<ProductChangeDto>();
 
     private async Task LoadData()
     {
@@ -508,57 +528,24 @@
         }
 
     }
-
-    private void UpdateGroupProductQuantity(GroupProductDto groupProductDto)
+    private void UpdatePPQuantity(GroupProductDto groupProduct)
     {
-        //groupProductDto.InputProductQuantity = 1;
-        PurchasedProductDto? purchasedProduct = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProductDto.PurchasedProductId);
+        PurchasedProductDto? purchasedProduct = purchasedProductDtos?.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
         if (purchasedProduct != null)
         {
-
         }
         else
         {
             // Handle other logic as needed
         }
-
+        StateHasChanged();
     }
-    private int GetComparisonPurchasedQuantity(GroupProductDto groupProduct)
-    {
-        // Find the corresponding product in the comparisonList
-        var matchingComparisonProduct = purchasedProductDtos.FirstOrDefault(comparisonProduct =>
-            comparisonProduct.PurchasedProductId == groupProduct.PurchasedProductId);
-
-        if (matchingComparisonProduct != null)
-        {
-            return (matchingComparisonProduct.PurchasedQty);
-        }
-        else
-        {
-            return 0; // Return a default value when no matching product is found
-        }
-    }
-    private int GetComparisonGroupProductQuantity(PurchasedProductDto purchasedProduct)
-    {
-        // Find the corresponding product in the comparisonList
-        var matchingComparisonProduct = selectedGroupDto.GroupProductsDto.FirstOrDefault(comparisonProduct =>
-            comparisonProduct.PurchasedProductId == purchasedProduct.PurchasedProductId);
-
-        if (matchingComparisonProduct != null)
-        {
-            return (matchingComparisonProduct.InputProductQuantity);
-        }
-        else
-        {
-            return 0; // Return a default value when no matching product is found
-        }
-    }
-    private void UpdatePurchasedProductQuantity(PurchasedProductDto? purchasedProductDto)
+    private void UpdatePurchasedProductQuantity(PurchasedProductDto? purchasedProduct)
     {
         // Find the corresponding GroupProduct
-        var groupProduct = groupProductDtos.FirstOrDefault(gp => gp.PurchasedProductId == purchasedProductDto.PurchasedProductId);
+        GroupProductDto groupProductToUpdate = groupProductDtos.FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
 
-        if (groupProduct != null)
+        if (groupProductToUpdate != null)
         {
 
         }
@@ -569,17 +556,24 @@
     }
     private void AddPurchasedQuantitiesTGroupProduct(GroupDto selectedGroup)
     {
-        if (purchasedProductDtos != null)
+        if (purchasedProductDtos != null && purchasedProductDtos.Count() > 0)
         {
             foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
             {
-                if (purchasedProduct.InputPurchasedtQuantity > 0 && purchasedProduct.PurchasedQty > 0)
+                if (purchasedProduct.InputPurchasedtQuantity <= 0)
+                {
+                    continue;
+                }
+                if (selectedGroup.GroupProductsDto != null)
+
                 {
                     // Retrieve the corresponding product in the GroupProductsDto list
                     GroupProductDto? groupProductToUpdate = selectedGroup.GroupProductsDto
                      .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
-
-                    if (groupProductToUpdate != null && (purchasedProduct.InputPurchasedtQuantity + groupProductToUpdate.InputProductQuantity) <= purchasedProduct.PurchasedQty)
+                    // Get GP Availability
+                    // the List<GP> has an object of type GP which GP_Id = PP_Id
+                    if (groupProductToUpdate != null &&
+                    (groupProductToUpdate.InputProductQuantity + purchasedProduct.InputPurchasedtQuantity) <= (purchasedProduct.PurchasedQty))
                     {
                         groupProductToUpdate.InputProductQuantity += purchasedProduct.InputPurchasedtQuantity;
                         purchasedProduct.InputPurchasedtQuantity = 0;
@@ -592,43 +586,23 @@
                                 PurchasedProductId = purchasedProduct.PurchasedProductId,
                                 ProductName = purchasedProduct.ProductName,
                                 ProductPrice = purchasedProduct.ProductPrice,
-                                AddedQty = purchasedProduct.InputPurchasedtQuantity,
+                                AddedQty = 0,
                                 InputProductQuantity = purchasedProduct.InputPurchasedtQuantity
                             };
 
                         selectedGroup.GroupProductsDto.Add(newGroupProduct);
-
+                        purchasedProduct.InputPurchasedtQuantity = 0;
                     }
+
+                    StateHasChanged();
                 }
-                StateHasChanged();
             }
         }
-    }
 
+    }
     #endregion
 
     #region Helper Methods
-
-    private void UpdateQuantities(GroupProductDto groupProduct, PurchasedProductDto purchasedProduct, int inputQuantity)
-    {
-        groupProduct.InputProductQuantity = inputQuantity;
-        purchasedProduct.InputPurchasedtQuantity = 0;
-    }
-
-    private void TrackChange(int groupId, int productId, int updatedAddedQty, int updatedPurchasedQty)
-    {
-        ProductChangeDto changeDto = new ProductChangeDto
-            {
-                CustomerId = customerId,
-                GroupId = groupId,
-                ProductId = productId,
-                UpdatedGroupProductAddedQty = updatedAddedQty,
-                UpdatedPurchasedQty = updatedPurchasedQty
-            };
-
-        ProductChangesDto.Add(changeDto);
-    }
-
     private void CreateNewGroupProduct(GroupDto selectedGroup, PurchasedProductDto purchasedProduct)
     {
         GroupProductDto newGroupProduct = new GroupProductDto
@@ -652,7 +626,6 @@
         {
             // Find the selected group and set it as the selectedGroup
             selectedGroupDto = customerGroupsDto.FirstOrDefault(g => g.GroupId == groupId);
-            ProductChangesDto = ProductChangesDto.Where(c => c.CustomerId == customerId && c.GroupId == groupId).ToList();
             displayGroupProducts = false; // Hide GroupProduct Table
         }
         else
@@ -675,17 +648,5 @@
         // For example, you can navigate to the CreateNewGroupPage with a route parameter
         NavigationManager.NavigateTo($"/create-group/{customerId}", forceLoad: true);
     }
-
-    #region Dto Classes
-
-    public class ProductChangeDto
-    {
-        public int CustomerId { get; set; }
-        public int GroupId { get; set; }
-        public int ProductId { get; set; }
-        public int UpdatedGroupProductAddedQty { get; set; }
-        public int UpdatedPurchasedQty { get; set; }
-    }
-    #endregion
 
 }
