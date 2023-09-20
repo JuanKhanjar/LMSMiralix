@@ -1,0 +1,19 @@
+﻿<!-- CustomHeaderRowWithConditions.razor -->
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+    <div class="col-sm-12 d-flex justify-content-sm-between align-baseline headerFont fs-7 bg-light p-2">
+        @for (int i = 0; i < Headers.Length; i++)
+        {
+            if (Conditions[i])
+            {
+                <div class="col-sm-3">
+                    @Headers[i]
+                </div>
+            }
+        }
+    </div>
+
+@code {
+    [Parameter] public string[] Headers { get; set; }
+    [Parameter] public bool[] Conditions { get; set; }
+}
+

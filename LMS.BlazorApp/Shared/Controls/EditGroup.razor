@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using LMS.BlazorApp.Dtos
+
+<div class="card-body p-1">
+    <EditForm Model="model" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row d-flex justify-content-center">
+            <div class="form-group col-md-10 d-flex justify-content-between">
+                <div class="form-group col-md-6">
+                    <label for="GroupName">Group Name:</label>
+                    <InputText id="GroupName" @bind-Value="model.GroupName" class="form-control inputGroupName" />
+                    <ValidationMessage For="@(() => model.GroupName)" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="EANName">EAN:</label>
+                    <input type="text" id="EANName" value="@model.EAN" class="form-control inputGroupEAN bg-white" disabled />
+                </div>
+            </div>
+            <div class="form-group col-md-2 d-flex justify-content-evenly p-3">
+                <button type="submit" class="btn btn-outline-success mx-4">
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public GroupDto model { get; set; } = new GroupDto();
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}
