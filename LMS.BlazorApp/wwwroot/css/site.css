@@ -233,3 +233,11 @@ details[open] summary ~ * {
     background: #273D20;
     color: #FFFFFF;
 }
+
+.custom-table {
+    border: none;
+}
+
+.custom-header-row {
+    border-radius: 10px 10px 0 0; /* Top-left and top-right border-radius */
+}

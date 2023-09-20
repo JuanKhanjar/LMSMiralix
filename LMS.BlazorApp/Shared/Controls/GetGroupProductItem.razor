@@ -1,0 +1,14 @@
+﻿@inherits ComponentBase
+
+<tr>
+    <td>@GroupProduct.PurchasedProduct.ProductName</td>
+    <td>@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</td>
+    <td>@GroupProduct.AddedQuantity</td>
+</tr>
+
+@code {
+    [Parameter]
+    public GroupProduct GroupProduct { get; set; }
+}
+
+

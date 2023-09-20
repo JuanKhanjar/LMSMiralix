@@ -43,9 +43,9 @@
 
                             <!-- Group -->
                             <div class="card-body">
-                                <table class="table table-borderless m-2">
+                                <table class="table table-borderless m-2 custom-table">
                                     <thead style="background:#dee2e6;">
-                                        <tr>
+                                        <tr class="custom-header-row">
                                             <th>Type</th>
                                             <th>Cost</th>
                                             <th>Remaining</th>
@@ -54,14 +54,11 @@
                                     <tbody class="">
                                         @foreach (var product in group.GroupProducts)
                                         {
-                                            <tr>
-                                                <td>@product.PurchasedProduct.ProductName</td>
-                                                <td>@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
-                                                <td>@product.AddedQuantity</td>
-                                            </tr>
+                                            <GetGroupProductItem GroupProduct="product" />
                                         }
                                     </tbody>
                                 </table>
+
                                 <div class="d-flex justify-content-between p-2">
                                     <button class="btn btn-outline-secondary" @onclick="()=>ShowGroupDetails(group.GroupId)">Edit</button>
                                     <button class="btn btn-outline-danger" @onclick="()=>ShowGroupDetails(group.GroupId)"><i class="fa fa-trash"></i></button>
