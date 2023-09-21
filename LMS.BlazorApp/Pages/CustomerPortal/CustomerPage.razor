@@ -45,8 +45,8 @@
 
                             <!-- Group -->
                             <div class="m-3">
-                                    <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
-                                               Conditions='new bool[] { true, true, true, false }' />
+                                <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
+                                                   Conditions='new bool[] { true, true, true, false }' />
                                 <table class="table">
                                     <tbody>
                                         @foreach (var product in group.GroupProducts)
@@ -91,7 +91,7 @@
                     <div class="m-4">
 
                         <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
-                                   Conditions='new bool[] { true, true, true, true }' />
+                                           Conditions='new bool[] { true, true, true, true }' />
                     </div>
                     <div class="row ">
                         <div class="col-sm-12">
@@ -113,8 +113,8 @@
                                                            max="@PP"
                                                            class="inputNumber"
                                                            id="inputNumber@(groupProduct.PurchasedProductId)"
-                                               @bind-value="@groupProduct.InputProductQuantity"
-                                               @oninput="() => UpdatePPQuantity(groupProduct)" />
+                                                    @bind-value="@groupProduct.InputProductQuantity"
+                                                    @oninput="() => UpdatePPQuantity(groupProduct)" />
                                                     @if ((PP - groupProduct.InputProductQuantity) == 0 || (groupProduct.AddedQty * -1 == groupProduct.InputProductQuantity))
                                                     {
                                                         <span class=" position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
@@ -155,7 +155,6 @@
                             </table>
 
                         </div>
-
                     </div>
 
 
@@ -163,7 +162,7 @@
                     <h5 class="mt-4 p-2 headerFont">Choose from licenses</h5>
                     <div class="m-4">
                         <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
-                                   Conditions='new bool[] { true, true, true, true }' />
+                                           Conditions='new bool[] { true, true, true, true }' />
 
                         <div class="row ">
                             <div class="col-sm-12">
@@ -185,8 +184,8 @@
                                                                max="@(Purchasedproduct.PurchasedQty - GP)"
                                                                class="inputNumber"
                                                                id="inputNumber@(Purchasedproduct.PurchasedProductId)"
-                                                   @bind-value="Purchasedproduct.InputPurchasedtQuantity"
-                                                   @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
+                                                        @bind-value="Purchasedproduct.InputPurchasedtQuantity"
+                                                        @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
 
                                                         @if (Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)
                                                         {
@@ -206,7 +205,7 @@
                             </div>
                             <div class="d-flex justify-content-end m-2 gap-1">
                                 <button class="btn btn-secondary rounded-pill px-5 " @onclick="undoChanges">Disgard</button>
-                                <button class="btn btn-success rounded-pill px-5 " @onclick="()=>showChangesToUpdate(selectedGroupDto)">Save</button>
+                                <button class="btn btn-success rounded-pill px-5 " @onclick="()=>showChangesToUpdate(selectedGroupDto,purchasedProductDtos)">Save</button>
                             </div>
                         </div>
                     </div>
@@ -220,7 +219,7 @@
                         <table class="table">
                             <thead>
                                 <CustomTableHeaderRow Headers='new string[] { " Type", "Cost" , "Remaining" }'
-                                              Conditions='new bool[] { true, true, true }'>
+                                                      Conditions='new bool[] { true, true, true }'>
                                 </CustomTableHeaderRow>
                             </thead>
                             <tbody class="">
@@ -244,75 +243,65 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Total GroupProduct</th>
-            <th>Total PurchasedProduct</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var change in changedGroupProductDtos)
-        {
-            <tr>
-                <td>@change.Id</td>
-                <td>@change.Name</td>
-                <td>@change.GPChangeQuantity</td>
-                <td>@change.PPChangeQuantity</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>GroupProduct Balance</th>
+                    <th>PurchasedProduct Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var change in changedGPDtos.OrderBy(gp => gp.Name))
+                {
+                    <tr>
+                        <td>@change.Id</td>
+                        <td>@change.Name</td>
+                        <td>@change.GPChangeQuantity</td>
+                        <td>@change.PPChangeQuantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 @code {
     private bool isLoading = true;
-    private List<Changes> changedGroupProductDtos = new List<Changes>();
-    private void showChangesToUpdate(GroupDto? selectedGroupDto)
+    private List<Changes> changedGPDtos = new List<Changes>();
+
+    private void showChangesToUpdate(GroupDto? selectedGroupDto, List<PurchasedProductDto> purchasedProductDtos)
     {
-        changedGroupProductDtos.Clear();
-
-        if (selectedGroupDto != null)
+        changedGPDtos.Clear();
+        if (purchasedProductDtos != null)
         {
-            foreach (GroupProductDto groupProduct in selectedGroupDto.GroupProductsDto)
+            foreach (PurchasedProductDto PPProduct in purchasedProductDtos)
             {
-                // Find the corresponding product in the selectedGroupDto by some identifier (e.g., ID or Name)
-                var GP = selectedGroupDto.GroupProductsDto.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
-                var PP = purchasedProductDtos.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
-
-                if (GP != null && PP != null)
+                // Find the corresponding PP in the purchasedProductDtos by some identifier (e.g., ID or Name)
+                Changes ch = new Changes();
+                var GP = selectedGroupDto.GroupProductsDto.FirstOrDefault(gp => gp.PurchasedProductId == PPProduct.PurchasedProductId);
+                if (GP != null && GP.InputProductQuantity > 0)
                 {
-                    var ch = new Changes
-                        {
-                            Id = GP.PurchasedProductId,
-                            Name = GP.ProductName,
-                            GPChangeQuantity = GP.InputProductQuantity + GP.AddedQty,
-                            PPChangeQuantity = 0
-                        };
 
-                    changedGroupProductDtos.Add(ch);
+                    ch.Id = GP.PurchasedProductId;
+                    ch.Name = GP.ProductName;
+                    ch.GPChangeQuantity = GP.InputProductQuantity;
+                    ch.PPChangeQuantity = (PPProduct.PurchasedQty - GP.InputProductQuantity);
+
                 }
-            }
-
-            // Now, loop through PurchasedProductDto collection
-            foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
-            {
-                // Check if the PurchasedProductDto is not already in the changes list
-                if (!changedGroupProductDtos.Any(ch => ch.Id == purchasedProduct.PurchasedProductId))
+                else
                 {
-                    // Create a Changes object for the PurchasedProductDto
-                    var ch = new Changes
-                        {
-                            Id = purchasedProduct.PurchasedProductId,
-                            Name = purchasedProduct.ProductName,
-                            GPChangeQuantity = 0,  // You can set this to 0 or some default value
-                            PPChangeQuantity = purchasedProduct.PurchasedQty
-                        };
-
-                    changedGroupProductDtos.Add(ch);
+                    // Corresponding GP not found, use values from PPProduct
+                    ch.Id = PPProduct.PurchasedProductId;
+                    ch.Name = PPProduct.ProductName;
+                    ch.GPChangeQuantity = 0;
+                    ch.PPChangeQuantity = PPProduct.PurchasedQty;
                 }
+                changedGPDtos.Add(ch);
             }
         }
     }
@@ -579,20 +568,20 @@
 
     private async Task DeleteGroupWithAllItsGP(int groupId)
     {
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil selt gruppe\n{selectedGroupDto.GroupName}"); 
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil selt gruppe\n{selectedGroupDto.GroupName}");
         if (confirmed)
         {
             bool result = await _IDeleteGroupWithProductsUC.ExecuteAsync(groupId);
             if (result)
             {
                 await JSRuntime.InvokeVoidAsync("Swal.fire", "Delete Successful", "The group has been deleted successfully.", "success");
-               await LoadData();
+                await LoadData();
             }
         }
         else
         {
             await JSRuntime.InvokeVoidAsync("Swal.fire", "Delete failed", "The group has not  deleted successfully.", "error");
         }
-      
+
     }
 }
