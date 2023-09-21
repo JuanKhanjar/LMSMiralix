@@ -115,17 +115,18 @@
                                                            id="inputNumber@(groupProduct.PurchasedProductId)"
                                                     @bind-value="@groupProduct.InputProductQuantity"
                                                     @oninput="() => UpdatePPQuantity(groupProduct)" />
+                                                   
                                                     @if ((PP - groupProduct.InputProductQuantity) == 0 || (groupProduct.AddedQty * -1 == groupProduct.InputProductQuantity))
                                                     {
-                                                        <span class=" position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
-
+                                                        <span class=" position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white rounded-circle">
+                                                           
                                                         </span>
                                                     }
-                                                    else
+                                                    @*else
                                                     {
-                                                        <span class=" position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                                                        <span class=" position-absolute bottom-0 start-0 translate-middle p-2 bg-success border border-light ">
                                                         </span>
-                                                    }
+                                                    }*@
                                                 </div>
                                             </td>
                                             <td>
@@ -189,7 +190,7 @@
 
                                                         @if (Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)
                                                         {
-                                                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                                            <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white">
                                                             </span>
                                                         }
                                                     </div>
