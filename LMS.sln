@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.BlazorApp", "LMS.Blazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.ServiceExtensions", "LMS.ServiceExtensions\LMS.ServiceExtensions.csproj", "{2A065945-D35A-4A95-9F8F-C93257D5128F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Tests", "LMS.Tests\LMS.Tests.csproj", "{3553DA3A-9566-4EA1-AB70-56C44960A09B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Tests", "LMS.Tests\LMS.Tests.csproj", "{3553DA3A-9566-4EA1-AB70-56C44960A09B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

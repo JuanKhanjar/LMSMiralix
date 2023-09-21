@@ -242,36 +242,24 @@
         </div>
     </div>
 </div>
+@*<ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />*@
 
-<div class="row">
-    <div class="col-md-6">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>GroupProduct Balance</th>
-                    <th>PurchasedProduct Balance</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var change in changedGPDtos.OrderBy(gp => gp.Name))
-                {
-                    <tr>
-                        <td>@change.Id</td>
-                        <td>@change.Name</td>
-                        <td>@change.GPChangeQuantity</td>
-                        <td>@change.PPChangeQuantity</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+<Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")" ConfirmButtonText="OK" CancelButtonText="Cancel" @ref="dialog">
+    <ChildContent>
+        <ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />
+    </ChildContent>
 
+</Dialog>
+<button class="btn btn-primary" @onclick="ShowDialog">Show Dialog</button>
 
 @code {
+    private Dialog dialog;
+    private void ShowDialog()
+    {
+        dialog.ShowDialog();
+    }
     private bool isLoading = true;
+
     private List<Changes> changedGPDtos = new List<Changes>();
 
     private void showChangesToUpdate(GroupDto? selectedGroupDto, List<PurchasedProductDto> purchasedProductDtos)
@@ -286,9 +274,11 @@
                 var GP = selectedGroupDto.GroupProductsDto.FirstOrDefault(gp => gp.PurchasedProductId == PPProduct.PurchasedProductId);
                 if (GP != null && GP.InputProductQuantity > 0)
                 {
-
-                    ch.Id = GP.PurchasedProductId;
+                    ch.CustomerId = customerId;
+                    ch.GroupId = selectedGroupDto.GroupId;
+                    ch.LicenseId = GP.PurchasedProductId;
                     ch.Name = GP.ProductName;
+                    ch.Cost = PPProduct.ProductPrice;
                     ch.GPChangeQuantity = GP.InputProductQuantity;
                     ch.PPChangeQuantity = (PPProduct.PurchasedQty - GP.InputProductQuantity);
 
@@ -296,22 +286,18 @@
                 else
                 {
                     // Corresponding GP not found, use values from PPProduct
-                    ch.Id = PPProduct.PurchasedProductId;
+                    ch.CustomerId = customerId;
+                    ch.GroupId = selectedGroupDto.GroupId;
+                    ch.LicenseId = PPProduct.PurchasedProductId;
                     ch.Name = PPProduct.ProductName;
+                    ch.Cost = PPProduct.ProductPrice;
                     ch.GPChangeQuantity = 0;
                     ch.PPChangeQuantity = PPProduct.PurchasedQty;
                 }
                 changedGPDtos.Add(ch);
             }
+            ShowDialog();
         }
-    }
-
-    private class Changes
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int GPChangeQuantity { get; set; }
-        public int PPChangeQuantity { get; set; }
     }
 
     protected override async Task OnInitializedAsync()

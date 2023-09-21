@@ -1,0 +1,54 @@
+﻿<div class="modal" tabindex="-1" role="dialog" style="display: @modalDisplay">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="close" @onclick="CloseDialog">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-2">
+                @ChildContent
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CancelDialog">@CancelButtonText</button>
+                <button type="button" class="btn btn-primary" @onclick="ConfirmDialog">@ConfirmButtonText</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string ConfirmButtonText { get; set; } = "OK";
+    [Parameter] public string CancelButtonText { get; set; } = "Cancel";
+    [Parameter] public RenderFragment ChildContent { get; set; } 
+
+    private string modalDisplay = "none";
+
+    public void ShowDialog()
+    {
+        modalDisplay = "block";
+    }
+
+    public void CloseDialog()
+    {
+        modalDisplay = "none";
+    }
+
+    public void ConfirmDialog()
+    {
+        // Handle OK button click action here
+
+        // Close the dialog after handling the action
+        CloseDialog();
+    }
+
+    public void CancelDialog()
+    {
+        // Handle Cancel button click action here
+
+        // Close the dialog after handling the action
+        CloseDialog();
+    }
+}
