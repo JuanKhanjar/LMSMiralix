@@ -1,4 +1,5 @@
-﻿<div class="modal" tabindex="-1" role="dialog" style="display: @modalDisplay">
+﻿@using LMS.BlazorApp.Dtos;
+<div class="modal" tabindex="-1" role="dialog" style="display: @modalDisplay">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,6 +24,7 @@
     [Parameter] public string ConfirmButtonText { get; set; } = "OK";
     [Parameter] public string CancelButtonText { get; set; } = "Cancel";
     [Parameter] public RenderFragment ChildContent { get; set; } 
+    [Parameter] public EventCallback<List<ChangesDto>> SaveChnges { get; set; }
 
     private string modalDisplay = "none";
 
@@ -39,7 +41,7 @@
     public void ConfirmDialog()
     {
         // Handle OK button click action here
-
+        SaveChnges.InvokeAsync();
         // Close the dialog after handling the action
         CloseDialog();
     }

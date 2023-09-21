@@ -1,5 +1,5 @@
 ﻿using LMS.BusinessCore.Entities;
-
+using System.Threading.Channels;
 namespace LMS.BusinessUseCases.PluginInterfaces
 {
     public interface IGroupRepository

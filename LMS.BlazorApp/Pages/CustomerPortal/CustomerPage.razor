@@ -245,7 +245,9 @@
 </div>
 @*<ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />*@
 
-<Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")" ConfirmButtonText="OK" CancelButtonText="Cancel" @ref="dialog">
+<Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")" 
+ConfirmButtonText="OK"
+        CancelButtonText="Cancel" @ref="dialog" SaveChnges="SaveToDb">
     <ChildContent>
         <ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />
     </ChildContent>
@@ -261,7 +263,7 @@
     }
     private bool isLoading = true;
 
-    private List<Changes> changedGPDtos = new List<Changes>();
+    private List<ChangesDto> changedGPDtos = new List<ChangesDto>();
 
     private void showChangesToUpdate(GroupDto? selectedGroupDto, List<PurchasedProductDto> purchasedProductDtos)
     {
@@ -271,7 +273,7 @@
             foreach (PurchasedProductDto PPProduct in purchasedProductDtos)
             {
                 // Find the corresponding PP in the purchasedProductDtos by some identifier (e.g., ID or Name)
-                Changes ch = new Changes();
+                ChangesDto ch = new ChangesDto();
                 var GP = selectedGroupDto.GroupProductsDto.FirstOrDefault(gp => gp.PurchasedProductId == PPProduct.PurchasedProductId);
                 if (GP != null && GP.InputProductQuantity > 0)
                 {
@@ -299,6 +301,10 @@
             }
             ShowDialog();
         }
+    }
+    private async Task SaveToDb(List<ChangesDto> changedGPDtos)
+    {
+        //call save
     }
 
     protected override async Task OnInitializedAsync()

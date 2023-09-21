@@ -1,6 +1,6 @@
 ﻿namespace LMS.BlazorApp.Dtos
 {
-    public class Changes
+    public class ChangesDto
     {
         public int CustomerId { get; set; }
         public int GroupId { get; set; }
