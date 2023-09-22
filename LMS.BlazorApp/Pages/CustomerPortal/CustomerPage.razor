@@ -95,7 +95,7 @@
                                     @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
                                     {
                                         int PP = groupProduct.GetPPAvailability(purchasedProductDtos);
-                                        <tr class="d-flex justify-content-sm-between align-baseline ">
+                                        <tr class="d-flex justify-content-sm-between align-baseline">
                                             <td>@groupProduct.ProductName</td>
                                             <td>@groupProduct.ProductPrice</td>
                                             <td>
@@ -167,11 +167,11 @@
                                         @foreach (var Purchasedproduct in purchasedProductDtos)
                                         {
                                             int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
-                                            <tr class="d-flex justify-content-sm-between align-baseline">
+                                            <tr class="d-flex justify-content-sm-between align-baseline @((GP - Purchasedproduct.InputPurchasedtQuantity) == 0 ? "d-none" : "")">
                                                 <td>@Purchasedproduct.ProductName</td>
                                                 <td>@Purchasedproduct.ProductPrice</td>
                                                 <td>
-                                                    <span>@Purchasedproduct.PurchasedQty - ( @GP ) = @(Purchasedproduct.PurchasedQty - GP)</span>
+                                                    <span>@Purchasedproduct.PurchasedQty - ( @GP ) = @(Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)</span>
                                                 </td>
                                                 <td>
                                                     <div class="position-relative">
@@ -249,7 +249,7 @@
     </ChildContent>
 
 </Dialog>
-<button class="btn btn-primary" @onclick="ShowDialog">Show Dialog</button>
+
 <CreateGroupDialog CancelButtonText="close" Title="Create Group" @ref="createGroupDialog">
     <ChildContent>
         <CreateNewGroupPage customerId="customerId"  />
@@ -563,20 +563,22 @@
 
     private async Task DeleteGroupWithAllItsGP(int groupId)
     {
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil selt gruppe\n{selectedGroupDto.GroupName}");
+        // check
+        string msg = $"Du er ved at slette denne gruppe:\n(<strong>{selectedGroupDto.GroupName}</strong>) med alle dens ({selectedGroupDto.GroupProductsDto.Sum(gp => gp.AddedQty)}) licens , er du sikker?";
+        bool confirmed = await _notificationService.ShowConfirmation(msg, true);
+        //bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil selt gruppe\n{selectedGroupDto.GroupName}");
         if (confirmed)
         {
             bool result = await _IDeleteGroupWithProductsUC.ExecuteAsync(groupId);
             if (result)
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Delete Successful", "The group has been deleted successfully.", "success");
+                await _notificationService.ShowSuccessNotification("Update Successful", "The group name has been updated successfully.");
                 await LoadData();
             }
+            else
+            {
+                await _notificationService.ShowErrorNotification("Update failed", "The group name has not  updated successfully.");
+            }
         }
-        else
-        {
-            await JSRuntime.InvokeVoidAsync("Swal.fire", "Delete failed", "The group has not  deleted successfully.", "error");
-        }
-
     }
 }
