@@ -31,6 +31,10 @@ namespace LMS.ServiceExtensions
             services.AddTransient<ICreateGroupUC, CreateGroupUC>();
             services.AddTransient<IUpdateGroupNameUC, UpdateGroupNameUC>();
             services.AddTransient<IDeleteGroupWithProductsUC, DeleteGroupWithProductsUC>();
+            services.AddTransient<IAddPurchasedQtysToGroupProductsUC, AddPurchasedQtysToGroupProductsUC>();
+
+            
+
         }
     }
 }

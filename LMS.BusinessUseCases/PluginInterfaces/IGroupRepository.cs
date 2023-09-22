@@ -1,4 +1,5 @@
 ﻿using LMS.BusinessCore.Entities;
+using LMS.BusinessCore.ViewModels;
 using System.Threading.Channels;
 namespace LMS.BusinessUseCases.PluginInterfaces
 {
@@ -10,6 +11,6 @@ namespace LMS.BusinessUseCases.PluginInterfaces
         Task<bool> DeleteGroupProductsAsync(int groupId);
         Task<bool> DeleteGroupWithProductsAsync(int groupId);
         Task<bool> DeleteGroupProductAsync(int groupId, int groupProductId);
-        Task<bool> AddPurchasedQtysToGroupProductsAsync(int groupId, List<Tuple<int, int>> purchasedQtys);
+        Task<bool> AddPurchasedQtysToGroupProductsAsync(int groupId, List<UpdateQuantityVM> purchasedQtys);
     }
 }

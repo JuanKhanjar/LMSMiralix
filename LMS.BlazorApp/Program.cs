@@ -1,5 +1,6 @@
 using LMS.BlazorApp.Areas.Identity;
 using LMS.BlazorApp.Data;
+using LMS.BlazorApp.ExtensionsMethods;
 using LMS.ServiceExtensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +40,7 @@ namespace LMS.BlazorApp
 
             //builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             //builder.Services.AddTransient<IGetCustomerWithGroupsAndProductsUC, GetCustomerWithGroupsAndProductsUC>();
-
+            builder.Services.AddScoped<NotificationService>();
 
 
             var app = builder.Build();

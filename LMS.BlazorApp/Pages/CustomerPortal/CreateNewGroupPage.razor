@@ -1,32 +1,39 @@
 ﻿@page "/create-group/{customerId:int}"
+
 @inject ICreateGroupUC _ICreateGroupUC
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
-@using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
-@using LMS.BusinessUseCases.GroupUCs.GroupUCInterfaces;
-@using Microsoft.AspNetCore.Components.Forms;
 @inject NavigationManager NavigationManager
+@inject NotificationService _notificationService
 @inject IJSRuntime JSRuntime
-<h3>Welcome :@_customer.CustomerName</h3>
-<div class="card p-4 mb-2">
-    <h6>Create a group and then Click edit to add Products</h6>
-</div>
-<div class="card p-2">
-    <EditForm Model="_groupModel" OnValidSubmit="CreateGroupAsync">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
 
-        <div class="form-group">
-            <label for="GroupName">Group Name:</label>
-            <InputText id="GroupName" @bind-Value="_groupModel.GroupName" class="form-control" />
-            <ValidationMessage For="@(() => _groupModel.GroupName)" />
+<div class="card">
+    <div class="card-body">
+        <h3>Welcome: @_customer.CustomerName</h3>
+        <div class="card p-4 mb-2">
+            <h6>Create a group and then Click edit to add Products</h6>
         </div>
+        <div class="card p-2">
+            <EditForm Model="_groupModel" OnValidSubmit="CreateGroupAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
+                <div class="form-group">
+                    <label for="GroupName">Group Name:</label>
+                    <InputText id="GroupName" @bind-Value="_groupModel.GroupName" class="form-control" />
+                    <ValidationMessage For="@(() => _groupModel.GroupName)" />
+                </div>
+
+                <div class="form-group m-2 p-2">
+                    <button type="submit" class="btn btn-success">Create Group</button>
+                </div>
+            </EditForm>
+        </div>
+       @* <!-- Back Button -->
         <div class="form-group m-2 p-2">
-            <button type="submit" class="btn btn-success">Create Group</button>
-        </div>
-    </EditForm>
+            <button class="btn btn-secondary" @onclick="GoBack">Cancel</button>
+        </div>*@
+    </div>
 </div>
-
 
 @code {
     [Parameter]
@@ -37,17 +44,6 @@
     {
         _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
     }
-    private async Task ShowSweetAlertAsync(string title, string text, SweetAlertMessageType type)
-    {
-        await JSRuntime.InvokeVoidAsync("showSweetAlert", title, text, type.ToString().ToLowerInvariant());
-    }
-    public enum SweetAlertMessageType
-    {
-        Success,
-        Error,
-        Warning,
-        Info
-    }
 
     private async Task CreateGroupAsync()
     {
@@ -57,13 +53,13 @@
             if (result!=null)
             {
                 // Group created successfully, navigate to a success page or perform other actions
-                await ShowSweetAlertAsync("Success", "Group created successfully!", SweetAlertMessageType.Success);
-                NavigationManager.NavigateTo($"/customer/{customerId}", forceLoad: true);
+                await _notificationService.ShowSuccessNotification("Group created successfully!", $"The Group Name Is: {result.GroupName}");
+                NavigationManager.NavigateTo($"/customer/{_customer.CustomerId}", forceLoad: true);
             }
             else
             {
                 // Group creation failed, show error notification
-                await ShowSweetAlertAsync("Error", "Group creation failed.", SweetAlertMessageType.Error);
+                await _notificationService.ShowErrorNotification("Group creation failed.","Some thing went erong!,Try Again");
             }
         }
         catch (Exception ex)
@@ -71,6 +67,11 @@
             // Handle exceptions, log errors, or display error messages
             Console.WriteLine(ex);
         }
+    }
+    private void GoBack()
+    {
+        // Navigate back to the customer page
+        NavigationManager.NavigateTo($"/customer/{_customer.CustomerId}");
     }
 }
 

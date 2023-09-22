@@ -33,16 +33,28 @@ function showValidationError(message) {
 
 
 //Update Confirmation
-function showSweetAlertConfirmation(message) {
+//function showSweetAlertConfirmation(message) {
+//    return Swal.fire({
+//        title: 'Confirmation',
+//        text: message,
+//        icon: 'question',
+//        showCancelButton: true,
+//    }).then((result) => {
+//        return result.isConfirmed;
+//    });
+//}
+function showSweetAlertConfirmation(message, useHtml) {
     return Swal.fire({
         title: 'Confirmation',
-        text: message,
+        html: useHtml ? message : undefined, // Enable HTML rendering if useHtml is true
+        text: !useHtml ? message : undefined, // Use plain text if useHtml is false
         icon: 'question',
         showCancelButton: true,
     }).then((result) => {
         return result.isConfirmed;
     });
 }
+
 //Notification for Update
 function showSweetAlertSuccess(title, message) {
     Swal.fire({

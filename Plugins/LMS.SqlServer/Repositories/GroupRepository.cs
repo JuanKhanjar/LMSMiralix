@@ -1,4 +1,5 @@
 ﻿using LMS.BusinessCore.Entities;
+using LMS.BusinessCore.ViewModels;
 using LMS.BusinessUseCases.PluginInterfaces;
 using LMS.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace LMS.SqlServer.Repositories
             _logger = logger;
         }
 
-        public async Task<bool> AddPurchasedQtysToGroupProductsAsync(int groupId, List<Tuple<int, int>> purchasedQtys)
+        public async Task<bool> AddPurchasedQtysToGroupProductsAsync(int groupId, List<UpdateQuantityVM> purchasedQtys)
         {
             if (groupId <= 0 || purchasedQtys == null || !purchasedQtys.Any())
             {
@@ -28,39 +29,39 @@ namespace LMS.SqlServer.Repositories
 
             using (LMSDbContext _dbContext = _dbContextFactory.CreateDbContext())
             {
-                using (var transaction = _dbContext.Database.BeginTransaction())
+                using (IDbContextTransaction transaction = _dbContext.Database.BeginTransaction())
                 {
                     try
                     {
-                        foreach (var (purchasedProductId, qty) in purchasedQtys)
+                        foreach (UpdateQuantityVM updateQuantityVM in purchasedQtys)
                         {
                             // Find the specific GroupProduct and the associated PurchasedProduct
                             GroupProduct? groupProduct = await _dbContext.GroupProducts
                                 .Include(gp => gp.PurchasedProduct)
-                                .FirstOrDefaultAsync(gp => gp.GroupId == groupId && gp.PurchasedProductId == purchasedProductId);
+                                .FirstOrDefaultAsync(gp => gp.GroupId == groupId && gp.PurchasedProductId == updateQuantityVM.LicenseId);
 
                             if (groupProduct == null)
                             {
                                 // Log a warning if the GroupProduct is not found
-                                _logger.LogWarning("GroupProduct not found for groupId: {GroupId} and purchasedProductId: {PurchasedProductId}", groupId, purchasedProductId);
+                                _logger.LogWarning("GroupProduct not found for groupId: {GroupId} and purchasedProductId: {PurchasedProductId}", groupId, updateQuantityVM.LicenseId);
                                 return false; // Return false if the GroupProduct is not found
                             }
 
                             // Find the corresponding PurchasedProduct
                             PurchasedProduct? purchasedProduct = groupProduct.PurchasedProduct;
 
-                            if (purchasedProduct == null || purchasedProduct.PurchasedQty < qty)
+                            if (purchasedProduct == null)
                             {
                                 // Log a warning if the PurchasedProduct is not found or if the PurchasedQty is insufficient
-                                _logger.LogWarning("PurchasedProduct not found or insufficient quantity for purchasedProductId: {PurchasedProductId}", purchasedProductId);
+                                _logger.LogWarning("PurchasedProduct not found or insufficient quantity for purchasedProductId: {PurchasedProductId}", purchasedProduct.ProductId);
                                 return false; // Return false if the PurchasedProduct is not found or insufficient quantity
                             }
 
                             // Update the GroupProduct's AddedQuantity
-                            groupProduct.AddedQuantity += qty;
+                            groupProduct.AddedQuantity = updateQuantityVM.GPChangeQuantity;
 
                             // Update the PurchasedProduct's PurchasedQty
-                            purchasedProduct.PurchasedQty -= qty;
+                            purchasedProduct.PurchasedQty = updateQuantityVM.PPChangeQuantity;
                         }
 
                         // Save changes to apply the updates
@@ -160,7 +161,14 @@ namespace LMS.SqlServer.Repositories
                     _logger.LogWarning("Group not found for groupId: {GroupId}", groupId);
                     return false; // Return false if the group is not found
                 }
+                // Check if another group with the same name already exists
+                bool groupNameExists = await _dbContext.Groups.AnyAsync(g => g.GroupName == newGroupName && g.GroupId != groupId);
 
+                if (groupNameExists)
+                {
+                    _logger.LogWarning("Group with the same name already exists: {GroupName}", newGroupName);
+                    return false; // Return false if a group with the same name already exists
+                }
                 // Update the group name
                 groupToUpdate.GroupName = newGroupName;
 

@@ -1,17 +1,12 @@
 ﻿@page "/customer/{customerId:int}"
-@using LMS.BlazorApp.Dtos;
-@using LMS.BlazorApp.ExtensionsMethods;
-@using LMS.BusinessUseCases.CustomerUCs.CustomerUCInterfaces;
-@using LMS.BusinessCore.Extensions.GroupExtentionsMethods;
-@using LMS.BusinessUseCases.GroupUCs.GroupUCInterfaces;
 
-@using LMS.BusinessUseCases.PurchasedProductsUCs.PurchasedProductsUCsInterfaces;
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
 @inject IUpdateGroupNameUC _IUpdateGroupNameUC
 @inject IDeleteGroupWithProductsUC _IDeleteGroupWithProductsUC
-@using LMS.BlazorApp.Extensions;
+@inject IAddPurchasedQtysToGroupProductsUC _IAddPurchasedQtysToGroupProductsUC
 @inject NavigationManager NavigationManager
+@inject NotificationService _notificationService
 
 @inject IJSRuntime JSRuntime
 
@@ -79,7 +74,7 @@
                         <p>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                     </div>
                     <div class="m-3 d-flex">
-                        <EditGroup model="selectedGroupDto" OnValidSubmit="UpdateGroupAsync" />
+                        <EditGroup model="selectedGroupDto" OnValidSubmit="UpdateGroupNameAsync" />
                         <div class="form-group col-md-2 d-flex justify-content-evenly p-3">
                             <button type="submit" class="btn btn-outline-danger " @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)"><i class="fa fa-trash"></i></button>
                         </div>
@@ -114,19 +109,19 @@
                                                            class="inputNumber"
                                                            id="inputNumber@(groupProduct.PurchasedProductId)"
                                                     @bind-value="@groupProduct.InputProductQuantity"
-                                                    @oninput="() => UpdatePPQuantity(groupProduct)" />
-                                                   
+                                                     />
+
                                                     @if ((PP - groupProduct.InputProductQuantity) == 0 || (groupProduct.AddedQty * -1 == groupProduct.InputProductQuantity))
                                                     {
                                                         <span class=" position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white rounded-circle">
-                                                           
+
                                                         </span>
                                                     }
                                                     @*else
-                                                    {
-                                                        <span class=" position-absolute bottom-0 start-0 translate-middle p-2 bg-success border border-light ">
-                                                        </span>
-                                                    }*@
+                                        {
+                                        <span class=" position-absolute bottom-0 start-0 translate-middle p-2 bg-success border border-light ">
+                                        </span>
+                                        }*@
                                                 </div>
                                             </td>
                                             <td>
@@ -186,7 +181,7 @@
                                                                class="inputNumber"
                                                                id="inputNumber@(Purchasedproduct.PurchasedProductId)"
                                                         @bind-value="Purchasedproduct.InputPurchasedtQuantity"
-                                                        @oninput="() => UpdatePurchasedProductQuantity(Purchasedproduct)" />
+                                                       />
 
                                                         @if (Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)
                                                         {
@@ -245,17 +240,24 @@
 </div>
 @*<ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />*@
 
-<Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")" 
-ConfirmButtonText="OK"
-        CancelButtonText="Cancel" @ref="dialog" SaveChnges="SaveToDb">
+<Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")"
+        ConfirmButtonText="OK"
+        CancelButtonText="Cancel" 
+        @ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
     <ChildContent>
         <ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />
     </ChildContent>
 
 </Dialog>
 <button class="btn btn-primary" @onclick="ShowDialog">Show Dialog</button>
+<CreateGroupDialog CancelButtonText="close" Title="Create Group" @ref="createGroupDialog">
+    <ChildContent>
+        <CreateNewGroupPage customerId="customerId"  />
+    </ChildContent>
+</CreateGroupDialog>
 
 @code {
+    private CreateGroupDialog createGroupDialog;
     private Dialog dialog;
     private void ShowDialog()
     {
@@ -264,6 +266,7 @@ ConfirmButtonText="OK"
     private bool isLoading = true;
 
     private List<ChangesDto> changedGPDtos = new List<ChangesDto>();
+    private List<UpdateQuantityVM> updateQuantityVmList = new List<UpdateQuantityVM>();
 
     private void showChangesToUpdate(GroupDto? selectedGroupDto, List<PurchasedProductDto> purchasedProductDtos)
     {
@@ -304,7 +307,18 @@ ConfirmButtonText="OK"
     }
     private async Task SaveToDb(List<ChangesDto> changedGPDtos)
     {
+        updateQuantityVmList = changedGPDtos.Select(dto => MapToUpdateQuantityVM(dto)).ToList();
         //call save
+        bool result = await _IAddPurchasedQtysToGroupProductsUC.ExecuteAsync(selectedGroupDto.GroupId, updateQuantityVmList);
+        if (result)
+        {
+            // Update was successful, show a success notification
+            await JSRuntime.InvokeVoidAsync("Swal.fire", "Quantities Updated Successfully", "The groups quantities has been updated successfully.", "success");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The groups quantities has not  updated successfully.", "error");
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -364,72 +378,29 @@ ConfirmButtonText="OK"
             purchasedProductDtos = _PurchasedProducts.Select(p => MapToPurchasedProductDto(p)).ToList();
         }
     }
-    private GroupDto MapToGroupDto(Group group)
-    {
-        if (group == null)
-        {
-            return null;
-        }
 
-        return new GroupDto
-            {
-                GroupId = group.GroupId,
-                GroupName = group.GroupName,
-                EAN = group.EAN,
-                CustomerId = customerId,
-                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList()
-            };
-    }
-    private GroupProductDto MapToGroupProductDto(GroupProduct groupProduct)
-    {
-        if (groupProduct == null)
-        {
-            return null;
-        }
 
-        return new GroupProductDto
-            {
-                GroupId = groupProduct.GroupId,
-                PurchasedProductId = groupProduct.PurchasedProductId,
-                ProductName = groupProduct.PurchasedProduct?.ProductName,
-                ProductPrice = groupProduct.PurchasedProduct?.ProductPrice ?? 0.00M,
-                AddedQty = groupProduct.AddedQuantity
-
-            };
-    }
-    private PurchasedProductDto MapToPurchasedProductDto(PurchasedProduct purchasedProduct)
-    {
-        if (purchasedProduct == null)
-        {
-            return null;
-        }
-
-        return new PurchasedProductDto
-            {
-                PurchasedProductId = purchasedProduct.ProductId,
-                ProductName = purchasedProduct.ProductName,
-                ProductPrice = purchasedProduct.ProductPrice,
-                PurchasedQty = purchasedProduct.PurchasedQty,
-                CustomerId = customerId
-            };
-    }
     #endregion
 
     #region Manpulate
-    private async Task UpdateGroupAsync()
+    private async Task UpdateGroupNameAsync()
     {
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}"); if (confirmed)
+        bool confirmed = await _notificationService.ShowConfirmation($"Du er ved at ændre gruppenavnet til<strong> {selectedGroupDto.GroupName}</strong>, er du sikker? ",true);
+        //bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}");
+        if (confirmed)
         {
             var result = await _IUpdateGroupNameUC.ExcecuteAsync(selectedGroupDto.GroupId, selectedGroupDto.GroupName);
             if (result)
             {
                 // Update was successful, show a success notification
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Update Successful", "The group name has been updated successfully.", "success");
+                await _notificationService.ShowSuccessNotification("Update Successful", "The group name has been updated successfully.");
+                //await JSRuntime.InvokeVoidAsync("Swal.fire", "Update Successful", "The group name has been updated successfully.", "success");
             }
-        }
-        else
-        {
-            await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The group name has not  updated successfully.", "error");
+            else
+            {
+                await _notificationService.ShowErrorNotification("Update failed", "The group name has not  updated successfully.");
+                //await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The group name has not  updated successfully.", "error");
+            }
         }
     }
     #endregion
@@ -449,34 +420,8 @@ ConfirmButtonText="OK"
             selectedGroupDto?.GroupProductsDto.Remove(groupProduct);
             StateHasChanged();
         }
-
     }
-    private void UpdatePPQuantity(GroupProductDto groupProduct)
-    {
-        PurchasedProductDto? purchasedProduct = purchasedProductDtos?.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
-        if (purchasedProduct != null)
-        {
-        }
-        else
-        {
-            // Handle other logic as needed
-        }
-        StateHasChanged();
-    }
-    private void UpdatePurchasedProductQuantity(PurchasedProductDto? purchasedProduct)
-    {
-        // Find the corresponding GroupProduct
-        GroupProductDto groupProductToUpdate = groupProductDtos.FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
 
-        if (groupProductToUpdate != null)
-        {
-
-        }
-        else
-        {
-
-        }
-    }
     private void AddPurchasedQuantitiesTGroupProduct(GroupDto selectedGroup)
     {
         if (purchasedProductDtos != null && purchasedProductDtos.Count() > 0)
@@ -526,7 +471,68 @@ ConfirmButtonText="OK"
     #endregion
 
     #region Helper Methods
+    private GroupDto MapToGroupDto(Group group)
+    {
+        if (group == null)
+        {
+            return null;
+        }
 
+        return new GroupDto
+            {
+                GroupId = group.GroupId,
+                GroupName = group.GroupName,
+                EAN = group.EAN,
+                CustomerId = customerId,
+                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList()
+            };
+    }
+    private GroupProductDto MapToGroupProductDto(GroupProduct groupProduct)
+    {
+        if (groupProduct == null)
+        {
+            return null;
+        }
+
+        return new GroupProductDto
+            {
+                GroupId = groupProduct.GroupId,
+                PurchasedProductId = groupProduct.PurchasedProductId,
+                ProductName = groupProduct.PurchasedProduct?.ProductName,
+                ProductPrice = groupProduct.PurchasedProduct?.ProductPrice ?? 0.00M,
+                AddedQty = groupProduct.AddedQuantity
+
+            };
+    }
+    private PurchasedProductDto MapToPurchasedProductDto(PurchasedProduct purchasedProduct)
+    {
+        if (purchasedProduct == null)
+        {
+            return null;
+        }
+
+        return new PurchasedProductDto
+            {
+                PurchasedProductId = purchasedProduct.ProductId,
+                ProductName = purchasedProduct.ProductName,
+                ProductPrice = purchasedProduct.ProductPrice,
+                PurchasedQty = purchasedProduct.PurchasedQty,
+                CustomerId = customerId
+            };
+    }
+    private UpdateQuantityVM MapToUpdateQuantityVM(ChangesDto dto)
+    {
+        return new UpdateQuantityVM
+            {
+                CustomerId = customerId,
+                GroupId = dto.GroupId,
+                LicenseId = dto.LicenseId,
+                Name = dto.Name,
+                Cost = dto.Cost,
+                GPChangeQuantity = dto.GPChangeQuantity,
+                PPChangeQuantity = dto.PPChangeQuantity
+            };
+    }
     #endregion
 
     #region Methods
@@ -547,16 +553,12 @@ ConfirmButtonText="OK"
     }
     #endregion
 
-    private async Task ShowValidationError(string message)
-    {
-        await JSRuntime.ShowValidationErrorAsync(message);
-    }
-
     private void CreateGroup()
     {
         // Implement the logic to create a group here
         // For example, you can navigate to the CreateNewGroupPage with a route parameter
-        NavigationManager.NavigateTo($"/create-group/{customerId}", forceLoad: true);
+        //NavigationManager.NavigateTo($"/create-group/{customerId}", forceLoad: true);
+        createGroupDialog.ShowDialog();
     }
 
     private async Task DeleteGroupWithAllItsGP(int groupId)
