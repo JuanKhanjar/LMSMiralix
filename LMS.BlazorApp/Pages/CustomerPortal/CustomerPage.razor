@@ -10,13 +10,12 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="container-fluid mt-30">
     <div class="row">
         <!-- Left LayOut -->
-        <div class="col-md-5 card shadow-left">
+    <div class="col-md-5 shadow-left">
             <!-- Customer Info Card -->
             <div class=" m-4 p-2">
-                <p class="headerFont">Grupper (@customerGroups.Count())</p>
+            <p class="headerFont">Grupper (@customerGroups.Count())</p>
             </div>
             <!-- List of Groups -->
             @if (customerGroups != null)
@@ -26,22 +25,22 @@
                     <div class=" mb-4 p-1">
                         <details>
                             <!--Group Header-->
-                            <summary class="d-flex justify-content-between header2Font align-items-center">
+                            <summary class="d-flex justify-content-between align-items-center">
                                 <div class="row row-cols-3 px-3">
-                                    <div class="col m-0">@_customer?.CustomerName @group.GroupName </div>
+                                <div class="col m-0">@_customer?.CustomerName @group.GroupName </div>
                                     <div class="col m-0"></div>
-                                    <div class="col m-0">EAN:<span class="col m-0 d-flex justify-content-start">@group.EAN</span> </div>
+                                <div class="col m-0">EAN:<span class="col m-0 d-flex justify-content-start">@group.EAN</span> </div>
 
-                                    <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
-                                    <div class="col mx-0">(@group.GetTotalQuantityForAgroup()) licenses</div>
+                                <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
+                                <div class="col mx-0">(@group.GetTotalQuantityForAgroup()) licenses</div>
                                     <div class="col m-0"></div>
                                 </div>
                             </summary>
 
                             <!-- Group -->
                             <div class="m-3">
-                                <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
-                                                   Conditions='new bool[] { true, true, true, false }' />
+                                <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining" }'
+                                                   Conditions='new bool[] { true, true, true }' />
                                 <table class="table">
                                     <tbody>
                                         @foreach (var product in group.GroupProducts)
@@ -63,7 +62,7 @@
 
         </div>
         <!-- Right LayOut- Group Detalis -->
-        <div class="col-md-7">
+        <div class="col-md-7 p-2 align-content-center">
             @if (selectedGroupDto != null)
             {
                 @if (displayGroupProducts == false)
@@ -167,11 +166,11 @@
                                         @foreach (var Purchasedproduct in purchasedProductDtos)
                                         {
                                             int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
-                                            <tr class="d-flex justify-content-sm-between align-baseline @((GP - Purchasedproduct.InputPurchasedtQuantity) == 0 ? "d-none" : "")">
-                                                <td>@Purchasedproduct.ProductName</td>
+                                            <tr class="d-flex justify-content-sm-between align-baseline " >
+                                                <td class="@(Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0 ? "text-danger" : "")">@Purchasedproduct.ProductName</td>
                                                 <td>@Purchasedproduct.ProductPrice</td>
                                                 <td>
-                                                    <span>@Purchasedproduct.PurchasedQty - ( @GP ) = @(Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity) == 0)</span>
+                                                    <span>@Purchasedproduct.PurchasedQty - ( @GP ) = @(Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity))</span>
                                                 </td>
                                                 <td>
                                                     <div class="position-relative">
@@ -208,11 +207,11 @@
                 }
                 else
                 {
-                    <div class="card  p-2 ">
+                    <div class="p-2 ">
                         <!-- Purchased Products Table -->
                         <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
                         <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
-                        <table class="table">
+                        <table class="table table-borderless">
                             <thead>
                                 <CustomTableHeaderRow Headers='new string[] { " Type", "Cost" , "Remaining" }'
                                                       Conditions='new bool[] { true, true, true }'>
@@ -237,7 +236,6 @@
             }
         </div>
     </div>
-</div>
 @*<ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />*@
 
 <Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")"
@@ -332,6 +330,7 @@
         await LoadData();
         ShowGroupDetails(selectedGroup.GroupId);
     }
+
     #region Param
     [Parameter]
     public int customerId { get; set; }
@@ -409,7 +408,6 @@
     private void RemoveProduct(GroupProductDto groupProduct)
     {
         PurchasedProductDto? PP = purchasedProductDtos?.FirstOrDefault(p => p.PurchasedProductId == groupProduct.PurchasedProductId);
-
         if (PP != null)
         {
 
@@ -418,8 +416,23 @@
             PP.InputPurchasedtQuantity = 0;
             // Remove the product from the list
             selectedGroupDto?.GroupProductsDto.Remove(groupProduct);
-            StateHasChanged();
         }
+        else
+        {
+            PurchasedProductDto newPP = new PurchasedProductDto()
+            {
+                    PurchasedProductId = groupProduct.PurchasedProductId,
+                    ProductName=groupProduct.ProductName,
+                    ProductPrice=groupProduct.ProductPrice,
+                    PurchasedQty=groupProduct.AddedQty
+            };
+            if (purchasedProductDtos!=null)
+            {
+                selectedGroupDto?.GroupProductsDto.Remove(groupProduct);
+                purchasedProductDtos.Add(newPP);
+            }
+        }
+        StateHasChanged();
     }
 
     private void AddPurchasedQuantitiesTGroupProduct(GroupDto selectedGroup)

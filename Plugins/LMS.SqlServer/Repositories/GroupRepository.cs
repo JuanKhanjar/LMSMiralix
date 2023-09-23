@@ -35,21 +35,27 @@ namespace LMS.SqlServer.Repositories
                     {
                         foreach (UpdateQuantityVM updateQuantityVM in purchasedQtys)
                         {
-                            // Find the specific GroupProduct and the associated PurchasedProduct
+                            // Find the specific GroupProduct for this specific Group
                             GroupProduct? groupProduct = await _dbContext.GroupProducts
-                                .Include(gp => gp.PurchasedProduct)
-                                .FirstOrDefaultAsync(gp => gp.GroupId == groupId && gp.PurchasedProductId == updateQuantityVM.LicenseId);
+                                .FirstOrDefaultAsync(gp => gp.GroupId == groupId && gp.GroupProductId == updateQuantityVM.LicenseId);
 
-                            if (groupProduct == null)
+                            if (groupProduct == null || groupProduct.GroupProductId<=0)
                             {
-                                // Log a warning if the GroupProduct is not found
-                                _logger.LogWarning("GroupProduct not found for groupId: {GroupId} and purchasedProductId: {PurchasedProductId}", groupId, updateQuantityVM.LicenseId);
-                                return false; // Return false if the GroupProduct is not found
+                                var GP = new GroupProduct()
+                                {
+                                    GroupId= groupId,
+                                    PurchasedProductId=updateQuantityVM.LicenseId,
+                                    AddedQuantity= updateQuantityVM.GPChangeQuantity
+                                };
+                                await _dbContext.GroupProducts.AddAsync(GP);
+                                //// Log a warning if the GroupProduct is not found
+                                //_logger.LogWarning("GroupProduct not found for groupId: {GroupId} and purchasedProductId: {PurchasedProductId}", groupId, updateQuantityVM.LicenseId);
+                                //return false; // Return false if the GroupProduct is not found
                             }
 
                             // Find the corresponding PurchasedProduct
-                            PurchasedProduct? purchasedProduct = groupProduct.PurchasedProduct;
-
+                            PurchasedProduct? purchasedProduct = await _dbContext.PurchasedProducts
+                                .FirstOrDefaultAsync(pp => pp.ProductId == updateQuantityVM.LicenseId);
                             if (purchasedProduct == null)
                             {
                                 // Log a warning if the PurchasedProduct is not found or if the PurchasedQty is insufficient
