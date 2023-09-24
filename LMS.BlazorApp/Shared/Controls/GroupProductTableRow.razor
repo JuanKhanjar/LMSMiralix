@@ -1,0 +1,26 @@
+﻿<tr class="d-flex justify-content-sm-between align-baseline">
+    <td>@GroupProduct.ProductName</td>
+    <td>@GroupProduct.ProductPrice</td>
+    <td>
+        <span>@GroupProduct.AddedQty + (@GroupProduct.InputProductQuantity) = @(GroupProduct.AddedQty + GroupProduct.InputProductQuantity)</span>
+    </td>
+    <td>
+        <div class="position-relative">
+            <input type="number"
+                   min="0"
+                   max="@PurchasedProduct"
+                   class="inputNumber"
+                   id="inputNumber@(GroupProduct.PurchasedProductId)"
+                   @bind-value="GroupProduct.InputProductQuantity" />
+
+            @if ((PurchasedProduct - GroupProduct.InputProductQuantity) == 0 || (GroupProduct.AddedQty * -1 == GroupProduct.InputProductQuantity))
+            {
+                <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white rounded-circle"></span>
+            }
+        </div>
+    </td>
+    <td>
+        <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct.InvokeAsync(GroupProduct)"><i class="fa fa-trash"></i></button>
+    </td>
+</tr>
+

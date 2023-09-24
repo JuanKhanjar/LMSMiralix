@@ -1,11 +1,11 @@
 ﻿<!-- CustomHeaderRowWithConditions.razor -->
 @inherits Microsoft.AspNetCore.Components.ComponentBase
-<div class="col-sm-12 d-flex justify-content-sm-between align-content-between tableHearderFont rounded-top px-2 py-2">
+<div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between tableHearderFont rounded-top px-4 py-2">
     @for (int i = 0; i < Headers.Length; i++)
     {
         if (Conditions[i])
         {
-            <div class="col-sm-4 d-flex justify-content-center">
+            <div class="col-sm-3">
                 @Headers[i]
             </div>
         }

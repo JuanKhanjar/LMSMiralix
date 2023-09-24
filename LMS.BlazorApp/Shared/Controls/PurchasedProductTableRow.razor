@@ -1,0 +1,24 @@
+﻿<tr class="d-flex justify-content-sm-between align-baseline ">
+    <td class="@(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity) == 0 ? "text-danger" : "")">@PurchasedProduct.ProductName</td>
+    <td>@PurchasedProduct.ProductPrice</td>
+    <td>
+        <span>@PurchasedProduct.PurchasedQty - ( @GroupProductQuantity ) = @(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity))</span>
+    </td>
+    <td>
+        <div class="position-relative">
+            <input type="number"
+                   min="0"
+                   max="@(PurchasedProduct.PurchasedQty - GroupProductQuantity)"
+                   class="inputNumber"
+                   id="inputNumber@(PurchasedProduct.PurchasedProductId)"
+                   @bind-value="PurchasedProduct.InputPurchasedtQuantity" />
+
+            @if (PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity) == 0)
+            {
+                <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white">
+                </span>
+            }
+        </div>
+    </td>
+    <td></td>
+</tr>
