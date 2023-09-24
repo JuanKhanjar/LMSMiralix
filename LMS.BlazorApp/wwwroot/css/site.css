@@ -306,3 +306,17 @@ details[open] summary ~ * {
 @media (max-width: 1199.98px) {
 
 }
+
+
+.disabled-row {
+    
+    color: #721c24; /* Set the text color (dark red in this case) */
+    text-decoration: line-through; /* Apply a line-through text decoration */
+}
+    .disabled-row input[type="number"] {
+        /* Your custom styles for the input field in disabled rows */
+        /* For example, you can set the input field's color to gray */
+        color: gray;
+        /* You can also disable user interaction with the input field */
+        pointer-events: none;
+    }

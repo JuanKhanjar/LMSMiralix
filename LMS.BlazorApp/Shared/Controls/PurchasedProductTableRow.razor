@@ -1,5 +1,5 @@
-﻿<tr class="d-flex justify-content-sm-between align-baseline ">
-    <td class="@(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity) == 0 ? "text-danger" : "")">@PurchasedProduct.ProductName</td>
+﻿<tr class="d-flex justify-content-sm-between align-baseline @(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity) == 0 ? "disabled-row" : "") ">
+    <td class="">@PurchasedProduct.ProductName</td>
     <td>@PurchasedProduct.ProductPrice</td>
     <td>
         <span>@PurchasedProduct.PurchasedQty - ( @GroupProductQuantity ) = @(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity))</span>
