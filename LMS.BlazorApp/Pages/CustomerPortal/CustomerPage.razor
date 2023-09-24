@@ -255,8 +255,8 @@
 </CreateGroupDialog>
 
 @code {
-    private CreateGroupDialog createGroupDialog;
-    private Dialog dialog;
+    private CreateGroupDialog createGroupDialog { get; set; } = new CreateGroupDialog();
+    private Dialog dialog { get; set; } = new Dialog();
     private void ShowDialog()
     {
         dialog.ShowDialog();
