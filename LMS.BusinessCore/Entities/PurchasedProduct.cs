@@ -26,5 +26,4 @@ namespace LMS.BusinessCore.Entities
         public virtual Customer? Customer { get; set; }
         public virtual ICollection<GroupProduct> GroupProducts { get; set; } = new List<GroupProduct>();
     }
-
 }

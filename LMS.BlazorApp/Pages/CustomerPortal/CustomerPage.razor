@@ -43,10 +43,12 @@
                     <p class="header2Font">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</p>
                     <p>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                 </div>
-                <div class="col-sm-12 col-md-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
-                    <EditGroup model="selectedGroupDto" OnValidSubmit="UpdateGroupNameAsync" />
-                    <div class="form-group ">
-                        <button type="submit" class="btn btn-outline-danger " @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)"><i class="fa fa-trash"></i></button>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
+                        <EditGroup model="selectedGroupDto" OnValidSubmit="UpdateGroupNameAsync" />
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-outline-danger " @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)"><i class="fa fa-trash"></i></button>
+                        </div>
                     </div>
                 </div>
 
@@ -55,7 +57,7 @@
                 <!-- GroupProduct Table -->
 
                 <div class="row">
-                    <div class="col-md-11">
+                    <div class="col-md-10">
                         <div class="">
                             <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
                                        Conditions='new bool[] { true, true, true, true }' />
@@ -72,17 +74,24 @@
                                     int PP = groupProduct.GetPPAvailability(purchasedProductDtos);
                                     <GroupProductTableRow GroupProduct="groupProduct" PurchasedProduct="PP" RemoveProduct="RemoveProduct" />
                                 }
+                                
                             </tbody>
-                            <tr class="d-flex justify-content-between gap-1">
-                                <td colspan="4"></td>
-                                <td colspan="2" class="d-flex justify-content-between align-items-baseline px-3">
-                                    <span>Total:</span>
-                                    <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p => p.ProductPrice * (p.AddedQty + p.InputProductQuantity)).ToString("c")</span>
-                                    <span>/</span>
-                                    <span>(@selectedGroupDto.GroupProductsDto.Sum(p => p.AddedQty + p.InputProductQuantity))</span>
-                                    <span>licenser</span>
-                                </td>
-                            </tr>
+                            <tfoot>
+                                <tr class="d-flex justify-content-end gap-1">
+                                    <td class="d-flex justify-content-between align-items-baseline px-3">
+                                        <span>Total:</span>
+                                        <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p => p.ProductPrice * (p.AddedQty + p.InputProductQuantity)).ToString("c")</span>
+                                        <span>/</span>
+                                        <span>(@selectedGroupDto.GroupProductsDto.Sum(p => p.AddedQty + p.InputProductQuantity))</span>
+                                        <span>licenser</span>
+                                        
+                                    </td>
+                                    <td>&ensp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tfoot>
+                            
                         </table>
                     </div>
                 </div>
@@ -91,8 +100,8 @@
                 <h5 class="mt-4 p-2 headerFont">Choose from licenses</h5>
 
                 <div class="row">
-                    <div class="col-md-11">
-                        <div class="col-md-11">
+                    <div class="col-md-10">
+                        <div class="">
                             <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
                                        Conditions='new bool[] { true, true, true, true }' />
                         </div>
