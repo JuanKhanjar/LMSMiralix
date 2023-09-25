@@ -1,0 +1,33 @@
+﻿<details>
+    <!-- Group Header -->
+    <summary class="d-flex justify-content-between align-items-center">
+        <div class="row row-cols-3 px-3">
+            <div class="col m-0">@_customer?.CustomerName @group.GroupName </div>
+            <div class="col m-0"></div>
+            <div class="col m-0">EAN:<span class="col m-0 d-flex justify-content-start">@group.EAN</span> </div>
+
+            <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
+            <div class="col mx-0">(@group.GetTotalQuantityForAgroup()) licenses</div>
+            <div class="col m-0"></div>
+        </div>
+    </summary>
+
+    <!-- Group -->
+    <div class="m-3">
+        <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining" }'
+                           Conditions='new bool[] { true, true, true }' />
+        <table class="table">
+            <tbody>
+                @foreach (var product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
+                {
+                    <GetGroupProductItem GroupProduct="product" />
+                }
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-between p-2">
+            <button class="btn btn-outline-secondary" @onclick="()=>ShowGroupDetails.InvokeAsync(group.GroupId)">Edit</button>
+            <button class="btn btn-outline-danger" @onclick="()=>DeleteGroupWithAllItsGP.InvokeAsync(group.GroupId)"><i class="fa fa-trash"></i></button>
+        </div>
+    </div>
+</details>
+
