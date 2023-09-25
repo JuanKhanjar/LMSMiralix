@@ -274,8 +274,9 @@ details[open] summary ~ * {
 }
 
 .shadow-left {
-    box-shadow: 4px 4px 13px 0px #C9C9C940;
-    border: 1px solid #D3D3D3;
+    border: 1px solid rgba(211, 211, 211, 1) ;
+    border-left:none;
+    box-shadow: 1px 0px 12px 0px rgba(201, 201, 201, 0.25);
 }
 
 .shadow-right {
@@ -318,5 +319,5 @@ details[open] summary ~ * {
         /* For example, you can set the input field's color to gray */
         color: gray;
         /* You can also disable user interaction with the input field */
-        pointer-events: none;
+       /* pointer-events: none;*/
     }

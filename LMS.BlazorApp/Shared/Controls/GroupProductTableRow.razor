@@ -1,4 +1,5 @@
-﻿<tr class="d-flex justify-content-sm-between align-baseline">
+﻿
+<tr class="d-flex justify-content-sm-between align-baseline">
     <td>@GroupProduct.ProductName</td>
     <td>@GroupProduct.ProductPrice</td>
     <td>
@@ -11,7 +12,7 @@
                    max="@PurchasedProduct"
                    class="inputNumber"
                    id="inputNumber@(GroupProduct.PurchasedProductId)"
-                   @bind-value="GroupProduct.InputProductQuantity" />
+            @bind-value="GroupProduct.InputProductQuantity" />
 
             @if ((PurchasedProduct - GroupProduct.InputProductQuantity) == 0 || (GroupProduct.AddedQty * -1 == GroupProduct.InputProductQuantity))
             {
@@ -23,4 +24,5 @@
         <button class="btn btn-outline-danger" @onclick="()=>RemoveProduct.InvokeAsync(GroupProduct)"><i class="fa fa-trash"></i></button>
     </td>
 </tr>
+
 

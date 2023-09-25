@@ -7,6 +7,7 @@
         <table class="table ">
             <thead>
                 <tr>
+                    <th>Type Id</th>
                     <th>Type</th>
                     <th>Group Balance</th>
                     <th>Purchased Balance</th>
@@ -16,6 +17,7 @@
                 @foreach (var change in ChangedGPDtos.OrderBy(gp => gp.Name))
                 {
                     <tr>
+                        <td>@change.LicenseId</td>
                         <td>@change.Name</td>
                         <td>@change.GPChangeQuantity</td>
                         <td>@change.PPChangeQuantity</td>

@@ -9,6 +9,5 @@ namespace LMS.BlazorApp.Shared.Controls
         public PurchasedProductDto PurchasedProduct { get; set; } = new PurchasedProductDto();
         [Parameter]
         public int GroupProductQuantity { get; set; }
-
     }
 }
