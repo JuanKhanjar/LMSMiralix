@@ -1,23 +1,24 @@
 ﻿
-<tr class="d-flex justify-content-sm-between align-baseline @(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity) == 0 ? "disabled-row" : "") ">
+<tr class="d-flex justify-content-sm-between align-baseline @(IsDisabledRow() ? "disabled-row" : "") ">
     <td class="">@PurchasedProduct.ProductName</td>
     <td>@PurchasedProduct.ProductPrice</td>
     <td>
-        <span>@PurchasedProduct.PurchasedQty - ( @GroupProductQuantity ) = @(PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity))</span>
+        <span>
+            @($"{PurchasedProduct.PurchasedQty} - {GroupProductQuantityAvailability} = {PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
+        </span>
     </td>
     <td>
         <div class="position-relative">
             <input type="number"
                    min="0"
-                   max="@(PurchasedProduct.PurchasedQty - GroupProductQuantity)"
+                   max="@MaxAllowedQuantity()"
                    class="inputNumber"
-                   id="inputNumber@(PurchasedProduct.PurchasedProductId)"
-            @bind-value="PurchasedProduct.InputPurchasedtQuantity" />
+                   id="@($"inputNumber{PurchasedProduct.PurchasedProductId}")"
+            @bind="PurchasedProduct.InputPurchasedtQuantity" />
 
-            @if (PurchasedProduct.PurchasedQty - (GroupProductQuantity + PurchasedProduct.InputPurchasedtQuantity) == 0)
+            @if (IsInvalidQuantity())
             {
-                <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white">
-                </span>
+                <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white"></span>
             }
         </div>
     </td>

@@ -1,5 +1,4 @@
 ﻿using LMS.BlazorApp.Dtos;
-using LMS.BusinessCore.Entities;
 using Microsoft.AspNetCore.Components;
 
 namespace LMS.BlazorApp.Shared.Controls
@@ -11,9 +10,19 @@ namespace LMS.BlazorApp.Shared.Controls
         public GroupProductDto GroupProduct { get; set; } = new GroupProductDto();
 
         [Parameter]
-        public int PurchasedProduct { get; set; }
+        public int PurchasedProductAvailability { get; set; }
         [Parameter]
         public EventCallback<GroupProductDto> RemoveProduct { get; set; }
+
+        private bool IsInvalidQuantity()
+        {
+            return (PurchasedProductAvailability - GroupProduct.InputProductQuantity) == 0 || (GroupProduct.AddedQty * -1 == GroupProduct.InputProductQuantity);
+        }
+
+        private async Task RemoveProductClicked()
+        {
+            await RemoveProduct.InvokeAsync(GroupProduct);
+        }
 
     }
 }

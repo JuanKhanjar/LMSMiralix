@@ -8,6 +8,20 @@ namespace LMS.BlazorApp.Shared.Controls
         [Parameter]
         public PurchasedProductDto PurchasedProduct { get; set; } = new PurchasedProductDto();
         [Parameter]
-        public int GroupProductQuantity { get; set; }
+        public int GroupProductQuantityAvailability { get; set; }
+
+        private bool IsDisabledRow()
+        {
+            return PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity) == 0;
+        }
+        private int MaxAllowedQuantity()
+        {
+            return PurchasedProduct.PurchasedQty - GroupProductQuantityAvailability;
+        }
+
+        private bool IsInvalidQuantity()
+        {
+            return IsDisabledRow();
+        }
     }
 }
