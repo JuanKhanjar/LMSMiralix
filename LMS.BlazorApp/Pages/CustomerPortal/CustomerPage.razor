@@ -114,17 +114,30 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-borderless">
-                            <tbody>
-                                @foreach (var Purchasedproduct in purchasedProductDtos)
-                                {
-                                    int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
+                        @if (purchasedProductDtos != null && purchasedProductDtos.Any())
+                        {
+                            <table class="table table-borderless">
+                                <tbody>
+                                    @foreach (var Purchasedproduct in purchasedProductDtos)
+                                    {
+                                        int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
 
-                                    <PurchasedProductTableRow PurchasedProduct="Purchasedproduct"
-                                                              GroupProductQuantityAvailability="@(GP)" />
-                                }
-                            </tbody>
-                        </table>
+                                        <PurchasedProductTableRow PurchasedProduct="Purchasedproduct"
+                                                                  GroupProductQuantityAvailability="@(GP)" />
+                                    }
+                                </tbody>
+                            </table>
+                        }else
+                        {
+                            <table class="table table-borderless">
+                                <tbody>
+                                   <tr class="">
+                                       <td> No Purchased Product ...</td>
+                                   </tr>
+                                </tbody>
+                            </table>
+                        }
+                        
                     </div>
                 </div>
 
@@ -162,7 +175,7 @@
 </div>
 
 
-<Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")"
+<Dialog Title="@($"Change Summary : for {_customer?.CustomerName?? string.Empty}-{selectedGroupDto?.GroupName ?? string.Empty } gruppe")"
         ConfirmButtonText="OK"
         CancelButtonText="Cancel"
 @ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
@@ -197,8 +210,6 @@
     {
         dialog.ShowDialog();
     }
-    private bool isLoading = true;
-
     private List<ChangesDto> changedGPDtos = new List<ChangesDto>();
     private List<UpdateQuantityVM> updateQuantityVmList = new List<UpdateQuantityVM>();
 
@@ -244,25 +255,26 @@
         await UpdateGroupNameAsync();
         updateQuantityVmList = changedGPDtos.Select(dto => MapToUpdateQuantityVM(dto)).ToList();
         //call save
-        bool result = await _IAddPurchasedQtysToGroupProductsUC.ExecuteAsync(selectedGroupDto.GroupId, updateQuantityVmList);
-        if (result)
+        if (selectedGroupDto!=null)
         {
-            // Update was successful, show a success notification
-            await JSRuntime.InvokeVoidAsync("Swal.fire", "Quantities Updated Successfully", "The groups quantities has been updated successfully.", "success");
-            await LoadData();
-            ShowGroupDetails(selectedGroup.GroupId);
-        }
-        else
-        {
-            await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The groups quantities has not  updated successfully.", "error");
+            bool result = await _IAddPurchasedQtysToGroupProductsUC.ExecuteAsync(selectedGroupDto.GroupId, updateQuantityVmList);
+            if (result)
+            {
+                // Update was successful, show a success notification
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Quantities Updated Successfully", "The groups quantities has been updated successfully.", "success");
+                await LoadData();
+                ShowGroupDetails(selectedGroup.GroupId);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The groups quantities has not  updated successfully.", "error");
+            }
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
         await LoadData();
-        isLoading = false;
     }
     private async Task undoChanges()
     {
@@ -428,7 +440,7 @@
     {
         if (group == null)
         {
-            return null;
+            return new GroupDto();
         }
 
         return new GroupDto
@@ -444,14 +456,14 @@
     {
         if (groupProduct == null)
         {
-            return null;
+            return new GroupProductDto();
         }
 
         return new GroupProductDto
             {
                 GroupId = groupProduct.GroupId,
                 PurchasedProductId = groupProduct.PurchasedProductId,
-                ProductName = groupProduct.PurchasedProduct?.ProductName,
+                ProductName = groupProduct.PurchasedProduct.ProductName?? string.Empty,
                 ProductPrice = groupProduct.PurchasedProduct?.ProductPrice ?? 0.00M,
                 AddedQty = groupProduct.AddedQuantity
 
