@@ -9,6 +9,8 @@ namespace LMS.BlazorApp.Shared.Controls
         public PurchasedProductDto PurchasedProduct { get; set; } = new PurchasedProductDto();
         [Parameter]
         public int GroupProductQuantityAvailability { get; set; }
+        [Parameter]
+        public EventCallback UpdateState { get; set; }
 
         private bool IsDisabledRow()
         {

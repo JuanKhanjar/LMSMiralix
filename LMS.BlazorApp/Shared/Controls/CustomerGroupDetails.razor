@@ -16,7 +16,7 @@
     <div class="m-3">
         <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining" }'
                            Conditions='new bool[] { true, true, true }' />
-        <table class="table">
+        <table class="table table-borderless">
             <tbody>
                 @foreach (var product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
                 {

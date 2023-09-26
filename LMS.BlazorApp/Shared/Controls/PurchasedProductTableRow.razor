@@ -4,8 +4,11 @@
     <td>@PurchasedProduct.ProductPrice</td>
     <td>
         <span>
-            @($"{PurchasedProduct.PurchasedQty} - {GroupProductQuantityAvailability} = {PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
+            @($"{PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
         </span>
+        @*<span>
+            @($"{PurchasedProduct.PurchasedQty} - {GroupProductQuantityAvailability} = {PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
+        </span>*@
     </td>
     <td>
         <div class="position-relative">
@@ -14,11 +17,12 @@
                    max="@MaxAllowedQuantity()"
                    class="inputNumber"
                    id="@($"inputNumber{PurchasedProduct.PurchasedProductId}")"
-            @bind="PurchasedProduct.InputPurchasedtQuantity" />
+            @bind="PurchasedProduct.InputPurchasedtQuantity"
+            @oninput="()=>UpdateState.InvokeAsync()" />
 
             @if (IsInvalidQuantity())
             {
-                <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white"></span>
+               @* <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white"></span>*@
             }
         </div>
     </td>

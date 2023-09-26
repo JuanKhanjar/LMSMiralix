@@ -10,8 +10,9 @@ h1:focus {
     outline: none;
 }
 
-a, .btn-link {
-    color: #0071c1;
+a,.btn-link {
+    font-weight: 700;
+    color: none;
     text-decoration:none;
 }
 
@@ -22,8 +23,8 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-  text-decoration:none;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    text-decoration: none;
 }
 
 .content {
@@ -95,19 +96,24 @@ summary {
     transition: background-color .3s;
     box-shadow: 0px 1px 5px 0px #f5f6fa;
 }
-    summary:hover {
-        background: #f5f6fa;
-    }
+/*Arrows
+*//*https://www.htmlsymbols.xyz/unicode?page=17 */
+summary:hover {
+    background: #f5f6fa;
+}
 
     summary::after {
-        content: "\25B2";
+        content: "\2B9F";
         margin-right: 4px;
-        width: 24px;
-        height: 24px;
+        padding:4px;
+        width: 40px;
+        height: 40px;
+        color:red;
     }
 /* Define the arrow when details are closed */
 details:not([open]) summary::after {
-    content: "\25BC";
+    content: "\2B9D";
+    color: forestgreen;
 }
 
 /* Add the animation for open and close */
@@ -120,20 +126,9 @@ details[open] summary ~ * {
         opacity: 0;
         margin-top: -10px;
     }
-
-    25% {
-        opacity: 0.5;
-        margin-top: -5px;
-    }
-
     50% {
-        opacity: 0.8;
+        opacity: 0.5;
         margin-top: 0px;
-    }
-
-    75% {
-        opacity: 0.9;
-        margin-top: 5px;
     }
 
     100% {
@@ -153,6 +148,7 @@ details[open] summary ~ * {
     text-align: left;
     border-radius: 20px 20px 0px 0px;
 }
+
 .header2Font {
     font-family: Rajdhani;
     color: rgba(13, 13, 13, 1);
@@ -162,6 +158,7 @@ details[open] summary ~ * {
     letter-spacing: 0em;
     text-align: left;
 }
+
 .header3Font {
     font-family: Rajdhani;
     font-size: 16px;
@@ -171,6 +168,7 @@ details[open] summary ~ * {
     text-align: left;
     color: rgba(186, 186, 186, 1);
 }
+
 .tableHearderFont {
     font-family: Rajdhani;
     font-size: 16px;
@@ -181,12 +179,13 @@ details[open] summary ~ * {
     color: rgba(0, 0, 0, 1);
     background: rgba(241, 241, 241, 1);
 }
+
 .inputNumber {
-    text-align:center;
+    text-align: center;
     width: 101px;
     height: 35px;
-    font-weight:400;
-    font-size:18px;
+    font-weight: 400;
+    font-size: 18px;
     border-radius: 10px;
     border: 1px solid rgba(46, 119, 229, 1);
 }
@@ -199,6 +198,7 @@ details[open] summary ~ * {
     border-radius: 10px;
     border: 1px solid rgba(171, 171, 171, 1);
 }
+
 .inputGroupEAN {
     width: 122px;
     height: 37px;
@@ -213,53 +213,6 @@ details[open] summary ~ * {
     box-shadow: 0px 2px 7px 0px #99999940;
 }
 
-.addBtn {
-    width: 113px;
-    height: 39px;
-    top: 847px;
-    left: 1267px;
-    border:none;
-    border-radius: 10px;
-    background: #2E77E5;
-    color: #FFFFFF;
-    font-family: Rajdhani;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 23px;
-    letter-spacing: 0em;
-    text-align: center;
-}
-.btnUndo {
-    width: 139px;
-    height: 39px;
-    top: 912px;
-    left: 1195px;
-    border: none;
-    border-radius: 20px;
-    background: #F1F1F1;
-    font-family: Rajdhani;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 23px;
-    letter-spacing: 0em;
-    text-align: center;
-}
-.btnSave {
-    width: 113px;
-    height: 39px;
-    top: 912px;
-    left: 1351px;
-    border: none;
-    border-radius: 20px;
-    background: #273D20;
-    font-family: Rajdhani;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 23px;
-    letter-spacing: 0em;
-    text-align: center;
-    color:white;
-}
 .btnAddGroup {
     top: 897px;
     left: 1300px;
@@ -274,50 +227,30 @@ details[open] summary ~ * {
 }
 
 .shadow-left {
-    border: 1px solid rgba(211, 211, 211, 1) ;
-    border-left:none;
-    box-shadow: 1px 0px 12px 0px rgba(201, 201, 201, 0.25);
+    border: 1px solid rgba(211, 211, 211, 1);
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-radius: 10px;
+    box-shadow: 10px 0px 0px 0px rgba(201, 201, 201, 0.03);
 }
 
 .shadow-right {
-   
 }
 
-.underline-text {
-    text-decoration: underline;
-    color:red;
-}
 
 /* Extra small devices (portrait phones, less than 576px)*/
 @media (max-width: 575.98px) {
-
 }
 
- /*Small devices (landscape phones, less than 768px)*/
+/*Small devices (landscape phones, less than 768px)*/
 @media (max-width: 767.98px) {
-    
 }
 
 /* Medium devices (tablets, less than 992px)*/
 @media (max-width: 991.98px) {
-
 }
 
 /* Large devices (desktops, less than 1200px)*/
 @media (max-width: 1199.98px) {
-
 }
-
-
-.disabled-row {
-    
-    color: #721c24; /* Set the text color (dark red in this case) */
-    text-decoration: line-through; /* Apply a line-through text decoration */
-}
-    .disabled-row input[type="number"] {
-        /* Your custom styles for the input field in disabled rows */
-        /* For example, you can set the input field's color to gray */
-        color: gray;
-        /* You can also disable user interaction with the input field */
-       /* pointer-events: none;*/
-    }
