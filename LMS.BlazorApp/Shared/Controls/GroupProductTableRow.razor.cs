@@ -11,6 +11,7 @@ namespace LMS.BlazorApp.Shared.Controls
 
         [Parameter]
         public int PurchasedProductAvailability { get; set; }
+
         [Parameter]
         public EventCallback<GroupProductDto> RemoveProduct { get; set; }
 

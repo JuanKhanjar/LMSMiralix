@@ -12,7 +12,7 @@
                    min="0"
                    max="@PurchasedProductAvailability"
                    class="inputNumber"
-                   id="inputNumber@(GroupProduct.PurchasedProductId)"
+                   id="@($"inputNumber{GroupProduct.PurchasedProductId}")"
             @bind="GroupProduct.InputProductQuantity" />
 
             @if (IsInvalidQuantity())
