@@ -24,6 +24,13 @@ namespace LMS.BlazorApp.Shared.Controls
         {
             await RemoveProduct.InvokeAsync(GroupProduct);
         }
+        [Parameter]
+        public EventCallback<int> PurchasedProductAvailabilityQuantityChanged { get; set; }
 
+        private void HandleInputProductQuantityChanged()
+        {
+            // Notify the parent component of the input value change
+            PurchasedProductAvailabilityQuantityChanged.InvokeAsync(PurchasedProductAvailability);
+        }
     }
 }

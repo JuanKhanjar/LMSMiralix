@@ -25,9 +25,9 @@
             {
                 <div class=" mb-4 p-1">
                     <CustomerGroupDetails group="group"
-                                  _customer="_customer"
-                                  ShowGroupDetails="ShowGroupDetails"
-                                  DeleteGroupWithAllItsGP="DeleteGroupWithAllItsGP" />
+                                          _customer="_customer"
+                                          ShowGroupDetails="ShowGroupDetails"
+                                          DeleteGroupWithAllItsGP="DeleteGroupWithAllItsGP" />
                 </div>
             }
         }
@@ -60,7 +60,7 @@
                     <div class="col-md-10">
                         <div class="">
                             <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
-                                       Conditions='new bool[] { true, true, true, true }' />
+                                               Conditions='new bool[] { true, true, true, true }' />
                         </div>
                     </div>
                 </div>
@@ -71,30 +71,31 @@
                             <tbody>
                                 @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
                                 {
-                                    int PP = groupProduct.GetPPAvailability(purchasedProductDtos);
-                                    <GroupProductTableRow 
-                                        GroupProduct="groupProduct" 
-                                        PurchasedProductAvailability="PP" 
-                                        RemoveProduct="RemoveProduct"  />
+                                    int PP = groupProduct.GetPPAvailability(purchasedProductDtos?? new List<PurchasedProductDto>());
+                                    <GroupProductTableRow GroupProduct="groupProduct"
+                                                          PurchasedProductAvailability="PP"
+                                                          RemoveProduct="RemoveProduct"
+                                                          PurchasedProductAvailabilityQuantityChanged="()=>HandleInputProductQuantityChanged(PP)" />
                                 }
-                                
+
                             </tbody>
                             <tfoot>
-                                <tr class="d-flex justify-content-end gap-1">
-                                    <td class="d-flex justify-content-between align-items-baseline px-3">
+                                <tr class="d-flex justify-content-lg-between gap-1">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="3">
                                         <span>Total:</span>
                                         <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p => p.ProductPrice * (p.AddedQty + p.InputProductQuantity)).ToString("c")</span>
                                         <span>/</span>
                                         <span>(@selectedGroupDto.GroupProductsDto.Sum(p => p.AddedQty + p.InputProductQuantity))</span>
                                         <span>licenser</span>
-                                        
+
                                     </td>
-                                    <td>&ensp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                    <td></td>
                                 </tr>
                             </tfoot>
-                            
+
                         </table>
                     </div>
                 </div>
@@ -106,7 +107,7 @@
                     <div class="col-md-10">
                         <div class="">
                             <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
-                                       Conditions='new bool[] { true, true, true, true }' />
+                                               Conditions='new bool[] { true, true, true, true }' />
                         </div>
                     </div>
                 </div>
@@ -118,19 +119,18 @@
                                 @foreach (var Purchasedproduct in purchasedProductDtos)
                                 {
                                     int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
-                                    <PurchasedProductTableRow 
-                                        PurchasedProduct="Purchasedproduct" 
-                                        GroupProductQuantityAvailability="GP" />
+
+                                    <PurchasedProductTableRow PurchasedProduct="Purchasedproduct"
+                                                              GroupProductQuantityAvailability="@(GP)" />
                                 }
                             </tbody>
                         </table>
-
                     </div>
                 </div>
 
 
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary rounded-pill px-4 fw-bold" @onclick="()=>AddPurchasedQuantitiesTGroupProduct(selectedGroupDto)">Add</button>
+                    <button class="btn btn-primary rounded-pill px-4 fw-bold" @onclick="()=>AddPurchasedQuantitiesToGroupProduct(selectedGroupDto)">Add</button>
                 </div>
 
                 <div class="d-flex justify-content-end m-2 gap-1">
@@ -142,17 +142,17 @@
             {
                 <div class="p-2 ">
                     <!-- Purchased Products Table -->
-                    <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos.Sum(p=>p.PurchasedQty))</h4>
+                    <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos?.Sum(p=>p.PurchasedQty))</h4>
                     <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
                     <div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
                         <CustomGPHeaderRow Headers='new string[] { " Type", "Cost" , "Remaining" }'
-                                   Conditions='new bool[] { true, true, true }'>
+                                           Conditions='new bool[] { true, true, true }'>
                         </CustomGPHeaderRow>
                     </div>
                     <div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
                         <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos" />
                     </div>
-                    <div class="d-flex justify-content-end ">
+                    <div class="col-sm-12 col-m-12 d-flex justify-content-sm-end align-content-between px-4 py-2 ">
                         <button class="btnAddGroup rounded-pill" @onclick="()=>CreateGroup()">Create Group</button>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
 <Dialog Title="@($"Change Summary : for {_customer.CustomerName}-{selectedGroupDto.GroupName} gruppe")"
         ConfirmButtonText="OK"
         CancelButtonText="Cancel"
-        @ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
+@ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
     <ChildContent>
         <ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />
     </ChildContent>
@@ -181,6 +181,15 @@
 
 
 @code {
+
+    private void HandleInputProductQuantityChanged(int newQuantity)
+    {
+        //// Handle the input value change event here
+        //// You can update your data or perform any necessary actions
+        //groupProductQuantity = newQuantity+1;
+        //// Call StateHasChanged if needed to re-render the component
+        StateHasChanged();
+    }
 
     private CreateGroupDialog createGroupDialog { get; set; } = new CreateGroupDialog();
     private Dialog dialog { get; set; } = new Dialog();
@@ -232,6 +241,7 @@
     }
     private async Task SaveToDb(List<ChangesDto> changedGPDtos)
     {
+        await UpdateGroupNameAsync();
         updateQuantityVmList = changedGPDtos.Select(dto => MapToUpdateQuantityVM(dto)).ToList();
         //call save
         bool result = await _IAddPurchasedQtysToGroupProductsUC.ExecuteAsync(selectedGroupDto.GroupId, updateQuantityVmList);
@@ -284,26 +294,30 @@
         if (_customer != null)
         {
             // Load and map customer groups
-            LoadCustomerGroups();
+            await LoadCustomerGroups();
 
             // Load and map purchased products
             await LoadPurchasedProducts();
         }
     }
-    private void LoadCustomerGroups()
+    private async Task LoadCustomerGroups()
     {
-        customerGroups = _customer.Groups.ToList();
-        if (customerGroups != null)
+        if (_customer != null)
         {
-            customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group)).ToList();
+            customerGroups = await Task.Run(() => _customer.Groups.ToList());
+            if (customerGroups != null)
+            {
+                customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group)).ToList();
+            }
         }
+
     }
     private async Task LoadPurchasedProducts()
     {
         _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
         if (_PurchasedProducts != null)
         {
-            purchasedProductDtos = _PurchasedProducts.Select(p => MapToPurchasedProductDto(p)).ToList();
+            purchasedProductDtos = _PurchasedProducts.Select(PP => MapToPurchasedProductDto(PP)).ToList();
         }
     }
 
@@ -364,52 +378,49 @@
         StateHasChanged();
     }
 
-    private void AddPurchasedQuantitiesTGroupProduct(GroupDto selectedGroup)
+    private void AddPurchasedQuantitiesToGroupProduct(GroupDto selectedGroup)
     {
-        if (purchasedProductDtos != null && purchasedProductDtos.Count() > 0)
+        if (purchasedProductDtos == null || !purchasedProductDtos.Any())
         {
-            foreach (PurchasedProductDto purchasedProduct in purchasedProductDtos)
+            return;
+        }
+
+        foreach (var purchasedProduct in purchasedProductDtos.Where(pp => pp.InputPurchasedtQuantity > 0))
+        {
+            var groupProductToUpdate = selectedGroup.GroupProductsDto?
+                .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
+
+            if (groupProductToUpdate != null)
             {
-                if (purchasedProduct.InputPurchasedtQuantity <= 0)
+                int newInputQuantity = groupProductToUpdate.InputProductQuantity + purchasedProduct.InputPurchasedtQuantity;
+
+                if (newInputQuantity <= purchasedProduct.PurchasedQty)
                 {
-                    continue;
+                    groupProductToUpdate.InputProductQuantity = newInputQuantity;
+                    purchasedProduct.InputPurchasedtQuantity = 0;
                 }
-                if (selectedGroup.GroupProductsDto != null)
-
-                {
-                    // Retrieve the corresponding product in the GroupProductsDto list
-                    GroupProductDto? groupProductToUpdate = selectedGroup.GroupProductsDto
-                     .FirstOrDefault(gp => gp.PurchasedProductId == purchasedProduct.PurchasedProductId);
-                    // Get GP Availability
-                    // the List<GP> has an object of type GP which GP_Id = PP_Id
-                    if (groupProductToUpdate != null &&
-                    (groupProductToUpdate.InputProductQuantity + purchasedProduct.InputPurchasedtQuantity) <= (purchasedProduct.PurchasedQty))
+            }
+            else
+            {
+                GroupProductDto newGroupProduct = new GroupProductDto
                     {
-                        groupProductToUpdate.InputProductQuantity += purchasedProduct.InputPurchasedtQuantity;
-                        purchasedProduct.InputPurchasedtQuantity = 0;
-                    }
-                    else
-                    {
-                        GroupProductDto newGroupProduct = new GroupProductDto
-                            {
-                                GroupId = selectedGroup.GroupId,
-                                PurchasedProductId = purchasedProduct.PurchasedProductId,
-                                ProductName = purchasedProduct.ProductName,
-                                ProductPrice = purchasedProduct.ProductPrice,
-                                AddedQty = 0,
-                                InputProductQuantity = purchasedProduct.InputPurchasedtQuantity
-                            };
+                        GroupId = selectedGroup.GroupId,
+                        PurchasedProductId = purchasedProduct.PurchasedProductId,
+                        ProductName = purchasedProduct.ProductName,
+                        ProductPrice = purchasedProduct.ProductPrice,
+                        AddedQty = 0,
+                        InputProductQuantity = purchasedProduct.InputPurchasedtQuantity
+                    };
 
-                        selectedGroup.GroupProductsDto.Add(newGroupProduct);
-                        purchasedProduct.InputPurchasedtQuantity = 0;
-                    }
-
-                    StateHasChanged();
-                }
+                selectedGroup.GroupProductsDto ??= new List<GroupProductDto>();
+                selectedGroup.GroupProductsDto.Add(newGroupProduct);
+                purchasedProduct.InputPurchasedtQuantity = 0;
             }
         }
 
+        StateHasChanged();
     }
+
     #endregion
 
     #region Helper Methods
@@ -450,7 +461,7 @@
     {
         if (purchasedProduct == null)
         {
-            return null;
+            return new PurchasedProductDto();
         }
 
         return new PurchasedProductDto
