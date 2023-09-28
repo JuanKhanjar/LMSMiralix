@@ -1,6 +1,5 @@
 ﻿@page "/customer/{customerId:int}"
 
-
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
 @inject IUpdateGroupNameUC _IUpdateGroupNameUC
@@ -8,7 +7,6 @@
 @inject IAddPurchasedQtysToGroupProductsUC _IAddPurchasedQtysToGroupProductsUC
 @inject NavigationManager NavigationManager
 @inject NotificationService _notificationService
-
 @inject IJSRuntime JSRuntime
 
 <div class="row">
@@ -49,7 +47,6 @@
                             </ChildContent>
                         </HearderSurvery>
                  
-                    
                     <div class="row d-flex justify-content-between align-content-center">
                         <div class="col-sm-10 col-md-10 ">
                             <EditGroup model="selectedGroupDto"
@@ -219,13 +216,12 @@
 
 
 @code {
-
+    private string OldGroupName { get; set;} = string.Empty;
     private void HandleInputProductQuantityChanged()
     {
         // Call StateHasChanged if needed to re-render the component
         StateHasChanged();
     }
-
     private CreateGroupDialog createGroupDialog { get; set; } = new CreateGroupDialog();
     private Dialog dialog { get; set; } = new Dialog();
     private void ShowDialog()
@@ -274,7 +270,11 @@
     }
     private async Task SaveToDb(List<ChangesDto> changedGPDtos)
     {
-        await UpdateGroupNameAsync();
+        if (selectedGroupDto.GroupName.Trim().ToLower() != OldGroupName.ToLower().Trim())
+        {
+            await UpdateGroupNameAsync();
+        }
+
         updateQuantityVmList = changedGPDtos.Select(dto => MapToUpdateQuantityVM(dto)).ToList();
         //call save
         if (selectedGroupDto != null)
@@ -529,6 +529,7 @@
         {
             // Find the selected group and set it as the selectedGroup
             selectedGroupDto = customerGroupsDto.FirstOrDefault(g => g.GroupId == groupId);
+            OldGroupName = selectedGroupDto.GroupName;
             displayGroupProducts = false; // Hide GroupProduct Table
         }
         else
