@@ -5,7 +5,7 @@ namespace LMS.BlazorApp.Dtos
     public class PurchasedProductDto
     {
         public int PurchasedProductId { get; set; }
-        public string ProductName { get; set; }=string.Empty;
+        public string ProductName { get; set; } = string.Empty;
         public decimal ProductPrice { get; set; }
         public int PurchasedQty { get; set; }
         public int CustomerId { get; set; }
@@ -15,9 +15,15 @@ namespace LMS.BlazorApp.Dtos
         // Method to update GPAvailability based on a list of GroupProductDto
         public int GetGPAvailability(List<GroupProductDto> groupProducts)
         {
-            GroupProductDto GP = groupProducts.FirstOrDefault(gp => gp.PurchasedProductId == PurchasedProductId);
-            GPAvailability = GP?.InputProductQuantity ?? 0;
-            return GPAvailability;
+            if (groupProducts != null)
+            {
+                GroupProductDto GP = groupProducts.FirstOrDefault(gp => gp.PurchasedProductId == PurchasedProductId);
+                GPAvailability = GP?.InputProductQuantity ?? 0;
+                return GPAvailability;
+            }
+            return 0;
+
+            
         }
     }
 }

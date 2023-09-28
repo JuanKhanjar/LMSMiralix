@@ -13,9 +13,13 @@
         // Method to update PPAvailability based on a list of PurchasedProductDto
         public int GetPPAvailability(List<PurchasedProductDto> purchasedProducts)
         {
-            PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == PurchasedProductId);
-            PPAvailability = PP?.PurchasedQty ?? 0;
-            return PPAvailability;
+            if (purchasedProducts!=null)
+            {
+                PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == PurchasedProductId);
+                PPAvailability = PP?.PurchasedQty ?? 0;
+                return PPAvailability;
+            }
+            return 0;
         }
 
     }
