@@ -1,6 +1,6 @@
 ﻿<!-- CustomHeaderRowWithConditions.razor -->
 @inherits Microsoft.AspNetCore.Components.ComponentBase
-<div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between tableHearderFont rounded-top px-4 py-2">
+<div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between tableHeaderFont rounded-top px-4 py-2">
     @for (int i = 0; i < Headers.Length; i++)
     {
         if (Conditions[i])
@@ -13,7 +13,7 @@
 </div>
 
 @code {
-    [Parameter] public string[] Headers { get; set; }
+    [Parameter] public string[] Headers { get; set; } 
     [Parameter] public bool[] Conditions { get; set; }
 }
 

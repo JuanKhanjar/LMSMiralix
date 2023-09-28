@@ -1,8 +1,8 @@
 ﻿
-<tr class="d-flex justify-content-sm-between align-baseline">
+<tr class="d-flex justify-content-sm-between align-baseline tableRowFont">
     <td>@GroupProduct.ProductName</td>
-    <td>@GroupProduct.ProductPrice</td>
-    <td>
+    <td class="fw-bold">@GroupProduct.ProductPrice</td>
+    <td class="fw-bold">
         <span>@($"{GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>
         @*<span>@($"{GroupProduct.AddedQty} + {GroupProduct.InputProductQuantity} = {GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>*@
     </td>
@@ -24,7 +24,7 @@
         </div>
     </td>
     <td>
-        <button class="btn btn-outline-danger" @onclick="RemoveProductClicked"><i class="fa fa-trash"></i></button>
+        <button class="btn btn-outline-danger border-0" style="width:24px;height:24px;" @onclick="RemoveProductClicked"><i class="fa fa-trash"></i></button>
     </td>
 </tr>
 

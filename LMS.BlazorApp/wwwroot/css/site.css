@@ -1,7 +1,14 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-html, body {
-    font-family: 'Rajdhani',sans-serif;
+﻿
+html, body,
+.headerFont,
+.header2Font,
+.header3Font,
+.tableHeaderFont,
+.inputNumber,
+.styledNav,
+.btnAddGroup,
+.shadow-left, .shadow-right {
+    font-family: 'Rajdhani', sans-serif;
     padding: 0;
     margin: 0;
 }
@@ -74,10 +81,20 @@ a,.btn-link {
 
 
 
+/* Shared Styles */
+.custom-register-link {
+    color: rgba(165, 165, 165, 1);
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-align: left;
+}
 
+/* Details and Summary Styles */
 details {
     border-radius: 10px;
-    font-family: Rajdhani;
     font-size: 14px;
     font-weight: 700;
     line-height: 23px;
@@ -88,37 +105,34 @@ details {
 summary {
     height: 120px;
     padding: 5px;
-    border-radius: .3em;
+    border-radius: 0.3em;
     font-size: 18px;
-    font-family: Rajdhani;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color .3s;
+    transition: background-color 0.3s;
     box-shadow: 0px 1px 5px 0px #f5f6fa;
 }
-/*Arrows
-*//*https://www.htmlsymbols.xyz/unicode?page=17 */
-summary:hover {
-    background: #f5f6fa;
-}
+
+    summary:hover {
+        background: #f5f6fa;
+    }
 
     summary::after {
         content: "\2B9F";
         margin-right: 4px;
-        padding:4px;
+        padding: 4px;
         width: 40px;
         height: 40px;
-        color:red;
+        color: red;
     }
-/* Define the arrow when details are closed */
+
 details:not([open]) summary::after {
     content: "\2B9D";
     color: forestgreen;
 }
 
-/* Add the animation for open and close */
 details[open] summary ~ * {
-    animation: sweep .5s ease-in-out;
+    animation: sweep 0.5s ease-in-out;
 }
 
 @keyframes sweep {
@@ -126,6 +140,7 @@ details[open] summary ~ * {
         opacity: 0;
         margin-top: -10px;
     }
+
     50% {
         opacity: 0.5;
         margin-top: 0px;
@@ -137,22 +152,20 @@ details[open] summary ~ * {
     }
 }
 
+/* Header Styles */
 
 .headerFont {
-    font-family: Rajdhani;
     color: rgba(78, 78, 78, 1);
     font-size: 20px;
     font-weight: 700;
     line-height: 26px;
     letter-spacing: 0em;
     text-align: left;
-    border-radius: 20px 20px 0px 0px;
 }
 
 .header2Font {
-    font-family: Rajdhani;
     color: rgba(13, 13, 13, 1);
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 23px;
     letter-spacing: 0em;
@@ -160,7 +173,14 @@ details[open] summary ~ * {
 }
 
 .header3Font {
-    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(13, 13, 13, 1);
+}
+.header4Font {
     font-size: 16px;
     font-weight: 600;
     line-height: 20px;
@@ -169,8 +189,8 @@ details[open] summary ~ * {
     color: rgba(186, 186, 186, 1);
 }
 
-.tableHearderFont {
-    font-family: Rajdhani;
+
+.tableHeaderFont {
     font-size: 16px;
     font-weight: 700;
     line-height: 20px;
@@ -179,7 +199,16 @@ details[open] summary ~ * {
     color: rgba(0, 0, 0, 1);
     background: rgba(241, 241, 241, 1);
 }
+.tableRowFont {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(60, 60, 60, 1);
+}
 
+/* Input Styles */
 .inputNumber {
     text-align: center;
     width: 101px;
@@ -190,33 +219,26 @@ details[open] summary ~ * {
     border: 1px solid rgba(46, 119, 229, 1);
 }
 
-.inputGroupName {
-    width: 340px;
-    height: 37px;
-    top: 255px;
-    left: 648px;
-    border-radius: 10px;
-    border: 1px solid rgba(171, 171, 171, 1);
-}
-
-.inputGroupEAN {
-    width: 122px;
-    height: 37px;
-    top: 255px;
-    left: 1007px;
-    border-radius: 10px;
-    border: 1px solid rgba(171, 171, 171, 1);
-}
-
+/* Navigation Styles */
 .styledNav {
     border-radius: 0px 0px 30px 30px;
     box-shadow: 0px 2px 7px 0px #99999940;
+    background: #273D20;
+    text-decoration:none;
+    color:white;
+}
+.navIcon {
+    width: 25px;
+    height: 25px;
+    top: 33px;
+    left: 508px;
+    padding: 3.13px, 2.08px, 3.13px, 2.08px;
 }
 
+/* Button Styles */
 .btnAddGroup {
     top: 897px;
     left: 1300px;
-    font-family: Rajdhani;
     font-size: 18px;
     font-weight: 600;
     line-height: 23px;
@@ -226,6 +248,7 @@ details[open] summary ~ * {
     color: #FFFFFF;
 }
 
+/* Shadows */
 .shadow-left {
     border: 1px solid rgba(211, 211, 211, 1);
     border-left: none;
@@ -235,22 +258,19 @@ details[open] summary ~ * {
     box-shadow: 10px 0px 0px 0px rgba(201, 201, 201, 0.03);
 }
 
-.shadow-right {
-}
-
-
-/* Extra small devices (portrait phones, less than 576px)*/
+/* Media Queries */
 @media (max-width: 575.98px) {
+    /* Styles for Extra Small devices (portrait phones) */
 }
 
-/*Small devices (landscape phones, less than 768px)*/
 @media (max-width: 767.98px) {
+    /* Styles for Small devices (landscape phones) */
 }
 
-/* Medium devices (tablets, less than 992px)*/
 @media (max-width: 991.98px) {
+    /* Styles for Medium devices (tablets) */
 }
 
-/* Large devices (desktops, less than 1200px)*/
 @media (max-width: 1199.98px) {
+    /* Styles for Large devices (desktops) */
 }

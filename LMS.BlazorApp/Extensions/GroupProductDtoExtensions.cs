@@ -1,5 +1,4 @@
 ﻿using LMS.BlazorApp.Dtos;
-using static LMS.BlazorApp.Pages.CustomerPortal.CustomerPage;
 
 namespace LMS.BlazorApp.Extensions
 {

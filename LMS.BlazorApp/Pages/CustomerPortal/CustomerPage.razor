@@ -15,9 +15,11 @@
     <!-- Left LayOut -->
     <div class="col-md-5 shadow-left">
         <!-- Customer Info Card -->
-        <div class=" m-4 p-2">
-            <p class="headerFont">Grupper (@customerGroups.Count())</p>
-        </div>
+        <HearderSurvery HeaderText="@($"Grupper ({@customerGroups.Count()})")" HeaderClass="headerFont" SubHeaderText="">
+            <ChildContent>
+            </ChildContent>
+        </HearderSurvery>
+
         <!-- List of Groups -->
         @if (customerGroups != null)
         {
@@ -40,23 +42,33 @@
                 @if (displayGroupProducts == false)
                 {
                     <!-- Form Group -->
-                    <div class="m-4">
-                        <p class="header2Font">Licenser til tildeling ( @purchasedProductDtos?.Sum(p=>p.PurchasedQty) )</p>
-                        <p>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
-                            <EditGroup 
-                                model="selectedGroupDto" 
-                                OnValidSubmit="UpdateGroupNameAsync" />
-                            <div class="form-group ">
-                                <button type="submit" class="btn btn-outline-danger " @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)"><i class="fa fa-trash"></i></button>
-                            </div>
+                
+                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" HeaderClass="headerFont" SubHeaderText="" HeaderSubClass="header2Font">
+                            <ChildContent>
+                            <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
+                            </ChildContent>
+                        </HearderSurvery>
+                 
+                    
+                    <div class="row d-flex justify-content-between align-content-center">
+                        <div class="col-sm-10 col-md-10 ">
+                            <EditGroup model="selectedGroupDto"
+                                       OnValidSubmit="UpdateGroupNameAsync" />
                         </div>
+                        <div class="col-sm-2 col-md-2 text-end d-flex align-items-center justify-content-end">
+                            <button type="submit" class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+
                     </div>
 
                     <!-- Group Products -->
-                    <h5 class="mt-4 p-2 headerFont">Selected Licenses</h5>
+                    <HearderSurvery HeaderText="Selected Licenses" HeaderClass="headerFont" SubHeaderText="">
+                        <ChildContent>
+
+                        </ChildContent>
+                    </HearderSurvery>
                     <!-- GroupProduct Table -->
 
                     <div class="row">
@@ -104,8 +116,11 @@
                     </div>
 
                     <!-- Purchased Products Table -->
-                    <h5 class="mt-4 p-2 headerFont">Choose from licenses</h5>
+                    <HearderSurvery HeaderText="Choose from licenses" HeaderClass="headerFont" SubHeaderText="">
+                        <ChildContent>
 
+                        </ChildContent>
+                    </HearderSurvery>
                     <div class="row">
                         <div class="col-md-10">
                             <div class="">
@@ -160,8 +175,11 @@
                 {
                     <div class="p-2 ">
                         <!-- Purchased Products Table -->
-                        <h4 class="mt-2 headerFont">Licenser til tildeling (@purchasedProductDtos?.Sum(p=>p.PurchasedQty))</h4>
-                        <h5 class="header2Font">  Licenser kan redigeres til d.@DateTime.UtcNow.ToString("dd MM yyyy"). </h5>
+                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" HeaderClass="headerFont" SubHeaderText="" HeaderSubClass="header2Font">
+                            <ChildContent>
+                                <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
+                            </ChildContent>
+                        </HearderSurvery>
                         <div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
                             <CustomGPHeaderRow Headers='new string[] { " Type", "Cost" , "Remaining" }'
                                                Conditions='new bool[] { true, true, true }'>
@@ -177,7 +195,7 @@
                 }
             }
         </div>
-       
+
     </div>
 </div>
 

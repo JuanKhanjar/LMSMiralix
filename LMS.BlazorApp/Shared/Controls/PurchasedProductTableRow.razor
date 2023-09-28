@@ -1,8 +1,8 @@
 ﻿
-<tr class="d-flex justify-content-sm-between align-baseline @(IsDisabledRow() ? "disabled-row" : "") ">
+<tr class="d-flex justify-content-sm-between align-baseline tableRowFont @(IsDisabledRow() ? "disabled-row" : "") ">
     <td class="">@PurchasedProduct.ProductName</td>
-    <td>@PurchasedProduct.ProductPrice</td>
-    <td>
+    <td class="fw-bold">@PurchasedProduct.ProductPrice</td>
+    <td class="fw-bold">
         <span>
             @($"{PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
         </span>
