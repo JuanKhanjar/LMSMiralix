@@ -81,7 +81,7 @@
                         <div class="col-md-12">
                             <table class="table table-borderless">
                                 <tbody>
-                                    @foreach (var groupProduct in selectedGroupDto.GroupProductsDto.Where(gp => gp.AddedQty >= 0))
+                                    @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
                                     {
                                         int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>());
                                         <GroupProductTableRow GroupProduct="groupProduct"
@@ -186,7 +186,7 @@
                             <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos" />
                         </div>
                         <div class="col-sm-12 col-m-12 d-flex justify-content-sm-end align-content-between px-4 py-2 ">
-                            <button class="btnAddGroup rounded-pill" @onclick="()=>CreateGroup()">Create Group</button>
+                            <button class="btn btn-light mx-2 rounded-pill fw-bold" @onclick="()=>CreateGroup()">Create Group</button>
                         </div>
                     </div>
                 }

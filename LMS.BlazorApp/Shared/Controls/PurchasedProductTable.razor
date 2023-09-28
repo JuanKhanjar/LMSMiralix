@@ -1,12 +1,12 @@
 ﻿
-<table class="table shadow-sm">
+<table class="table shadow-sm tableRowFont">
     <tbody>
         @foreach (var purchasedProductDto in PurchasedProductDtos)
         {
             <tr>
                 <td class="col-sm-4">@purchasedProductDto.ProductName</td>
-                <td class="col-sm-3">@purchasedProductDto.ProductPrice</td>
-                <td class="col-sm-3">@purchasedProductDto.PurchasedQty</td>
+                <td class="col-sm-3 fw-bold">@purchasedProductDto.ProductPrice</td>
+                <td class="col-sm-3 fw-bold">@purchasedProductDto.PurchasedQty</td>
             </tr>
         }
     </tbody>
