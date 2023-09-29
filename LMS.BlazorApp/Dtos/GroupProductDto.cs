@@ -21,6 +21,15 @@
             }
             return 0;
         }
+        public int GetPPAvailability(List<PurchasedProductDto> purchasedProducts, int targetProductId)
+        {
+            if (purchasedProducts != null)
+            {
+                PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == targetProductId);
+                return PP?.PurchasedQty ?? 0;
+            }
+            return 0;
+        }
 
     }
 }

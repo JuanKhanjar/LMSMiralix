@@ -83,7 +83,7 @@
                                 <tbody>
                                     @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
                                     {
-                                        int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>());
+                                        int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>(), groupProduct.PurchasedProductId);
                                         <GroupProductTableRow GroupProduct="groupProduct"
                                                               PurchasedProductAvailability="PP"
                                                               RemoveProduct="RemoveProduct"
@@ -135,7 +135,7 @@
                                     <tbody>
                                         @foreach (var Purchasedproduct in purchasedProductDtos)
                                         {
-                                            int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto);
+                                            int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto, Purchasedproduct.PurchasedProductId);
 
                                             <PurchasedProductTableRow PurchasedProduct="Purchasedproduct"
                                                                       GroupProductQuantityAvailability="@(GP)"

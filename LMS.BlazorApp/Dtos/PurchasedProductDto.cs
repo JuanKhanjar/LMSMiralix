@@ -22,8 +22,16 @@ namespace LMS.BlazorApp.Dtos
                 return GPAvailability;
             }
             return 0;
-
-            
         }
+        public int GetGPAvailability(List<GroupProductDto> groupProducts, int targetPurchasedProductId)
+        {
+            if (groupProducts != null)
+            {
+                GroupProductDto GP = groupProducts.FirstOrDefault(gp => gp.PurchasedProductId == targetPurchasedProductId);
+                return GP?.InputProductQuantity ?? 0;
+            }
+            return 0;
+        }
+
     }
 }

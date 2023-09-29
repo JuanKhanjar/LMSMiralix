@@ -1,11 +1,6 @@
 ﻿using LMS.BusinessCore.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LMS.SqlServer.Configurations
 {
@@ -28,8 +23,8 @@ namespace LMS.SqlServer.Configurations
 
             // Seed data (you can add more customers as needed)
             builder.HasData(
-                new Customer { CustomerId = 1, CustomerName = "John Doe" },
-                new Customer { CustomerId = 2, CustomerName = "Jane Smith" }
+                new Customer { CustomerId = 1, CustomerName = "Vejle Kommune" },
+                new Customer { CustomerId = 2, CustomerName = "Herning Kommune" }
             // Add more customer records here
             );
         }

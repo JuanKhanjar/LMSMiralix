@@ -3,11 +3,9 @@
     <td class="">@PurchasedProduct.ProductName</td>
     <td class="fw-bold">@PurchasedProduct.ProductPrice</td>
     <td class="fw-bold">
-        <span>
-            @($"{PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
-        </span>
+        @($"{PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
         @*<span>
-            @($"{PurchasedProduct.PurchasedQty} - {GroupProductQuantityAvailability} = {PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
+        @($"{PurchasedProduct.PurchasedQty} - {GroupProductQuantityAvailability} = {PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
         </span>*@
     </td>
     <td>
@@ -22,7 +20,7 @@
 
             @if (IsInvalidQuantity())
             {
-               @* <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white"></span>*@
+                @* <span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white"></span>*@
             }
         </div>
     </td>
