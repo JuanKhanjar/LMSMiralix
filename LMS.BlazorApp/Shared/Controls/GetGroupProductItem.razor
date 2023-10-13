@@ -1,4 +1,4 @@
-﻿@inherits ComponentBase
+﻿
 @if (GroupProduct.PurchasedProduct != null)
 {
     <tr class="d-flex justify-content-sm-between align-baseline">
@@ -10,6 +10,7 @@
 
 
 @code {
+
     [Parameter]
     public GroupProduct GroupProduct { get; set; } = new GroupProduct();
 }

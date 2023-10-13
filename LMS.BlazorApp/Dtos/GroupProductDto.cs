@@ -15,7 +15,7 @@
         {
             if (purchasedProducts!=null)
             {
-                PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == PurchasedProductId);
+                PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == PurchasedProductId)??new PurchasedProductDto();
                 PPAvailability = PP?.PurchasedQty ?? 0;
                 return PPAvailability;
             }
@@ -25,7 +25,7 @@
         {
             if (purchasedProducts != null)
             {
-                PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == targetProductId);
+                PurchasedProductDto PP = purchasedProducts.FirstOrDefault(pp => pp.PurchasedProductId == targetProductId) ?? new PurchasedProductDto( );
                 return PP?.PurchasedQty ?? 0;
             }
             return 0;

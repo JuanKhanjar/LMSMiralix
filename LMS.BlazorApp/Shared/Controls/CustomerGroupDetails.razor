@@ -4,7 +4,10 @@
         <div class="row row-cols-3 px-3">
             <div class="col m-0">@_customer?.CustomerName @group.GroupName </div>
             <div class="col m-0"></div>
-            <div class="col m-0 p-3 d-flex justify-content-start header4Font">EAN.&ensp; <span class="col m-0 d-flex justify-content-start">@group.EAN</span> </div>
+            <div class="col m-0 p-3 d-flex justify-content-start header4Font">
+                EAN.&ensp;
+                <span class="col m-0 d-flex justify-content-start">@group.EAN</span>
+            </div>
             <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
             <div class="col mx-0 header4Font">(@group.GetTotalQuantityForAgroup()) licenses</div>
             <div class="col m-0"></div>

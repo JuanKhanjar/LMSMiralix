@@ -9,26 +9,25 @@ namespace LMS.BusinessUseCases.CustomerUCs
     public class GetCustomerWithGroupsAndProductsUC : IGetCustomerWithGroupsAndProductsUC
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly ILogger<GetCustomerWithGroupsAndProductsUC> _logger; // Inject ILogger
+        private readonly ILogger<GetCustomerWithGroupsAndProductsUC> _logger; 
 
         public GetCustomerWithGroupsAndProductsUC(ICustomerRepository customerRepository, ILogger<GetCustomerWithGroupsAndProductsUC> logger)
         {
             _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger)); // Validate that logger is not null
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger)); 
         }
 
         public async Task<Customer?> ExecuteAsync(int customerId)
         {
             if (customerId <= 0)
             {
-                _logger.LogError("Invalid customerId: {CustomerId}", customerId); // Log an error
+                _logger.LogError("Invalid customerId: {CustomerId}", customerId);
                 throw new InvalidCustomerIdException("customerId must be a positive integer.");
             }
 
             try
             {
-                // Validate that _customerRepository is properly injected and used to retrieve the data.
-                var customer = await _customerRepository.GetCustomerWithGroupsAndProductsAsync(customerId);
+                Customer? customer = await _customerRepository.GetCustomerWithGroupsAndProductsAsync(customerId);
 
                 if (customer == null)
                 {

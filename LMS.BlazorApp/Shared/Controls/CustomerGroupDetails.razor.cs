@@ -10,8 +10,10 @@ namespace LMS.BlazorApp.Shared.Controls
 
         [Parameter]
         public Group group { get; set; } = new Group();
+
         [Parameter]
         public EventCallback<int> ShowGroupDetails { get; set; }
+
         [Parameter]
         public EventCallback<int> DeleteGroupWithAllItsGP { get; set; }
     }

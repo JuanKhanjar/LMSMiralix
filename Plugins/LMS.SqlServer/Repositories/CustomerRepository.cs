@@ -59,19 +59,20 @@ namespace LMS.SqlServer.Repositories
             using LMSDbContext _dbContext = _dbContextFactory.CreateDbContext();
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            var customer = await _dbContext.Customers
-                .Include(c => c.Groups)
-                .ThenInclude(g => g.GroupProducts)
-                .ThenInclude(gp => gp.PurchasedProduct)
+            Customer? customer = await _dbContext.Customers
+                .Include(cg => cg.Groups)
+                .ThenInclude(gp => gp.GroupProducts)
+                .Include(cpp => cpp.PurchasedProducts)
                 .Where(c => c.CustomerId == customerId)
-                .Select(c => new Customer
+                .Select(customer => new Customer
                 {
-                    CustomerId = c.CustomerId,
-                    CustomerName = c.CustomerName,
-                    Groups = c.Groups.Select(g => new Group
+                    CustomerId = customer.CustomerId,
+                    CustomerName = customer.CustomerName,
+                    Groups = customer.Groups.Select(g => new Group
                     {
                         GroupId = g.GroupId,
                         GroupName = g.GroupName,
+                        EAN = g.EAN,    
                         GroupProducts = g.GroupProducts
                             .Where(gp => gp.AddedQuantity > 0)
                             .ToList()
