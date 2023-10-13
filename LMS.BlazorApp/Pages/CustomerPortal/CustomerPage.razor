@@ -324,26 +324,22 @@
 
     private async Task LoadData()
     {
-        // Load customer data, groups, and purchased products
         _customer = await _IGetCustomerWithGroupsAndProductsUC.ExecuteAsync(customerId);
         if (_customer != null)
         {
             // Load and map customer groups
-            LoadCustomerGroups( );
+           await LoadCustomerGroups( );
 
             // Load and map purchased products
             await LoadPurchasedProducts( );
         }
     }
-    private void LoadCustomerGroups()
+    private async Task LoadCustomerGroups()
     {
-        if (_customer != null)
+        customerGroups = await Task.Run(()=> _customer.Groups.ToList());
+        if (customerGroups != null && customerGroups.Any( ))
         {
-            customerGroups = _customer.Groups;
-            if (customerGroups != null && customerGroups.Any( ))
-            {
-                customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group));
-            }
+            customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group));
         }
     }
     private async Task LoadPurchasedProducts()
@@ -470,8 +466,8 @@
                 GroupId = group.GroupId,
                 GroupName = group.GroupName,
                 EAN = group.EAN,
-                CustomerId = customerId,
-                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList()
+                CustomerId =group.CustomerId,
+                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList( )
             };
     }
     private GroupProductDto MapToGroupProductDto(GroupProduct groupProduct)

@@ -23,8 +23,8 @@ namespace LMS.SqlServer.Configurations
 
             // Seed data (you can add more customers as needed)
             builder.HasData(
-                new Customer { CustomerId = 1, CustomerName = "Vejle Kommune" },
-                new Customer { CustomerId = 2, CustomerName = "Herning Kommune" }
+                new Customer { CustomerId = 1, CustomerName = "Vejle Kommune" ,Email="vejle@gmail.com",PhoneNumber="429292929"},
+                new Customer { CustomerId = 2, CustomerName = "Herning Kommune",Email = "herning@gmail.com",PhoneNumber = "429292930" }
             // Add more customer records here
             );
         }

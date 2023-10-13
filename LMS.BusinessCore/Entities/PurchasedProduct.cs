@@ -12,18 +12,25 @@ namespace LMS.BusinessCore.Entities
         public string ProductName { get; set; }
 
         [Required(ErrorMessage = "Product price is required")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Product price must be greater than 0")]
+        [Range(0.01,double.MaxValue,ErrorMessage = "Product price must be greater than 0")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal ProductPrice { get; set; }
 
         [Required(ErrorMessage = "Purchased quantity is required")]
-        [Range(0, int.MaxValue, ErrorMessage = "Purchased quantity must be non-negative")]
         public int PurchasedQty { get; set; }
 
         public int CustomerId { get; set; }
 
-        // Navigation properties should be nullable
         public virtual Customer? Customer { get; set; }
-        public virtual ICollection<GroupProduct> GroupProducts { get; set; } = new List<GroupProduct>();
+
+        // Computed Property for Total Cost
+        public decimal SubTotal
+        {
+            get
+            {
+                return ProductPrice * PurchasedQty;
+            }
+        }
     }
+
 }

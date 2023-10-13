@@ -64,19 +64,23 @@ namespace LMS.SqlServer.Repositories
                 .ThenInclude(gp => gp.GroupProducts)
                 .Include(cpp => cpp.PurchasedProducts)
                 .Where(c => c.CustomerId == customerId)
-                .Select(customer => new Customer
+                .Select(cus => new Customer
                 {
-                    CustomerId = customer.CustomerId,
-                    CustomerName = customer.CustomerName,
-                    Groups = customer.Groups.Select(g => new Group
-                    {
-                        GroupId = g.GroupId,
-                        GroupName = g.GroupName,
-                        EAN = g.EAN,    
-                        GroupProducts = g.GroupProducts
-                            .Where(gp => gp.AddedQuantity > 0)
-                            .ToList()
-                    }).ToList()
+                    CustomerId = cus.CustomerId,
+                    CustomerName = cus.CustomerName,
+                    Email = cus.Email,
+                    PhoneNumber = cus.PhoneNumber,
+                    PurchasedProducts = cus.PurchasedProducts,
+                    Groups = cus.Groups
+                    //Groups = cus.Groups.Select(g => new Group
+                    //{
+                    //    GroupId = g.GroupId,
+                    //    GroupName = g.GroupName,
+                    //    EAN = g.EAN,    
+                    //    GroupProducts = g.GroupProducts
+                    //        .Where(p => p.AddedQuantity > 0)
+                    //        .ToList()
+                    //}).ToList()
                 })
                 .FirstOrDefaultAsync();
             stopwatch.Stop();

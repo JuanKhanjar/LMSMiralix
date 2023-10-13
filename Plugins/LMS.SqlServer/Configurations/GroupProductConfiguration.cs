@@ -18,10 +18,7 @@ namespace LMS.SqlServer.Configurations
                    .OnDelete(DeleteBehavior.NoAction); // Cascade delete for Groups, but not for PurchasedProducts
 
             // Define the many-to-one relationship between GroupProduct and PurchasedProduct
-            builder.HasOne(gp => gp.PurchasedProduct)
-                   .WithMany(pp => pp.GroupProducts)
-                   .HasForeignKey(gp => gp.PurchasedProductId)
-                   .OnDelete(DeleteBehavior.NoAction); // No cascade delete for PurchasedProducts
+           
 
             // Seed data for GroupProducts (you can add more)
             builder.HasData(
