@@ -72,15 +72,15 @@ namespace LMS.SqlServer.Repositories
                     PhoneNumber = cus.PhoneNumber,
                     PurchasedProducts = cus.PurchasedProducts,
                     Groups = cus.Groups
-                    //Groups = cus.Groups.Select(g => new Group
-                    //{
-                    //    GroupId = g.GroupId,
-                    //    GroupName = g.GroupName,
-                    //    EAN = g.EAN,    
-                    //    GroupProducts = g.GroupProducts
-                    //        .Where(p => p.AddedQuantity > 0)
-                    //        .ToList()
-                    //}).ToList()
+                    ////Groups = cus.Groups.Select(g => new Group
+                    ////{
+                    ////    GroupId = g.GroupId,
+                    ////    GroupName = g.GroupName,
+                    ////    EAN = g.EAN,    
+                    ////    GroupProducts = g.GroupProducts
+                    ////        .Where(p => p.AddedQuantity > 0)
+                    ////        .ToList()
+                    ////}).ToList()
                 })
                 .FirstOrDefaultAsync();
             stopwatch.Stop();
