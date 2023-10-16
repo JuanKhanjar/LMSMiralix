@@ -30,14 +30,12 @@ namespace LMS.Tests
                         ProductId = 1,
                         ProductName = "Product1",
                         PurchasedQty = 5,
-                        // Add other properties and related data as needed
                     },
                     new PurchasedProduct
                     {
                         ProductId = 2,
                         ProductName = "Product2",
                         PurchasedQty = 3,
-                        // Add other properties and related data as needed
                     }
                 });
 
@@ -53,7 +51,6 @@ namespace LMS.Tests
             // Assert
             Assert.NotNull(result); // PurchasedProducts should not be null
             Assert.Equal(2, result.Count()); // There should be 2 purchased products
-            // Add more assertions based on the expected purchased product data
         }
 
         [Fact]

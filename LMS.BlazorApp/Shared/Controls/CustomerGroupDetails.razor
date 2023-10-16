@@ -1,18 +1,31 @@
 ﻿<details>
-    <!-- Group Header -->
+   
     <summary class="d-flex justify-content-between align-items-center header3Font">
-        <div class="row row-cols-3 px-3">
-            <div class="col m-0">@_customer?.CustomerName  </div>
-            <div class="col m-0 d-flex justify-content-start">@group.GroupName</div>
-            <div class="col m-0 p-3 d-flex justify-content-start header4Font">
-                EAN.&ensp;
-                <span class="col m-0 d-flex justify-content-start">@group.EAN</span>
+        <div class="container">
+            <div class="row d-flex justify-content-between align-items-center mb-4">
+                <!-- First Row -->
+                <div class="col">
+                    @_customer?.CustomerName @group.GroupName
+                </div>
+                <div class="col d-flex justify-content-end header4Font">
+                    EAN :@group.EAN
+                </div>
             </div>
-            <div class="col m-0">Total:<span class="text-primary mx-4">@group.GetTotalPriceForAgroup().ToString("c2")</span></div>
-            <div class="col mx-0 header4Font">(@group.GetTotalQuantityForAgroup()) licenses</div>
-            <div class="col m-0"></div>
+            <div class="row d-flex justify-content-between align-items-center">
+                <!-- First Row -->
+                <div class="col">
+                    <div>
+                        Total &ensp; <span class="text-primary">@group.GetTotalPriceForAgroup().ToString("c2")</span>
+                        <span class="header4Font">&ensp;/&ensp; (@group.GetTotalQuantityForAgroup())</span> licenser
+                    </div>
+                </div>
+                <div class="col">
+                </div>
+            </div>
         </div>
     </summary>
+
+
 
     <!-- Group -->
     <div class="m-3">

@@ -23,7 +23,6 @@ namespace LMS.Tests
                     // Initialize with customer data for testing
                     CustomerId = validCustomerId,
                     CustomerName = "TestCustomer"
-                    // Add other properties and related data as needed
                 });
 
             var mockLogger = new Mock<ILogger<GetCustomerWithGroupsAndProductsUC>>();
@@ -38,7 +37,6 @@ namespace LMS.Tests
             // Assert
             Assert.NotNull(result); // Customer should not be null
             Assert.Equal(validCustomerId, result.CustomerId);
-            // Add more assertions based on the expected customer data
         }
 
         [Fact]
@@ -97,20 +95,19 @@ namespace LMS.Tests
                     // Initialize with customer data for testing
                     CustomerId = validCustomerId,
                     CustomerName = "TestCustomer",
-                    // Add other properties and related data as needed
                     Groups = new List<Group>
                     {
                         new Group
                         {
                             GroupId = 1,
                             GroupName = "Group1",
-                            // Add other properties and related data as needed
+                          
                         },
                         new Group
                         {
                             GroupId = 2,
                             GroupName = "Group2",
-                            // Add other properties and related data as needed
+                         
                         }
                     }
                 });
@@ -127,7 +124,7 @@ namespace LMS.Tests
             // Assert
             Assert.NotNull(result); // Customer should not be null
             Assert.Equal(validCustomerId, result.CustomerId);
-            // Add more assertions based on the expected customer data and related groups
+
         }
 
         [Fact]
@@ -144,14 +141,12 @@ namespace LMS.Tests
                     // Initialize with customer data for testing
                     CustomerId = validCustomerId,
                     CustomerName = "TestCustomer",
-                    // Add other properties and related data as needed
                     Groups = new List<Group>
                     {
                         new Group
                         {
                             GroupId = 1,
                             GroupName = "Group1",
-                            // Add other properties and related data as needed
                             GroupProducts = new List<GroupProduct>
                             {
                                 new GroupProduct
@@ -172,7 +167,6 @@ namespace LMS.Tests
                         {
                             GroupId = 2,
                             GroupName = "Group2",
-                            // Add other properties and related data as needed
                         }
                     }
                 });
@@ -191,7 +185,6 @@ namespace LMS.Tests
             Assert.Equal(validCustomerId, result.CustomerId);
             Assert.NotNull(result.Groups); // Groups should not be null
             Assert.Equal(2, result.Groups.Count); // There should be 2 groups
-                                                  // Add more assertions based on the expected customer data, related groups, and group products
         }
 
     }

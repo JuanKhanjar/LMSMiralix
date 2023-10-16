@@ -2,14 +2,8 @@
 using LMS.BusinessUseCases.Exceptions;
 using LMS.BusinessUseCases.GroupUCs;
 using LMS.BusinessUseCases.PluginInterfaces;
-using LMS.SqlServer.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace LMS.Tests
@@ -31,7 +25,6 @@ namespace LMS.Tests
                     // Initialize with group data for testing
                     GroupId = 1,
                     GroupName = groupName,
-                    // Add other properties as needed
                 });
 
             var mockLogger = new Mock<ILogger<CreateGroupUC>>();
@@ -46,7 +39,6 @@ namespace LMS.Tests
             // Assert
             Assert.NotNull(result); // Created group should not be null
             Assert.Equal(groupName, result.GroupName);
-            // Add more assertions based on the expected group data
         }
 
         [Fact]
