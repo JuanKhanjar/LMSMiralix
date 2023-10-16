@@ -198,12 +198,15 @@
 </div>
 
 
-<Dialog Title="@($"Change Summary : for {_customer?.CustomerName?? string.Empty}-{selectedGroupDto?.GroupName ?? string.Empty } gruppe")"
+<Dialog Title="@($"Change Summary: for {_customer?.CustomerName?? string.Empty}-{selectedGroupDto?.GroupName ?? string.Empty } gruppe")"
         ConfirmButtonText="OK"
         CancelButtonText="Cancel"
 @ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
     <ChildContent>
-        <ChangeSummary CustomerId="customerId" SelectedGroupDto="selectedGroupDto" ChangedGPDtos="changedGPDtos" />
+        <ChangeSummary 
+            CustomerId="customerId" 
+            SelectedGroupDto="selectedGroupDto" 
+            ChangedGPDtos="changedGPDtos" />
     </ChildContent>
 
 </Dialog>
