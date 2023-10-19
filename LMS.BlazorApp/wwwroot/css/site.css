@@ -231,7 +231,7 @@ details[open] summary ~ * {
 /* Input Styles */
 .inputNumber {
     text-align: center;
-    width: 101px;
+    width: 200px;
     height: 35px;
     font-weight: 400;
     font-size: 18px;
@@ -294,3 +294,4 @@ details[open] summary ~ * {
 @media (max-width: 1199.98px) {
     /* Styles for Large devices (desktops) */
 }
+

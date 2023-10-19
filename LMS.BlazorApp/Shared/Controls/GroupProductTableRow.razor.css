@@ -1,14 +1,4 @@
-﻿.disabled-row {
-    /*color: red;*/ 
-    /*text-decoration: line-through;*/
-}
-
-    .disabled-row input[type="number"] {
-        color: gray;
-
-    }
-
-.grid-container {
+﻿.grid-container {
     display: grid;
     grid-template-columns: auto 20% 20% auto auto;
     padding: 4px;

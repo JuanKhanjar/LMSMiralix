@@ -1,13 +1,12 @@
 ﻿
 @if (GroupProduct.PurchasedProduct != null)
 {
-    <tr class="d-flex justify-content-sm-between align-baseline">
-        <td>@GroupProduct.PurchasedProduct.ProductName</td>
-        <td>@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</td>
-        <td>@GroupProduct.AddedQuantity</td>
+        <tr class="grid-container">
+        <td class="grid-item">@GroupProduct.PurchasedProduct.ProductName</td>
+        <td class="grid-item">@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</td>
+        <td class="grid-item">@GroupProduct.AddedQuantity</td>
     </tr>
 }
-
 
 @code {
 

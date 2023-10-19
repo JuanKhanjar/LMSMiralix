@@ -65,7 +65,9 @@
                     </div>
 
                     <!-- Group Products -->
-                    <HearderSurvery HeaderText="Selected Licenses" HeaderClass="headerFont" SubHeaderText="">
+                    <HearderSurvery HeaderText="Selected Licenses" 
+                        HeaderClass="headerFont" 
+                        SubHeaderText="">
                         <ChildContent>
 
                         </ChildContent>
@@ -74,10 +76,8 @@
 
                     <div class="row">
                         <div class="col-md-10">
-                            <div class="">
                                 <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende", "Antal" }'
                                                    Conditions='new bool[] { true, true, true, true }' />
-                            </div>
                         </div>
                     </div>
 
@@ -123,11 +123,9 @@
                         </ChildContent>
                     </HearderSurvery>
                     <div class="row">
-                        <div class="col-md-10">
-                            <div class="">
-                                <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
+                        <div class="col-md-10 ">
+                            <CustomGPHeaderRow Headers='new string[] { "Type", "Pris", "Resterende", "Antal" }'
                                                    Conditions='new bool[] { true, true, true, true }' />
-                            </div>
                         </div>
                     </div>
 
@@ -185,7 +183,7 @@
                                 <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                             </ChildContent>
                         </HearderSurvery>
-                        <div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
+                        <div class="">
                             <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende" }'
                                                Conditions='new bool[] { true, true, true }'>
                             </CustomGPHeaderRow>
