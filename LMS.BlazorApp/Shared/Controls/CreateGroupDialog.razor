@@ -3,9 +3,9 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@Title</h5>
-                <button type="button" class="close" @onclick="CloseDialog">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title mb-1">@Title</h5>
+                <button type="button" class="btn-close" @onclick="CloseDialog">
+                    
                 </button>
             </div>
             <div class="modal-body p-2">
@@ -20,7 +20,7 @@
 
 @code {
     [Parameter] public string Title { get; set; } = string.Empty;
-    [Parameter] public string CancelButtonText { get; set; } = "Cancel";
+    [Parameter] public string CancelButtonText { get; set; } = "Annullere";
     [Parameter] public RenderFragment ChildContent { get; set; }
 
     private string modalDisplay = "none";

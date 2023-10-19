@@ -42,7 +42,10 @@
                 {
                     <!-- Form Group -->
 
-                    <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" HeaderClass="headerFont" SubHeaderText="" HeaderSubClass="header2Font">
+                    <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" 
+                        HeaderClass="headerFont" 
+                        SubHeaderText="" 
+                        HeaderSubClass="header2Font">
                         <ChildContent>
                             <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                         </ChildContent>
@@ -72,7 +75,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <div class="">
-                                <CustomGPHeaderRow Headers='new string[] { "Type", "Cost", "Remaining", "Quantity" }'
+                                <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende", "Antal" }'
                                                    Conditions='new bool[] { true, true, true, true }' />
                             </div>
                         </div>
@@ -171,15 +174,19 @@
                 }
                 else
                 {
+                    <!-- Display Purchased Products -->
                     <div class="p-2 ">
                         <!-- Purchased Products Table -->
-                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" HeaderClass="headerFont" SubHeaderText="" HeaderSubClass="header2Font">
+                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" 
+                            HeaderClass="headerFont" 
+                            SubHeaderText="" 
+                            HeaderSubClass="header2Font">
                             <ChildContent>
                                 <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                             </ChildContent>
                         </HearderSurvery>
                         <div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
-                            <CustomGPHeaderRow Headers='new string[] { " Type", "Cost" , "Remaining" }'
+                            <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende" }'
                                                Conditions='new bool[] { true, true, true }'>
                             </CustomGPHeaderRow>
                         </div>
@@ -187,7 +194,7 @@
                             <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos" />
                         </div>
                         <div class="col-sm-12 col-m-12 d-flex justify-content-sm-end align-content-between px-4 py-2 ">
-                            <button class="btn btn-light mx-2 rounded-pill fw-bold" @onclick="()=>CreateGroup()">Create Group</button>
+                            <button class="btn btn-light mx-2 rounded-pill fw-bold" @onclick="()=>CreateGroup()">oprette gruppe</button>
                         </div>
                     </div>
                 }
@@ -198,9 +205,9 @@
 </div>
 
 
-<Dialog Title="@($"Change Summary: for {_customer?.CustomerName?? string.Empty}-{selectedGroupDto?.GroupName ?? string.Empty } gruppe")"
+<Dialog Title="@( $"Ændringsoversigt: Kunde {_customer?.CustomerName?? string.Empty} - Gruppe {selectedGroupDto?.GroupName ?? string.Empty }")"
         ConfirmButtonText="OK"
-        CancelButtonText="Cancel"
+        CancelButtonText="Annullere"
 @ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
     <ChildContent>
         <ChangeSummary 
@@ -211,7 +218,8 @@
 
 </Dialog>
 
-<CreateGroupDialog CancelButtonText="close" Title="Create Group" @ref="createGroupDialog">
+<CreateGroupDialog CancelButtonText="Luk"
+                   Title="Opret en ny gruppe" @ref="createGroupDialog">
     <ChildContent>
         <CreateNewGroupPage customerId="customerId" />
     </ChildContent>
@@ -287,13 +295,13 @@
             if (result)
             {
                 // Update was successful, show a success notification
-                await JSRuntime.InvokeVoidAsync("Swal.fire","Quantities Updated Successfully","The groups quantities has been updated successfully.","success");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Mængder opdateret med succes", "Gruppens mængder er blevet opdateret med succes.", "success");
                 await LoadData( );
                 ShowGroupDetails(selectedGroup.GroupId);
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire","Update failed","The groups quantities has not  updated successfully.","error");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Opdatering fejlede", "Gruppens mængder er ikke blevet opdateret.", "error");
             }
         }
     }

@@ -4,16 +4,19 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@Title</h5>
-                <button type="button" class="close" @onclick="CloseDialog">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" @onclick="CloseDialog">
+                    @*<span aria-hidden="true">&times;</span>*@
                 </button>
             </div>
-            <div class="modal-body p-2">
-                @ChildContent
+            <div class="modal-body p-2 m-3 bg-white shadow card">
+                @if (ChildContent != null)
+                {
+                    @ChildContent
+                }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CancelDialog">@CancelButtonText</button>
-                <button type="button" class="btn btn-primary" @onclick="ConfirmDialog">@ConfirmButtonText</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="CancelDialog">@CancelButtonText</button>
+                <button type="button" class="btn btn-success" @onclick="ConfirmDialog">@ConfirmButtonText</button>
             </div>
         </div>
     </div>
@@ -22,7 +25,7 @@
 @code {
     [Parameter] public string Title { get; set; } = string.Empty;
     [Parameter] public string ConfirmButtonText { get; set; } = "OK";
-    [Parameter] public string CancelButtonText { get; set; } = "Cancel";
+    [Parameter] public string CancelButtonText { get; set; } = "Annullere";
     [Parameter] public RenderFragment ChildContent { get; set; } 
     [Parameter] public EventCallback<List<ChangesDto>> SaveChnges { get; set; }
 

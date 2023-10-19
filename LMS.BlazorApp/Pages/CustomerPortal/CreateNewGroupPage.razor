@@ -6,11 +6,11 @@
 @inject NotificationService _notificationService
 @inject IJSRuntime JSRuntime
 
-<div class="card">
+<div class="card shadow">
     <div class="card-body">
-        <h3>Welcome: @_customer.CustomerName</h3>
+        <h3 class="">Velkommen: @(_customer?.CustomerName??string.Empty)</h3>
         <div class="card p-4 mb-2">
-            <h6>Create a group and then Click edit to add Products</h6>
+            <h6>Opret en gruppe, og klik derefter på rediger for at tilføje produkter</h6>
         </div>
         <div class="card p-2">
             <EditForm Model="_groupModel" OnValidSubmit="CreateGroupAsync">
@@ -18,13 +18,13 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="GroupName">Group Name:</label>
-                    <InputText id="GroupName" @bind-Value="_groupModel.GroupName" class="form-control" />
+                    <label for="GroupName" class="m-2">Gruppenavn:</label>
+                    <InputText id="GroupName" @bind-Value="_groupModel.GroupName" class="form-control" placeholder="indtast gruppenavn" />
                     <ValidationMessage For="@(() => _groupModel.GroupName)" />
                 </div>
 
-                <div class="form-group m-2 p-2">
-                    <button type="submit" class="btn btn-success">Create Group</button>
+                <div class="form-group p-2">
+                    <button type="submit" class="btn btn-success">Opret gruppe</button>
                 </div>
             </EditForm>
         </div>
@@ -53,13 +53,13 @@
             if (result!=null)
             {
                 // Group created successfully, navigate to a success page or perform other actions
-                await _notificationService.ShowSuccessNotification("Group created successfully!", $"The Group Name Is: {result.GroupName}");
-                NavigationManager.NavigateTo($"/customer/{_customer.CustomerId}", forceLoad: true);
+                await _notificationService.ShowSuccessNotification("Gruppen oprettet med succes!", $"Gruppenavnet er: {result.GroupName}");
+                NavigationManager.NavigateTo($"/customer/{customerId}", forceLoad: true);
             }
             else
             {
                 // Group creation failed, show error notification
-                await _notificationService.ShowErrorNotification("Group creation failed.","Some thing went erong!,Try Again");
+                await _notificationService.ShowErrorNotification("Gruppeoprettelse mislykkedes.","Noget gik galt!, Prøv igen senere");
             }
         }
         catch (Exception ex)
@@ -71,7 +71,7 @@
     private void GoBack()
     {
         // Navigate back to the customer page
-        NavigationManager.NavigateTo($"/customer/{_customer.CustomerId}");
+        NavigationManager.NavigateTo($"/customer/{customerId}");
     }
 }
 

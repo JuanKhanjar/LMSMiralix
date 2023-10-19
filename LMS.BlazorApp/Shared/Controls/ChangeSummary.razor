@@ -2,15 +2,15 @@
 
 @inherits ComponentBase
 
-<div class="row d-flex justify-content-between align-baseline">
-    <div class="col-12">
+<div class="row d-flex justify-content-between align-baseline p-2 ">
+    <div class="col-12 ">
         <table class="table ">
             <thead>
                 <tr>
                     <th>Type Id</th>
                     <th>Type</th>
-                    <th>Group Balance</th>
-                    <th>Purchased Balance</th>
+                    <th>Gruppe ændret ved</th>
+                    <th>Aktuel købt saldo</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,8 +26,8 @@
             </tbody>
             <tfoot>
                 <tr class="">
-                    <td colspan="2" >Total Changes:</td>
-                    <td class="text-end">@ChangedGPDtos.Sum(gp=>gp.GPChangeQuantity*gp.Cost).ToString("c2") / ( @ChangedGPDtos.Sum(gp=>gp.GPChangeQuantity) ) Licenser</td>
+                    <td colspan="3">Prisen vil ændre sig med:</td>
+                    <td class="text-end text-primary">@ChangedGPDtos.Sum(gp=>gp.GPChangeQuantity*gp.Cost).ToString("c2") / ( @ChangedGPDtos.Sum(gp=>gp.GPChangeQuantity) ) Licenser</td>
                 </tr>
             </tfoot>
         </table>

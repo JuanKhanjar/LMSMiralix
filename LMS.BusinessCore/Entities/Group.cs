@@ -9,7 +9,8 @@ namespace LMS.BusinessCore.Entities
         [Key]
         public int GroupId { get; set; }
 
-        [Required(ErrorMessage = "Group name is required")]
+        [Required(ErrorMessage = "Gruppenavn er obligatorisk")]
+        [Display(Name = "GroupName")]
         public string GroupName { get; set; }
 
         
