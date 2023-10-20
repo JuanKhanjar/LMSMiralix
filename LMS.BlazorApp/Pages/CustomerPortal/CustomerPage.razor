@@ -1,4 +1,5 @@
-﻿@page "/customer/{customerId:int}"
+﻿@page "/customer/"
+@page "/customer/{customerId:int}"
 
 @inject IGetCustomerWithGroupsAndProductsUC _IGetCustomerWithGroupsAndProductsUC
 @inject IGetPurchasedProductsByCustomerIdUC _IGetPurchasedProductsByCustomerIdUC
@@ -183,12 +184,12 @@
                                 <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                             </ChildContent>
                         </HearderSurvery>
-                        <div class="">
-                            <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende" }'
+                        <div class="p-2">
+                            <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende"}'
                                                Conditions='new bool[] { true, true, true }'>
                             </CustomGPHeaderRow>
                         </div>
-                        <div class="col-sm-12 col-m-12 d-flex justify-content-sm-between align-content-between px-4 py-2">
+                        <div class="p-2">
                             <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos" />
                         </div>
                         <div class="col-sm-12 col-m-12 d-flex justify-content-sm-end align-content-between px-4 py-2 ">

@@ -1,44 +1,6 @@
 ﻿@inherits LayoutComponentBase
-
-<PageTitle>LMS.BlazorApp</PageTitle>
-
-<div class="page">
-    @*<div class="sidebar">
-        <NavMenu />
-    </div>*@
-
-    <main>
-        <div class="top-row px-4 auth styledNav d-flex justify-content-between " style="background: rgba(39, 61, 32, 1);height:88px;">
-
-            <div class="custom-register-link">
-                <a class="navbar-brand" href="#">
-                    <img src="/image/logo.png" alt="logo" width="123" height="40">
-                </a>
-            </div>
-           
-            <div >
-                <a href="https://docs.microsoft.com/aspnet/" target="_blank" class="custom-register-link">
-                    <i class="fa fa-book navIcon"></i>
-                    Sager
-                    </a>
-                <a href="https://docs.microsoft.com/aspnet/" target="_blank" class="custom-register-link">
-                    <i class="fa fa-cube"></i>
-                    Din løsning
-                    </a>
-                <a href="/customer/1" target="_blank" class="custom-register-link text-light">
-                    <i class="fa fa-key"></i>
-                    Licenser
-                    </a>
-            </div>
-            
-            <div>
-                <LoginDisplay />
-            </div>
-            
-        </div>
-
-        <div class="px-5">
-            @Body
-        </div>
-    </main>
+<NavMenu />
+<div class="main">
+    @Body
 </div>
+

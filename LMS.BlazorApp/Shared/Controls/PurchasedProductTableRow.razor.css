@@ -7,16 +7,3 @@
         color: gray;
 
     }
-
-.grid-container {
-    display: grid;
-    grid-template-columns: auto 20% 20% auto auto;
-    padding: 4px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.grid-item {
-    font-size: 16px;
-    text-align: start;
-}

@@ -1,17 +1,21 @@
-﻿
-@if (GroupProduct.PurchasedProduct != null)
+﻿@if (GroupProduct.PurchasedProduct != null)
 {
-        <tr class="grid-container">
-        <td class="grid-item">@GroupProduct.PurchasedProduct.ProductName</td>
-        <td class="grid-item">@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</td>
-        <td class="grid-item">@GroupProduct.AddedQuantity</td>
-    </tr>
+    <div class="grid-container2">
+        <div class="grid-item">@GroupProduct.PurchasedProduct.ProductName</div>
+        <div class="grid-item">@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</div>
+        <div class="grid-item">@GroupProduct.AddedQuantity</div>
+    </div>
 }
 
 @code {
 
     [Parameter]
-    public GroupProduct GroupProduct { get; set; } = new GroupProduct();
+    public GroupProduct GroupProduct { get; set; } = new GroupProduct( );
 }
 
 
+@* <tr class="grid-container3">
+        <td class="grid-item">@GroupProduct.PurchasedProduct.ProductName</td>
+        <td class="grid-item">@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</td>
+        <td class="grid-item">@GroupProduct.AddedQuantity</td>
+    </tr> *@
