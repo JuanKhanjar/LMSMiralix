@@ -26,13 +26,14 @@
     <!-- Group -->
     <div class="p-2">
         <CustomGPHeaderRow Headers='new string[] { "Type", "Pris", "Antal"}'
-                           Conditions='new bool[] { true, true, true}' />
+                           Conditions='new bool[] { true, true, true}' 
+                           ClassName="grid-container1" />
     </div>
     <!-- Group Products -->
     <div class="p-2">
         @foreach (var product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
         {
-            <GetGroupProductItem GroupProduct="product" />
+            <GetGroupProductItem GroupProduct="product" ClassName="grid-container2" />
         }
     </div>
     <div class="d-flex justify-content-between p-2">

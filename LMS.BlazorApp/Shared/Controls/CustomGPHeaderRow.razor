@@ -1,6 +1,6 @@
 ﻿@inherits ComponentBase
 
-<div class="grid-container1">
+<div class="@ClassName">
     @for (int i = 0; i < Headers.Length; i++)
     {
         if (Conditions[i])
@@ -15,6 +15,7 @@
 @code {
     [Parameter] public string[ ] Headers { get; set; }
     [Parameter] public bool[ ] Conditions { get; set; }
+    [Parameter] public string ClassName { get; set; } = string.Empty;
 }
 
 

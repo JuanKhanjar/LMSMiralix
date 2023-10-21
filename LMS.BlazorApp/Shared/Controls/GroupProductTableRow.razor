@@ -1,12 +1,12 @@
 ﻿
-<tr>
-    <td >@GroupProduct.ProductName</td>
-    <td >@GroupProduct.ProductPrice</td>
-    <td >
+<tr class="grid-container4">
+    <td class="grid-item">@GroupProduct.ProductName</td>
+    <td class="grid-item">@GroupProduct.ProductPrice</td>
+    <td class="grid-item">
         <span>@($"{GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>
         @*<span>@($"{GroupProduct.AddedQty} + {GroupProduct.InputProductQuantity} = {GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>*@
     </td>
-    <td >
+    <td class="grid-item">
         <div class="position-relative">
             <input type="number"
                    @key="GroupProduct.PurchasedProductId"
@@ -24,7 +24,7 @@
         </div>
     </td>
 
-    <td >
+    <td class="grid-item text-center">
         <button class="btn btn-outline-danger border-0" style="" @onclick="RemoveProductClicked"><i class="fa fa-trash"></i></button>
     </td>
 </tr>

@@ -1,6 +1,6 @@
 ﻿@if (GroupProduct.PurchasedProduct != null)
 {
-    <div class="grid-container2">
+    <div class="@ClassName">
         <div class="grid-item">@GroupProduct.PurchasedProduct.ProductName</div>
         <div class="grid-item">@GroupProduct.PurchasedProduct.ProductPrice.ToString("c2")</div>
         <div class="grid-item">@GroupProduct.AddedQuantity</div>
@@ -11,6 +11,7 @@
 
     [Parameter]
     public GroupProduct GroupProduct { get; set; } = new GroupProduct( );
+    [Parameter] public string ClassName { get; set; } = string.Empty;
 }
 
 
