@@ -1,4 +1,4 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+﻿<nav class="navbar navbar-expand-lg styledNav">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,19 +7,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item p-0">
-                    <NavLink class="nav-link" href="/customer/1" ActiveClass="btn-outline-light text-white">
-                        <span class="p-2">Home</span>
+                    <NavLink class="nav-link" href="/customer/1" Match="NavLinkMatch.All">
+                        <span class="p-2" aria-hidden="true">Home</span>
                     </NavLink>
                 </li>
                
                 <li class="nav-item p-0">
                     <NavLink class="nav-link" href="/" >
-                        <span class="p-2">Losning</span>
+                        <span class="p-2" aria-hidden="true">Losning</span>
                     </NavLink>
                 </li>
                 <li class="nav-item p-0">
                     <NavLink class="nav-link" href="/">
-                        <span class="p-2">Sage</span>
+                        <span class="p-2" aria-hidden="true">Sage</span>
                     </NavLink>
                 </li>
             </ul>

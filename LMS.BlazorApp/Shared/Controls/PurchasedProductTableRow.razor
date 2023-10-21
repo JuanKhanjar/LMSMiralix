@@ -1,8 +1,8 @@
 ﻿
-<tr class=" tableRowFont @(IsDisabledRow() ? "disabled-row" : "") ">
-    <td class="">@PurchasedProduct.ProductName</td>
-    <td class="fw-bold">@PurchasedProduct.ProductPrice</td>
-    <td class="fw-bold">
+<tr class="grid-container4 @(IsDisabledRow() ? "disabled-row" : "") ">
+    <td class="grid-item">@PurchasedProduct.ProductName</td>
+    <td class="grid-item">@PurchasedProduct.ProductPrice</td>
+    <td class="grid-item">
         @($"{PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")
         @*<span>
         @($"{PurchasedProduct.PurchasedQty} - {GroupProductQuantityAvailability} = {PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity)}")

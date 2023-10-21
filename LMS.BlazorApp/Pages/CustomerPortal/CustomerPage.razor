@@ -42,22 +42,35 @@
                 @if (displayGroupProducts == false)
                 {
                     <!-- Form Group -->
-                    <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" 
-                        HeaderClass="headerFont" 
-                        SubHeaderText="" 
-                        HeaderSubClass="header2Font">
+                    <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")"
+                                    HeaderClass="headerFont"
+                                    SubHeaderText=""
+                                    HeaderSubClass="header2Font">
                         <ChildContent>
                             <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                         </ChildContent>
                     </HearderSurvery>
 
-                    <div class="row d-flex justify-content-between align-content-center">
-                        <div class="col-sm-10 col-md-10 ">
+                    @* <div class=" d-flex justify-content-between align-content-center">
+            <div class="col-sm-10 col-md-10 ">
+            <EditGroup model="selectedGroupDto"
+            OnValidSubmit="UpdateGroupNameAsync" />
+            </div>
+            <div class="col-sm-2 col-md-2 text-end d-flex align-items-center justify-content-end">
+            <button type="submit" class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
+            <i class="fa fa-trash"></i>
+            </button>
+            </div>
+
+            </div> *@
+                    <div class="row">
+                        <div class="col-md-10">
                             <EditGroup model="selectedGroupDto"
                                        OnValidSubmit="UpdateGroupNameAsync" />
                         </div>
-                        <div class="col-sm-2 col-md-2 text-end d-flex align-items-center justify-content-end">
-                            <button type="submit" class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
+                        <div class="col-md-2  d-flex justify-content-center">
+                            <button type="submit" 
+                                class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>
@@ -65,9 +78,9 @@
                     </div>
 
                     <!-- Group Products -->
-                    <HearderSurvery HeaderText="Selected Licenses" 
-                        HeaderClass="headerFont" 
-                        SubHeaderText="">
+                    <HearderSurvery HeaderText="Selected Licenses"
+                                    HeaderClass="headerFont"
+                                    SubHeaderText="">
                         <ChildContent>
                         </ChildContent>
                     </HearderSurvery>
@@ -123,7 +136,7 @@
                     <div class="row">
                         <div class="col-md-10 ">
                             <CustomGPHeaderRow Headers='new string[] { "Type", "Pris", "Resterende", "Antal" }'
-                                               Conditions='new bool[] { true, true, true, true }' 
+                                               Conditions='new bool[] { true, true, true, true }'
                                                ClassName="grid-container3" />
                         </div>
                     </div>
@@ -174,17 +187,17 @@
                     <!-- Display Purchased Products -->
                     <div class="p-2 ">
                         <!-- Purchased Products Table -->
-                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")" 
-                            HeaderClass="headerFont" 
-                            SubHeaderText="" 
-                            HeaderSubClass="header2Font">
+                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")"
+                                        HeaderClass="headerFont"
+                                        SubHeaderText=""
+                                        HeaderSubClass="header2Font">
                             <ChildContent>
                                 <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                             </ChildContent>
                         </HearderSurvery>
                         <div class="p-2">
                             <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende"}'
-                                               Conditions='new bool[] { true, true, true }' 
+                                               Conditions='new bool[] { true, true, true }'
                                                ClassName="grid-container1">
                             </CustomGPHeaderRow>
                         </div>
@@ -208,10 +221,9 @@
         CancelButtonText="Annullere"
 @ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
     <ChildContent>
-        <ChangeSummary 
-            CustomerId="customerId" 
-            SelectedGroupDto="selectedGroupDto" 
-            ChangedGPDtos="changedGPDtos" />
+        <ChangeSummary CustomerId="customerId"
+                       SelectedGroupDto="selectedGroupDto"
+                       ChangedGPDtos="changedGPDtos" />
     </ChildContent>
 
 </Dialog>
@@ -293,13 +305,13 @@
             if (result)
             {
                 // Update was successful, show a success notification
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Mængder opdateret med succes", "Gruppens mængder er blevet opdateret med succes.", "success");
+                await JSRuntime.InvokeVoidAsync("Swal.fire","Mængder opdateret med succes","Gruppens mængder er blevet opdateret med succes.","success");
                 await LoadData( );
                 ShowGroupDetails(selectedGroup.GroupId);
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire", "Opdatering fejlede", "Gruppens mængder er ikke blevet opdateret.", "error");
+                await JSRuntime.InvokeVoidAsync("Swal.fire","Opdatering fejlede","Gruppens mængder er ikke blevet opdateret.","error");
             }
         }
     }
@@ -337,7 +349,7 @@
         if (_customer != null)
         {
             // Load and map customer groups
-           await LoadCustomerGroups( );
+            await LoadCustomerGroups( );
 
             // Load and map purchased products
             await LoadPurchasedProducts( );
@@ -345,7 +357,7 @@
     }
     private async Task LoadCustomerGroups()
     {
-        customerGroups = await Task.Run(()=> _customer.Groups.ToList());
+        customerGroups = await Task.Run(() => _customer.Groups.ToList( ));
         if (customerGroups != null && customerGroups.Any( ))
         {
             customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group));
@@ -475,7 +487,7 @@
                 GroupId = group.GroupId,
                 GroupName = group.GroupName,
                 EAN = group.EAN,
-                CustomerId =group.CustomerId,
+                CustomerId = group.CustomerId,
                 GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList( )
             };
     }
