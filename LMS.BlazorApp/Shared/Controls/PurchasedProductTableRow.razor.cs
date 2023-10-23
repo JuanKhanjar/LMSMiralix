@@ -11,7 +11,10 @@ namespace LMS.BlazorApp.Shared.Controls
         public int GroupProductQuantityAvailability { get; set; }
         [Parameter]
         public EventCallback UpdateState { get; set; }
-
+        [Parameter]
+        public string ClassName { get; set; } = string.Empty;
+        [Parameter] 
+        public string SubClassName { get; set; } = string.Empty;
         private bool IsDisabledRow()
         {
             return PurchasedProduct.PurchasedQty - (GroupProductQuantityAvailability + PurchasedProduct.InputPurchasedtQuantity) == 0;

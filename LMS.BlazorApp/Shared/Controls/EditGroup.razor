@@ -1,25 +1,55 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @using LMS.BlazorApp.Dtos
 
-    <EditForm Model="model" OnValidSubmit="OnValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="row d-flex justify-content-center">
-            <div class="form-group col-md-12 d-flex justify-content-between">
-                <div class="form-group col-md-6">
-                    <label for="GroupName">Group Name:</label>
-                    <InputText id="GroupName" @bind-Value="model.GroupName" class="form-control inputGroupName" />
-                    <ValidationMessage For="@(() => model.GroupName)" />
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="EANName">EAN:</label>
-                    <input type="text" id="EANName" value="@model.EAN" class="form-control inputGroupEAN bg-white" disabled />
-                </div>
+<div class="col-10">
+    <div class="GroupDetailsHeader">
+        <div class="GroupProductItem">Gruppenavn</div>
+        <div class="GroupProductItem">EAN</div>
+    </div>
+</div>
+<div class="GroupItemsRowContainer">
+    <div class="GroupItemsRow">
+        <EditForm Model="model" OnValidSubmit="OnValidSubmit" class="">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="GroupProductItem">
+                <InputText type="text" @bind-Value="model.GroupName" class="GroupProductItem GroupNameItem" />
+                <ValidationMessage For="@(() => model.GroupName)" />
             </div>
+        </EditForm>
+        <div class="GroupProductItem">
+            <input type="text" value="@model.EAN" disabled class=" GroupProductItem GroupNameItem" />
         </div>
-    </EditForm>
+    </div>
+
+    <div class="GroupProductItem">
+        <div class="GroupProductItem text-center ">
+            @chiledContent
+        </div>
+    </div>
+
+</div>
 
 @code {
-    [Parameter] public GroupDto model { get; set; } = new GroupDto();
+    [Parameter] public GroupDto model { get; set; } = new GroupDto( );
     [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public RenderFragment chiledContent { get; set; }
 }
+
+@* <EditForm Model="model" OnValidSubmit="OnValidSubmit" class="">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="GroupItemsRow">
+        <div class="form-group col-md-12 d-flex justify-content-between">
+            <div class="form-group col-md-6">
+                <label for="GroupName" class="ProductItem">Group Name:</label>
+                <InputText id="GroupName" @bind-Value="model.GroupName" class="form-control inputGroupName" />
+                <ValidationMessage For="@(() => model.GroupName)" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="EANName" class="ProductItem">EAN:</label>
+                <input type="text" id="EANName" value="@model.EAN" class="form-control inputGroupEAN bg-white" disabled />
+            </div>
+        </div>
+    </div>
+</EditForm> *@

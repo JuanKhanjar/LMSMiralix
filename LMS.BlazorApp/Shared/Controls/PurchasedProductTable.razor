@@ -1,9 +1,9 @@
 ﻿@foreach (var purchasedProductDto in PurchasedProductDtos)
 {
     <div class="@ClassName">
-        <div class="grid-item">@purchasedProductDto.ProductName</div>
-        <div class="grid-item">@purchasedProductDto.ProductPrice</div>
-        <div class="grid-item">@purchasedProductDto.PurchasedQty</div>
+        <div class="@SubClassName">@purchasedProductDto.ProductName</div>
+        <div class="@SubClassName">@purchasedProductDto.ProductPrice</div>
+        <div class="@SubClassName">@purchasedProductDto.PurchasedQty</div>
     </div>
 }
 
@@ -11,5 +11,6 @@
     [Parameter]
     public List<PurchasedProductDto> PurchasedProductDtos { get; set; } = new List<PurchasedProductDto>( );
     [Parameter] public string ClassName { get; set; } = string.Empty;
+    [Parameter] public string SubClassName { get; set; } = string.Empty;
 }
 

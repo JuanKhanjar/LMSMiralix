@@ -64,17 +64,15 @@
 
             </div> *@
                     <div class="row">
-                        <div class="col-md-10">
-                            <EditGroup model="selectedGroupDto"
-                                       OnValidSubmit="UpdateGroupNameAsync" />
-                        </div>
-                        <div class="col-md-2  d-flex justify-content-center">
-                            <button type="submit" 
-                                class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-
+                        <EditGroup model="selectedGroupDto"
+                                   OnValidSubmit="UpdateGroupNameAsync">
+                            <chiledContent>
+                                <button type="submit"
+                                        class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </chiledContent>
+                        </EditGroup>
                     </div>
 
                     <!-- Group Products -->
@@ -84,64 +82,72 @@
                         <ChildContent>
                         </ChildContent>
                     </HearderSurvery>
-                    <!-- GroupProduct Table -->
-                    <div class="row">
-                        <div class="col-md-10">
-                            <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende", "Antal" }'
-                                               Conditions='new bool[] { true, true, true, true }'
-                                               ClassName="grid-container3" />
-                        </div>
+                    <!-- GroupProduct Edit Table -->
+
+                    <div class="col-10">
+                        <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende", "Antal" }'
+                                           Conditions='new bool[] { true, true, true, true }'
+                                           ClassName="GroupProductDetailsHeader" SubClassName="ProductItem" />
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-borderless">
-                                <tbody>
-                                    @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
-                                    {
-                                        int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
-                                        <GroupProductTableRow GroupProduct="groupProduct"
-                                                              PurchasedProductAvailability="PP"
-                                                              RemoveProduct="RemoveProduct"
-                                                              PurchasedProductAvailabilityQuantityChanged="HandleInputProductQuantityChanged" />
-                                    }
-
-                                </tbody>
-                                <tfoot>
-                                    <tr class="d-flex justify-content-lg-between gap-1">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td colspan="3">
-                                            <span>Total:</span>
-                                            <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p => p.ProductPrice * (p.AddedQty + p.InputProductQuantity)).ToString("c")</span>
-                                            <span>/</span>
-                                            <span>(@selectedGroupDto.GroupProductsDto.Sum(p => p.AddedQty + p.InputProductQuantity))</span>
-                                            <span>licenser</span>
-
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-
-                            </table>
-                        </div>
+                    <div class=" col-12">
+                        @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
+                        {
+                            int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
+                            <GroupProductTableRow GroupProduct="groupProduct"
+                                                  PurchasedProductAvailability="PP"
+                                                  RemoveProduct="RemoveProduct"
+                                                  PurchasedProductAvailabilityQuantityChanged="HandleInputProductQuantityChanged" />
+                        }
                     </div>
+
+@* 
+
+                    <table class="table table-borderless">
+                        <tbody class="PurchasedProductItemsRowContainer">
+                            @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
+                            {
+                                int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
+                                <GroupProductTableRow GroupProduct="groupProduct"
+                                                      PurchasedProductAvailability="PP"
+                                                      RemoveProduct="RemoveProduct"
+                                                      PurchasedProductAvailabilityQuantityChanged="HandleInputProductQuantityChanged" />
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="d-flex justify-content-lg-between gap-1">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td colspan="3">
+                                    <span>Total:</span>
+                                    <span class="text-primary fw-bold">@selectedGroupDto.GroupProductsDto.Sum(p => p.ProductPrice * (p.AddedQty + p.InputProductQuantity)).ToString("c")</span>
+                                    <span>/</span>
+                                    <span>(@selectedGroupDto.GroupProductsDto.Sum(p => p.AddedQty + p.InputProductQuantity))</span>
+                                    <span>licenser</span>
+
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+ *@
                     <!-- Purchased Products Table -->
                     <HearderSurvery HeaderText="Choose from licenses" HeaderClass="headerFont" SubHeaderText="">
                         <ChildContent>
 
                         </ChildContent>
                     </HearderSurvery>
-                    <div class="row">
-                        <div class="col-md-10 ">
+                    
+                        <div class="col-10 ">
                             <CustomGPHeaderRow Headers='new string[] { "Type", "Pris", "Resterende", "Antal" }'
                                                Conditions='new bool[] { true, true, true, true }'
-                                               ClassName="grid-container3" />
+                                               ClassName="GroupProductDetailsHeader" SubClassName="ProductItem" />
                         </div>
-                    </div>
-
-                    <div class="row">
+                    
+                    
                         <div class="col-md-12">
                             @if (purchasedProductDtos != null && purchasedProductDtos.Any( ))
                             {
@@ -153,7 +159,7 @@
 
                                             <PurchasedProductTableRow PurchasedProduct="Purchasedproduct"
                                                                       GroupProductQuantityAvailability="@(GP)"
-                                                                      UpdateState="HandleInputProductQuantityChanged" />
+                                                                      UpdateState="HandleInputProductQuantityChanged" SubClassName="ProductItem" />
                                         }
                                     </tbody>
                                 </table>
@@ -170,7 +176,7 @@
                             }
 
                         </div>
-                    </div>
+                    
 
 
                     <div class="d-flex justify-content-end">
@@ -195,14 +201,18 @@
                                 <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
                             </ChildContent>
                         </HearderSurvery>
-                        <div class="p-2">
+                        <div class="">
                             <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende"}'
                                                Conditions='new bool[] { true, true, true }'
-                                               ClassName="grid-container1">
+                                               ClassName="PurchasedProductHeader"
+                                               SubClassName="ProductItem">
+
                             </CustomGPHeaderRow>
                         </div>
-                        <div class="p-2">
-                            <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos" ClassName="grid-container2" />
+                        <div class="">
+                            <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos"
+                                                   ClassName="PurchasedProductItemsRow"
+                                                   SubClassName="ProductItem" />
                         </div>
                         <div class="col-sm-12 col-m-12 d-flex justify-content-sm-end align-content-between px-4 py-2 ">
                             <button class="btn btn-light mx-2 rounded-pill fw-bold" @onclick="()=>CreateGroup()">oprette gruppe</button>

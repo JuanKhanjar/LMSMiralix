@@ -1,32 +1,33 @@
 ﻿
-<tr class="grid-container4">
-    <td class="grid-item">@GroupProduct.ProductName</td>
-    <td class="grid-item">@GroupProduct.ProductPrice</td>
-    <td class="grid-item">
-        <span>@($"{GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>
-        @*<span>@($"{GroupProduct.AddedQty} + {GroupProduct.InputProductQuantity} = {GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>*@
-    </td>
-    <td class="grid-item">
-        <div class="position-relative">
-            <input type="number"
-                   @key="GroupProduct.PurchasedProductId"
-                   min="0"
-                   max="@PurchasedProductAvailability"
-                   class="inputNumber"
-                   id="@($"inputNumber{GroupProduct.PurchasedProductId}")"
-            @bind="GroupProduct.InputProductQuantity"
-            @oninput="()=>PurchasedProductAvailabilityQuantityChanged.InvokeAsync()" />
-
-            @if (IsInvalidQuantity())
-            {
-                @*<span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white rounded-circle"></span>*@
-            }
+<div class="PurchasedProductItemsRowContainer">
+    <div class="PurchasedProductItemsRow">
+        <div class="ProductItem">@GroupProduct.ProductName</div>
+        <div class="ProductItem">@GroupProduct.ProductPrice</div>
+        <div class="ProductItem">
+            <span>@($"{GroupProduct.AddedQty + GroupProduct.InputProductQuantity}")</span>
         </div>
-    </td>
+        <div class="ProductItem">
+            <div class="position-relative">
+                <input type="number"
+                @key="GroupProduct.PurchasedProductId"
+                       min="0"
+                       max="@PurchasedProductAvailability"
+                       class="inputNumber"
+                       id="@($"inputNumber{GroupProduct.PurchasedProductId}")"
+                @bind="GroupProduct.InputProductQuantity"
+                @oninput="()=>PurchasedProductAvailabilityQuantityChanged.InvokeAsync()" />
 
-    <td class="grid-item text-center">
-        <button class="btn btn-outline-danger border-0" style="" @onclick="RemoveProductClicked"><i class="fa fa-trash"></i></button>
-    </td>
-</tr>
+                @if (IsInvalidQuantity( ))
+                {
+                    @*<span class="position-absolute bottom-0 start-0 translate-middle p-2 bg-danger border border-white rounded-circle"></span>*@
+                }
+            </div>
+        </div>
+    </div>
 
-
+    <div class="">
+        <div class="ProductItem text-center">
+            <button class="btn btn-outline-danger border-0" style="" @onclick="RemoveProductClicked"><i class="far fa-trash-alt"></i></button>
+        </div>
+    </div>
+</div>
