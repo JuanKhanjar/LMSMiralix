@@ -19,7 +19,14 @@ namespace LMS.ServiceExtensions
         public static void AddRegisterServices(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddDbContextFactory<LMSDbContext>(options =>
-             options.UseSqlServer(configuration.GetConnectionString("LMSConnection")));
+             options.UseSqlServer(configuration.GetConnectionString("LMSConnection"),sqlServerOptionsAction: sqlOptions =>
+             {
+                 sqlOptions.EnableRetryOnFailure(
+                     maxRetryCount: 5,  // The number of retry attempts.
+                     maxRetryDelay: TimeSpan.FromSeconds(30),  // The maximum delay between retries.
+                     errorNumbersToAdd: null  // You can specify which error numbers trigger retries.
+                 );
+             }));
 
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IGetCustomerWithGroupsAndProductsUC, GetCustomerWithGroupsAndProductsUC>();

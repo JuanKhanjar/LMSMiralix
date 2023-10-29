@@ -1,0 +1,465 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
+
+@font-face {
+    font-family: 'Rajdhani', sans-serif;
+    src: url('Rajdhani-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Rajdhani', sans-serif;
+    src: url('Rajdhani-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0%;
+    font-family: 'Rajdhani', system-ui, sans-serif;
+    color: black;
+    background-color: white;
+}
+
+/* Navigation menu ---------------------------------------------------*/
+nav a {
+    display: inline-block;
+    min-width: 9rem;
+    padding: 0.5rem;
+    text-align: center;
+    text-decoration: none;
+}
+
+    nav a[aria-current='page'] {
+        color: #000;
+    }
+
+.navbar-nav .nav-link {
+    font-family: Rajdhani;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(165, 165, 165, 1);
+}
+
+    .navbar-nav .nav-link.active,
+    .navbar-nav .nav-link:focus {
+        color: #ffffff;
+    }
+
+    /* Change the color to white on hover */
+    .navbar-nav .nav-link:hover {
+        color: #ffffff;
+    }
+
+.rotate-icon {
+    -webkit-transform: rotate(25deg); /* For WebKit-based browsers (e.g., Safari) */
+    transform: rotate(-35deg); /* Standard syntax for modern browsers */
+}
+
+
+.navbar {
+    width: auto;
+    height: auto;
+    padding: 3px;
+    margin: 3px;
+    border-radius: 0px 0px 30px 30px;
+    background: rgba(39, 61, 32, 1);
+    box-shadow: 0px 2px 7px 0px rgba(153, 153, 153, 0.25);
+}
+
+.icon-styled {
+    font-size: 25px;
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    padding: 2.08px, 2.08px, 3.1px, 2.15px;
+}
+
+.toggleIcon {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/*End Navigation menu -------------------------------------------------- */
+/* Left side Container ---------------------------------------------*/
+.lefSideLayOut {
+    background: rgba(255, 255, 255, 1);
+    border: 1px linear-gradient(0deg, #d3d3d3, #d3d3d3), linear-gradient(0deg, #ffffff, #ffffff);
+    box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
+}
+
+
+
+.groupLayOut {
+    margin: 20px;
+    padding: 18px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    text-align: left;
+}
+
+.GroupMainHeaderFont {
+    font-family: Rajdhani;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 26px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(60, 60, 60, 1);
+}
+
+.GroupSecondaryHeaderFont {
+    font-family: Rajdhani;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(60, 60, 60, 1);
+}
+
+.ComponentMainHeaderFont {
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22.97px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(13, 13, 13, 1);
+}
+
+.groupEan {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(186, 186, 186, 1);
+    text-align: end;
+}
+
+.antalGroup {
+    color: rgba(46, 119, 229, 1);
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    letter-spacing: 0em;
+}
+
+.antalGroupCount {
+    color: rgba(183, 183, 183, 1);
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    letter-spacing: 0em;
+}
+/* Group Product Left Side */
+.GroupProductHeader {
+    box-shadow: 0px -1px 5px 0 rgba(87, 87, 87, 0.127);
+    border-radius: 10px 10px 0px 0px;
+    background: rgba(241, 241, 241, 1);
+    padding: 10px;
+}
+
+.Headers {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20.42px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.ProductItemText {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.42px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(60, 60, 60, 1);
+}
+
+.ProductItemNumber {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20.42px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(60, 60, 60, 1);
+}
+
+.Group-icon-styled {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.Group-font-btn {
+    font-family: Rajdhani;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: rgba(39, 61, 32, 1);
+}
+
+.clickable-section {
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Add a background color transition effect */
+}
+
+    .clickable-section:hover {
+        background-color: rgba( 0, 0, 0, 0.034 ); /* Change the background color on hover */
+    }
+
+    .clickable-section.active {
+        background-color: rgba( 211, 211, 211, 0.137 ); /* Change background color when active (clicked) */
+        color: black; /* Change text color when active (clicked) */
+        border-radius: 10px;
+        border: 1px solid rgb(236, 227, 227);
+    }
+
+.custom-tooltip {
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+/* End of Left side Container ------------------------------------------------------*/
+.rightSideLayOut {
+    padding: 50px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px linear-gradient(0deg, #d3d3d3, #d3d3d3), linear-gradient(0deg, #ffffff, #ffffff);
+    box-shadow: -4px -4px 13px 0px rgba(201, 201, 201, 0.25);
+}
+/* Style the first span in the ProductItem */
+.customSpan {
+    border-left: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+}
+
+.table tbody tr:last-child {
+    border-bottom: 0px;
+}
+
+.custom-td {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 1);
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    border-left: 1px linear-gradient(0deg, #d3d3d3, #d3d3d3), linear-gradient(0deg, #ffffff, #ffffff);
+    box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
+}
+
+.groupNameInput {
+    width: 340px;
+    height: 37px;
+    color: rgba(171, 171, 171, 1);
+    border: 1px solid rgba(171, 171, 171, 1);
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.groupEanInput {
+    width: 122px;
+    height: 37px;
+    border-radius: 10px;
+    color: rgba(171, 171, 171, 1);
+    border: 1px solid rgba(171, 171, 171, 1);
+    padding-left: 10px;
+}
+
+.inputNumber {
+    width: 100%;
+    height: 32px;
+    border-radius: 10px;
+    color: rgba(46, 119, 229, 1);
+    border: 1px solid rgba(46, 119, 229, 1);
+    font-family: Rajdhani;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+
+/* buttons ------------------------------------------------------ */
+.AddBtn {
+    width: 113px;
+    height: 39px;
+    border-radius: 10px;
+    background: rgba(46, 119, 229, 1);
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: rgba(255, 255, 255, 1);
+}
+
+.SaveBtn {
+    width: 113px;
+    height: 39px;
+    border-radius: 20px;
+    color: white;
+    background: rgba(39, 61, 32, 1);
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+
+.UndoBtn {
+    width: 139px;
+    height: 39px;
+    border-radius: 20px;
+    color: rgba(66, 66, 66, 1);
+    background: rgba(241, 241, 241, 1);
+    font-family: Rajdhani;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+/* Change button color on hover */
+.AddBtn:hover {
+    background: rgb(17, 73, 2);
+    color: rgb(255, 255, 255);
+}
+
+.SaveBtn:hover {
+    background: rgb(94, 2, 2);
+    color: rgb(255, 255, 255);
+}
+
+.UndoBtn:hover {
+    background: rgb(17, 73, 2);
+    color: rgb(255, 255, 255);
+}
+/* Change button color when active (clicked) */
+.SaveBtn:active {
+    background-color: #ff3300;
+    color: #fff;
+}
+
+/* Modal ------------------------------------------------------------------ */
+
+/* Float cancel and delete buttons and add an equal width */
+/* Center the content in the modal */
+.modal-content {
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Center the modal */
+    width: 412px; /* Adjust the width as needed */
+    height: 253px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(246, 246, 246, 1);
+    box-shadow: 0px 10px 50px -24px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    padding: 20px;
+}
+
+/* Button container styles */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Float cancel and delete buttons and add an equal width */
+.cancelbtn,
+.deletebtn {
+    font-family: Rajdhani;
+    font-size: 20px; /* Adjusted font size */
+    font-weight: 500;
+    line-height: 26px; /* Adjusted line height */
+    letter-spacing: 0em;
+    text-align: center; /* Center-align the text */
+    margin: 5px; /* Add some margin for spacing between buttons */
+}
+
+/* Add styles for the Cancel button */
+.cancelbtn {
+    color: rgba(106, 104, 104, 1);
+    background: transparent; /* Transparent background */
+}
+
+/* Add styles for the Delete button */
+.deletebtn {
+    border-radius: 5px;
+    background: rgba(167, 57, 57, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
+/* The rest of your CSS remains the same */
+
+/* Style the horizontal ruler */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+/* The Modal Close Button (x) */
+.close {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #f1f1f1;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #f44336;
+        cursor: pointer;
+    }
+
+/* Clear floats */
+.clearfix::after {
+    content: '';
+    clear: both;
+    display: table;
+}
+
+/* Change styles for cancel button and delete button on extra small screens */
+@media screen and (max-width: 300px) {
+    .cancelbtn,
+    .deletebtn {
+        width: 100%;
+    }
+}
+
+
+/* Standard user-select */
+element {
+    user-select: none; /* or auto, text, etc. */
+}
+
+/* -webkit-user-select for Safari and Safari on iOS */
+element {
+    -webkit-user-select: none; /* or auto, text, etc. */
+}
+/* Standard filter for Chrome and Chrome Android */
+.fa-rotate-90 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+}
