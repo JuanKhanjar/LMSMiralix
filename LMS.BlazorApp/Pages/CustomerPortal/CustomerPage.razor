@@ -24,73 +24,69 @@
         <!-- Group 1 -->
         @if (customerGroups != null)
         {
-            <!-- Panels -->
-            <div class="panel-group" id="accordion">
-                @foreach (Group group in customerGroups)
-                {
-                    <div class="groupLayOut ">
-                        <!-- Group Overview -->
-                        <div data-toggle="collapse" data-parent="#accordion" href="#collapse_@(group.GroupId)" class="clickable-section">
-                            <div class="row mb-3">
-                                <div class="col-5">@_customer.CustomerName</div>
-                                <div class="col-2">@group.GroupName</div>
-                                <div class="col-4 groupEan">@group.EAN</div>
-                                <div class="col-1 toggleIcon">
-                                    <i class="bi bi-chevron-down" id="collapseIcon"></i>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Total&nbsp;&nbsp;&nbsp;<span class="antalGroup">@group.GetTotalPriceForAgroup().ToString("c2")</span>&nbsp;/<span class="antalGroupCount">&nbsp;@group.GetTotalQuantityForAgroup() licenser</span>
-                                </div>
+            @foreach (Group group in customerGroups)
+            {
+                <div class="groupLayOut ">
+                    <!-- Group Overview -->
+                    <div data-bs-toggle="collapse" data-bs-target="#collapse_@(group.GroupId)" class="clickable-section" aria-expanded="false" aria-controls="collapseExample">
+                        <div class="row mb-3">
+                            <div class="col-5">@_customer.CustomerName</div>
+                            <div class="col-2">@group.GroupName</div>
+                            <div class="col-4 groupEan">@group.EAN</div>
+                            <div class="col-1 toggleIcon">
+                                <i class="bi bi-chevron-down toggle-icon" id="collapseIcon_@(group.GroupId)"></i>
                             </div>
                         </div>
-
-                        <!-- End of Group Overview -->
-                        <!-- Collaps section Group Products -->
-                        <div id="collapse_@(group.GroupId)" class="panel-collapse container mt-3 in">
-                            <div class="panel-body m-2 ">
-                                <!-- Group Products Item Headers -->
-                                <div class="row GroupProductHeader Headers d-flex justify-content-between">
-                                    <div class="col-6">Type</div>
-                                    <div class="col-3">Pris</div>
-                                    <div class="col-3">Antal</div>
-                                </div>
-                                <!-- End of Group Products Item Headers -->
-                                <!-- Group Products Item -->
-                                @foreach (GroupProduct product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
-                                {
-                                    <div class="row mt-3">
-                                        <div class="col">
-                                            <table class="table table-borderless">
-                                                <tbody>
-                                                    <tr class="ProductItemText">
-                                                        <td class="col-6">@product.PurchasedProduct.ProductName</td>
-                                                        <td class="col-3 ProductItemNumber">@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
-                                                        <td class="col-3 ProductItemNumber">@product.AddedQuantity</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                }
-                                <!-- End of Group Products Item -->
-                                <!-- Actions for Group Products Item -->
-                                <div class="row mt-3">
-                                    <div class="col d-flex justify-content-between m-1">
-                                        <button class="btn Group-font-btn" @onclick="(()=>ShowGroupDetails(group.GroupId))">Redigere</button>
-                                        <button class="btn" title="Delete this item" @onclick="(()=>DeleteGroupWithAllItsGP(group.GroupId))"><i class="bi bi-trash text-danger "></i></button>
-                                        <!--<div class="btn"><i class="bi bi-pencil-square text-secondary"></i></div>-->
-                                    </div>
-                                </div>
-                                <!-- End Of Actions for Group Products Item -->
+                        <div class="row">
+                            <div class="col">
+                                Total&nbsp;&nbsp;&nbsp;<span class="antalGroup">@group.GetTotalPriceForAgroup().ToString("c2")</span>&nbsp;/<span class="antalGroupCount">&nbsp;@group.GetTotalQuantityForAgroup() licenser</span>
                             </div>
                         </div>
-                        <!-- End of Collaps section Group Products -->
                     </div>
-                }
-            </div>
-            <!-- End of Panels -->
+
+                    <!-- End of Group Overview -->
+                    <!-- Collaps section Group Products -->
+                    <div id="collapse_@(group.GroupId)" class="collapse container mt-3" role="tabpanel">
+                        <div class=" m-2 ">
+                            <!-- Group Products Item Headers -->
+                            <div class="row GroupProductHeader Headers d-flex justify-content-between">
+                                <div class="col-6">Type</div>
+                                <div class="col-3">Pris</div>
+                                <div class="col-3">Antal</div>
+                            </div>
+                            <!-- End of Group Products Item Headers -->
+                            <!-- Group Products Item -->
+                            @foreach (GroupProduct product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
+                            {
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <table class="table table-borderless">
+                                            <tbody>
+                                                <tr class="ProductItemText">
+                                                    <td class="col-6">@product.PurchasedProduct.ProductName</td>
+                                                    <td class="col-3 ProductItemNumber">@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
+                                                    <td class="col-3 ProductItemNumber">@product.AddedQuantity</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                            <!-- End of Group Products Item -->
+                            <!-- Actions for Group Products Item -->
+                            <div class="row mt-3">
+                                <div class="col d-flex justify-content-between m-1">
+                                    <button class="btn Group-font-btn" @onclick="(()=>ShowGroupDetails(group.GroupId))">Redigere</button>
+                                    <button class="btn" title="Delete this item" @onclick="(()=>DeleteGroupWithAllItsGP(group.GroupId))"><i class="bi bi-trash text-danger "></i></button>
+                                    <!--<div class="btn"><i class="bi bi-pencil-square text-secondary"></i></div>-->
+                                </div>
+                            </div>
+                            <!-- End Of Actions for Group Products Item -->
+                        </div>
+                    </div>
+                    <!-- End of Collaps section Group Products -->
+                </div>
+            }
         }
 
         <!-- End Of Group 1 -->
@@ -269,7 +265,7 @@
                                     </tbody>
                                 </table>
                             }
-                             
+
                         </div>
                         <div class="col-10">
                             <div class="text-end">

@@ -1,4 +1,19 @@
-﻿
+﻿document.addEventListener('DOMContentLoaded', function () {
+    var icon = document.getElementById('collapseIcon_@(group.GroupId)');
+    var collapseSection = document.getElementById('collapse_@(group.GroupId)');
+
+    collapseSection.addEventListener('show.bs.collapse', function () {
+        // When the collapsible section is shown (expanded), change the icon to 'up'
+        icon.classList.remove('bi-chevron-down');
+        icon.classList.add('bi-chevron-up');
+    });
+
+    collapseSection.addEventListener('hide.bs.collapse', function () {
+        // When the collapsible section is hidden (collapsed), change the icon to 'down'
+        icon.classList.remove('bi-chevron-up');
+        icon.classList.add('bi-chevron-down');
+    });
+});
 
 //// Get the modal
 //var modal = document.getElementById('id01');
