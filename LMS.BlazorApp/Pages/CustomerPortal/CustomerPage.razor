@@ -21,220 +21,81 @@
             </div>
         </div>
         <!-- End of Section Main Headers -->
-        <!-- Group Item (foreach loop on -Customer.Groups) -->
         <!-- Group 1 -->
         @if (customerGroups != null)
         {
-            @foreach (Group group in customerGroups)
-            {
-                <div class="groupLayOut">
-                    <!-- Group Overview -->
-                    <div class="row mb-3 clickable-section" id="collapseContent_@group.GroupId" data-groupid="@group.GroupId" data-collapsed="true">
-                        <div class="col-5">@_customer.CustomerName</div>
-                        <div class="col-2">@group.GroupName</div>
-                        <div class="col-4 groupEan">@group.EAN</div>
-                        <div class="col-1 toggleIcon">
-                            <i class="bi bi-chevron-down" id="collapseIcon"></i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            Total&nbsp;&nbsp;&nbsp;<span class="antalGroup">@group.GetTotalPriceForAgroup().ToString("c2")</span>&nbsp;/<span class="antalGroupCount">&nbsp;@group.GetTotalQuantityForAgroup() licenser</span>
-                        </div>
-                    </div>
-                    <!-- End of Group Overview -->
-                    <!-- Collaps section Group Products -->
-                    <div class="container mt-3" id="collapseContent_@group.GroupId" style="display: none">
-                        <!-- Group Products Item Headers  -->
-                        <div class="row GroupProductHeader Headers d-flex justify-content-between">
-                            <!-- First column for Type -->
-                            <div class="col-6">Type</div>
-                            <!-- Second column for Pris -->
-                            <div class="col-3">Pris</div>
-                            <!-- Third column for Antal -->
-                            <div class="col-3">Antal</div>
-                        </div>
-                        <!-- End of Group Products Item Headers  -->
-                        <!-- Group Products Item  -->
-                        @foreach (GroupProduct product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
-                        {
-                            <div class="row mt-3">
-                                <div class="col">
-                                    <table class="table table-borderless">
-                                        <tbody>
-                                            <tr class="ProductItemText">
-                                                <td class="col-6">@product.PurchasedProduct.ProductName</td>
-                                                <td class="col-3 ProductItemNumber">@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
-                                                <td class="col-3 ProductItemNumber">@product.AddedQuantity</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+            <!-- Panels -->
+            <div class="panel-group" id="accordion">
+                @foreach (Group group in customerGroups)
+                {
+                    <div class="groupLayOut ">
+                        <!-- Group Overview -->
+                        <div data-toggle="collapse" data-parent="#accordion" href="#collapse_@(group.GroupId)" class="clickable-section">
+                            <div class="row mb-3">
+                                <div class="col-5">@_customer.CustomerName</div>
+                                <div class="col-2">@group.GroupName</div>
+                                <div class="col-4 groupEan">@group.EAN</div>
+                                <div class="col-1 toggleIcon">
+                                    <i class="bi bi-chevron-down" id="collapseIcon"></i>
                                 </div>
-
                             </div>
-                        }
-                        <!-- End of Group Products Item  -->
-                        <!-- Actions for  Group Products Item  -->
-                        <div class="row mt-3">
-                            <div class="col d-flex justify-content-between m-1">
-                                <button class="btn Group-font-btn" @onclick="(()=>ShowGroupDetails(group.GroupId))">Redigere</button>
-                                <button class="btn" @onclick="(()=>DeleteGroupWithAllItsGP(group.GroupId))"><i class="bi bi-trash text-danger Group-icon-styled"></i></button>
-                                <!--<div class="btn"><i class="bi bi-pencil-square text-secondary"></i></div>-->
+                            <div class="row">
+                                <div class="col">
+                                    Total&nbsp;&nbsp;&nbsp;<span class="antalGroup">@group.GetTotalPriceForAgroup().ToString("c2")</span>&nbsp;/<span class="antalGroupCount">&nbsp;@group.GetTotalQuantityForAgroup() licenser</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- End Of Actions for  Group Products Item  -->
+
+                        <!-- End of Group Overview -->
+                        <!-- Collaps section Group Products -->
+                        <div id="collapse_@(group.GroupId)" class="panel-collapse container mt-3 in">
+                            <div class="panel-body m-2 ">
+                                <!-- Group Products Item Headers -->
+                                <div class="row GroupProductHeader Headers d-flex justify-content-between">
+                                    <div class="col-6">Type</div>
+                                    <div class="col-3">Pris</div>
+                                    <div class="col-3">Antal</div>
+                                </div>
+                                <!-- End of Group Products Item Headers -->
+                                <!-- Group Products Item -->
+                                @foreach (GroupProduct product in group.GroupProducts.Where(gp => gp.AddedQuantity > 0))
+                                {
+                                    <div class="row mt-3">
+                                        <div class="col">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                    <tr class="ProductItemText">
+                                                        <td class="col-6">@product.PurchasedProduct.ProductName</td>
+                                                        <td class="col-3 ProductItemNumber">@product.PurchasedProduct.ProductPrice.ToString("c2")</td>
+                                                        <td class="col-3 ProductItemNumber">@product.AddedQuantity</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- End of Group Products Item -->
+                                <!-- Actions for Group Products Item -->
+                                <div class="row mt-3">
+                                    <div class="col d-flex justify-content-between m-1">
+                                        <button class="btn Group-font-btn" @onclick="(()=>ShowGroupDetails(group.GroupId))">Redigere</button>
+                                        <button class="btn" title="Delete this item" @onclick="(()=>DeleteGroupWithAllItsGP(group.GroupId))"><i class="bi bi-trash text-danger "></i></button>
+                                        <!--<div class="btn"><i class="bi bi-pencil-square text-secondary"></i></div>-->
+                                    </div>
+                                </div>
+                                <!-- End Of Actions for Group Products Item -->
+                            </div>
+                        </div>
+                        <!-- End of Collaps section Group Products -->
                     </div>
-                    <!-- End of Collaps section Group Products -->
-                </div>
-            }
+                }
+            </div>
+            <!-- End of Panels -->
         }
 
         <!-- End Of Group 1 -->
         <!-- End of Group Item -->
     </div>
-
-    <!-- Right LayOut- Group Detalis -->
-    <div class="col-md-7">
-        <div class="mx-lg-5">
-            @if (selectedGroupDto != null)
-            {
-                @if (displayGroupProducts == false)
-                {
-                    <!-- Form Group -->
-                    <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")"
-                                    HeaderClass="headerFont"
-                                    SubHeaderText=""
-                                    HeaderSubClass="header2Font">
-                        <ChildContent>
-                            <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
-                        </ChildContent>
-                    </HearderSurvery>
-                    <div class="row">
-                        <EditGroup model="selectedGroupDto"
-                                   OnValidSubmit="UpdateGroupNameAsync">
-                            <chiledContent>
-                                <button type="submit"
-                                        class="btn btn-outline-danger border-0" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </chiledContent>
-                        </EditGroup>
-                    </div>
-
-                    <!-- Group Products -->
-                    <HearderSurvery HeaderText="Selected Licenses"
-                                    HeaderClass="headerFont"
-                                    SubHeaderText="">
-                        <ChildContent>
-                        </ChildContent>
-                    </HearderSurvery>
-                    <!-- GroupProduct Edit Table -->
-
-                    <div class="col-10">
-                        <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende", "Antal" }'
-                                           Conditions='new bool[] { true, true, true, true }'
-                                           ClassName="GroupProductDetailsHeader" SubClassName="ProductItem" />
-                    </div>
-
-                    <div class=" col-12">
-                        @foreach (var groupProduct in selectedGroupDto.GroupProductsDto)
-                        {
-                            int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
-                            <GroupProductTableRow GroupProduct="groupProduct"
-                                                  PurchasedProductAvailability="PP"
-                                                  RemoveProduct="RemoveProduct"
-                                                  PurchasedProductAvailabilityQuantityChanged="HandleInputProductQuantityChanged" />
-                        }
-                    </div>
-
-                    <!-- Purchased Products Table -->
-                    <HearderSurvery HeaderText="Choose from licenses" HeaderClass="headerFont" SubHeaderText="">
-                        <ChildContent>
-
-                        </ChildContent>
-                    </HearderSurvery>
-
-                    <div class="col-10 ">
-                        <CustomGPHeaderRow Headers='new string[] { "Type", "Pris", "Resterende", "Antal" }'
-                                           Conditions='new bool[] { true, true, true, true }'
-                                           ClassName="GroupProductDetailsHeader" SubClassName="ProductItem" />
-                    </div>
-
-
-                    <div class="col-md-12">
-                        @if (purchasedProductDtos != null && purchasedProductDtos.Any( ))
-                        {
-                            <table class="table table-borderless">
-                                <tbody>
-                                    @foreach (var Purchasedproduct in purchasedProductDtos)
-                                    {
-                                        int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto,Purchasedproduct.PurchasedProductId);
-
-                                        <PurchasedProductTableRow PurchasedProduct="Purchasedproduct"
-                                                                  GroupProductQuantityAvailability="@(GP)"
-                                                                  UpdateState="HandleInputProductQuantityChanged" SubClassName="ProductItem" />
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        else
-                        {
-                            <table class="table table-borderless">
-                                <tbody>
-                                    <tr class="">
-                                        <td> No Purchased Product ...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        }
-
-                    </div>
-
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-primary rounded-pill px-4 fw-bold" @onclick="()=>AddPurchasedQuantitiesToGroupProduct(selectedGroupDto)">Add</button>
-                    </div>
-
-                    <div class="d-flex justify-content-end m-2 gap-1">
-                        <button class="btn btn-secondary rounded-pill px-5 " @onclick="undoChanges">Disgard</button>
-                        <button class="btn btn-success rounded-pill px-5 " @onclick="()=>showChangesToUpdate(selectedGroupDto,purchasedProductDtos)">Save</button>
-                    </div>
-                }
-                else
-                {
-                    <!-- Display Purchased Products -->
-                    <div class="p-2 ">
-                        <!-- Purchased Products Table -->
-                        <HearderSurvery HeaderText="@($"Licenser til tildeling: ({@purchasedProductDtos?.Sum(p=>p.PurchasedQty)})")"
-                                        HeaderClass="headerFont"
-                                        SubHeaderText=""
-                                        HeaderSubClass="header2Font">
-                            <ChildContent>
-                                <p><i class="fa fa-exclamation-circle p-2 text-primary w-15 h-15 "></i>Licenser kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").</p>
-                            </ChildContent>
-                        </HearderSurvery>
-                        <div class="">
-                            <CustomGPHeaderRow Headers='new string[] { " Type", "Pris" , "Resterende"}'
-                                               Conditions='new bool[] { true, true, true }'
-                                               ClassName="PurchasedProductHeader"
-                                               SubClassName="ProductItem">
-
-                            </CustomGPHeaderRow>
-                        </div>
-                        <div class="">
-                            <PurchasedProductTable PurchasedProductDtos="purchasedProductDtos"
-                                                   ClassName="PurchasedProductItemsRow"
-                                                   SubClassName="ProductItem" />
-                        </div>
-                        <div class="col-sm-12 col-m-12 d-flex justify-content-sm-end align-content-between px-4 py-2 ">
-                            <button class="btn btn-light mx-2 rounded-pill fw-bold" @onclick="()=>CreateGroup()">oprette gruppe</button>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-
-    </div>
-
     <!-- Right side 70% -->
     <div class="col-md-8 rightSideLayOut ">
         @if (selectedGroupDto != null)
@@ -313,7 +174,7 @@
                                 <tbody>
                                     @foreach (GroupProductDto groupProduct in selectedGroupDto.GroupProductsDto)
                                     {
-                                        int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
+                                        int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>(), groupProduct.PurchasedProductId);
 
                                         <tr class="ProductItemText">
                                             <td class="col-4">@groupProduct.ProductName</td>
@@ -326,11 +187,12 @@
                                                        min="0"
                                                        max="@PP"
                                                        id="@($"inputNumber{groupProduct.PurchasedProductId}")"
-                                                @bind="groupProduct.InputProductQuantity" />
+                                                @bind="groupProduct.InputProductQuantity"
+                                                @oninput="HandleInputProductQuantityChanged" />
                                             </td>
                                             <td class=" col-2" style="border: 0; text-align: center">
                                                 <div>
-                                                    <button class="btn">
+                                                    <button class="btn" @onclick="(()=>RemoveProduct(groupProduct))">
                                                         <i class="bi bi-trash text-danger Group-icon-styled"></i>
                                                     </button>
                                                 </div>
@@ -359,13 +221,7 @@
                 <!-- Customer Purchased Products will rendered here -->
                 <!-- Purchased Products Items -->
                 <div class="row">
-                    <div class="
-                col-10
-                GroupProductHeader
-                Headers
-                d-flex
-                justify-content-between
-              ">
+                    <div class=" col-10 GroupProductHeader Headers d-flex justify-content-between">
                         <div class="col-4">Type</div>
                         <div class="col-2">Pris</div>
                         <div class="col-2">Restende</div>
@@ -375,13 +231,13 @@
                     <!-- Purchased Products Items  -->
                     <div class="row">
                         <div class="col-12">
-                            @if (purchasedProductDtos != null && purchasedProductDtos.Any( ))
+                            @if (purchasedProductDtos != null && purchasedProductDtos.Any())
                             {
                                 <table class="table table-borderless">
                                     <tbody>
                                         @foreach (PurchasedProductDto Purchasedproduct in purchasedProductDtos)
                                         {
-                                            int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto,Purchasedproduct.PurchasedProductId);
+                                            int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto, Purchasedproduct.PurchasedProductId);
                                             <tr class="ProductItemText">
 
                                                 <td class="col-4">@Purchasedproduct.ProductName</td>
@@ -398,10 +254,8 @@
                                                     @bind="Purchasedproduct.InputPurchasedtQuantity" />
                                                 </td>
                                                 <td class="col-12"></td>
-
                                             </tr>
                                         }
-
                                     </tbody>
                                 </table>
                             }
@@ -415,11 +269,11 @@
                                     </tbody>
                                 </table>
                             }
-
+                             
                         </div>
                         <div class="col-10">
                             <div class="text-end">
-                                <button class="btn AddBtn">tilføje</button>
+                                <button class="btn AddBtn" @onclick="()=>AddPurchasedQuantitiesToGroupProduct(selectedGroupDto)">tilføje</button>
                             </div>
                         </div>
                     </div>
@@ -536,26 +390,26 @@
     private void HandleInputProductQuantityChanged()
     {
         // Call StateHasChanged if needed to re-render the component
-        StateHasChanged( );
+        StateHasChanged();
     }
-    private CreateGroupDialog createGroupDialog { get; set; } = new CreateGroupDialog( );
-    private Dialog dialog { get; set; } = new Dialog( );
+    private CreateGroupDialog createGroupDialog { get; set; } = new CreateGroupDialog();
+    private Dialog dialog { get; set; } = new Dialog();
     private void ShowDialog()
     {
-        dialog.ShowDialog( );
+        dialog.ShowDialog();
     }
-    private List<ChangesDto> changedGPDtos = new List<ChangesDto>( );
-    private List<UpdateQuantityVM> updateQuantityVmList = new List<UpdateQuantityVM>( );
+    private List<ChangesDto> changedGPDtos = new List<ChangesDto>();
+    private List<UpdateQuantityVM> updateQuantityVmList = new List<UpdateQuantityVM>();
 
-    private void showChangesToUpdate(GroupDto? selectedGroupDto,List<PurchasedProductDto> purchasedProductDtos)
+    private void showChangesToUpdate(GroupDto? selectedGroupDto, List<PurchasedProductDto> purchasedProductDtos)
     {
-        changedGPDtos.Clear( );
+        changedGPDtos.Clear();
         if (purchasedProductDtos != null)
         {
             foreach (PurchasedProductDto PPProduct in purchasedProductDtos)
             {
                 // Find the corresponding PP in the purchasedProductDtos by some identifier (e.g., ID or Name)
-                ChangesDto ch = new ChangesDto( );
+                ChangesDto ch = new ChangesDto();
                 var GP = selectedGroupDto.GroupProductsDto.FirstOrDefault(gp => gp.PurchasedProductId == PPProduct.PurchasedProductId);
                 if (GP != null && GP.InputProductQuantity > 0)
                 {
@@ -581,61 +435,61 @@
                 }
                 changedGPDtos.Add(ch);
             }
-            ShowDialog( );
+            ShowDialog();
         }
     }
     private async Task SaveToDb(List<ChangesDto> changedGPDtos)
     {
-        if (selectedGroupDto.GroupName.Trim( ).ToLower( ) != OldGroupName.ToLower( ).Trim( ))
+        if (selectedGroupDto.GroupName.Trim().ToLower() != OldGroupName.ToLower().Trim())
         {
-            await UpdateGroupNameAsync( );
+            await UpdateGroupNameAsync();
         }
 
-        updateQuantityVmList = changedGPDtos.Select(dto => MapToUpdateQuantityVM(dto)).ToList( );
+        updateQuantityVmList = changedGPDtos.Select(dto => MapToUpdateQuantityVM(dto)).ToList();
         //call save
         if (selectedGroupDto != null)
         {
-            bool result = await _IAddPurchasedQtysToGroupProductsUC.ExecuteAsync(selectedGroupDto.GroupId,updateQuantityVmList);
+            bool result = await _IAddPurchasedQtysToGroupProductsUC.ExecuteAsync(selectedGroupDto.GroupId, updateQuantityVmList);
             if (result)
             {
                 // Update was successful, show a success notification
-                await JSRuntime.InvokeVoidAsync("Swal.fire","Mængder opdateret med succes","Gruppens mængder er blevet opdateret med succes.","success");
-                await LoadData( );
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Mængder opdateret med succes", "Gruppens mængder er blevet opdateret med succes.", "success");
+                await LoadData();
                 ShowGroupDetails(selectedGroup.GroupId);
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("Swal.fire","Opdatering fejlede","Gruppens mængder er ikke blevet opdateret.","error");
+                await JSRuntime.InvokeVoidAsync("Swal.fire", "Opdatering fejlede", "Gruppens mængder er ikke blevet opdateret.", "error");
             }
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData( );
+        await LoadData();
     }
     private async Task undoChanges()
     {
-        await LoadData( );
+        await LoadData();
         ShowGroupDetails(selectedGroup.GroupId);
     }
 
     #region Param
     [Parameter]
     public int customerId { get; set; }
-    private Customer? _customer = new Customer( );
-    private Group selectedGroup = new Group( );
-    private IEnumerable<Group> customerGroups = new List<Group>( );
-    private IEnumerable<PurchasedProduct> _PurchasedProducts = new List<PurchasedProduct>( );
+    private Customer? _customer = new Customer();
+    private Group selectedGroup = new Group();
+    private IEnumerable<Group> customerGroups = new List<Group>();
+    private IEnumerable<PurchasedProduct> _PurchasedProducts = new List<PurchasedProduct>();
     private bool displayGroupProducts = true; // Flag to control GroupProduct Table display
     #endregion
 
     #region Dto Interacts Mehtods And Param
 
-    private GroupDto? selectedGroupDto = new GroupDto( );
-    private IEnumerable<GroupDto> customerGroupsDto = new List<GroupDto>( );
-    private List<GroupProductDto>? groupProductDtos = new List<GroupProductDto>( );
-    private List<PurchasedProductDto>? purchasedProductDtos = new List<PurchasedProductDto>( );
+    private GroupDto? selectedGroupDto = new GroupDto();
+    private IEnumerable<GroupDto> customerGroupsDto = new List<GroupDto>();
+    private List<GroupProductDto>? groupProductDtos = new List<GroupProductDto>();
+    private List<PurchasedProductDto>? purchasedProductDtos = new List<PurchasedProductDto>();
 
     private async Task LoadData()
     {
@@ -643,16 +497,16 @@
         if (_customer != null)
         {
             // Load and map customer groups
-            await LoadCustomerGroups( );
+            await LoadCustomerGroups();
 
             // Load and map purchased products
-            await LoadPurchasedProducts( );
+            await LoadPurchasedProducts();
         }
     }
     private async Task LoadCustomerGroups()
     {
-        customerGroups = await Task.Run(() => _customer.Groups.ToList( ));
-        if (customerGroups != null && customerGroups.Any( ))
+        customerGroups = await Task.Run(() => _customer.Groups.ToList());
+        if (customerGroups != null && customerGroups.Any())
         {
             customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group));
         }
@@ -662,7 +516,7 @@
         _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
         if (_PurchasedProducts != null)
         {
-            purchasedProductDtos = _PurchasedProducts.Select(PP => MapToPurchasedProductDto(PP)).ToList( );
+            purchasedProductDtos = _PurchasedProducts.Select(PP => MapToPurchasedProductDto(PP)).ToList();
         }
     }
 
@@ -672,20 +526,20 @@
     #region Manpulate
     private async Task UpdateGroupNameAsync()
     {
-        bool confirmed = await _notificationService.ShowConfirmation($"Du er ved at ændre gruppenavnet til<strong> {selectedGroupDto.GroupName}</strong>, er du sikker? ",true);
+        bool confirmed = await _notificationService.ShowConfirmation($"Du er ved at ændre gruppenavnet til<strong> {selectedGroupDto.GroupName}</strong>, er du sikker? ", true);
         //bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil opdaterer gruppen\nAarhus Kommune {selectedGroupDto.GroupName}");
         if (confirmed)
         {
-            var result = await _IUpdateGroupNameUC.ExcecuteAsync(selectedGroupDto.GroupId,selectedGroupDto.GroupName);
+            var result = await _IUpdateGroupNameUC.ExcecuteAsync(selectedGroupDto.GroupId, selectedGroupDto.GroupName);
             if (result)
             {
                 // Update was successful, show a success notification
-                await _notificationService.ShowSuccessNotification("Update Successful","The group name has been updated successfully.");
+                await _notificationService.ShowSuccessNotification("Update Successful", "The group name has been updated successfully.");
                 //await JSRuntime.InvokeVoidAsync("Swal.fire", "Update Successful", "The group name has been updated successfully.", "success");
             }
             else
             {
-                await _notificationService.ShowErrorNotification("Update failed","The group name has not  updated successfully.");
+                await _notificationService.ShowErrorNotification("Update failed", "The group name has not  updated successfully.");
                 //await JSRuntime.InvokeVoidAsync("Swal.fire", "Update failed", "The group name has not  updated successfully.", "error");
             }
         }
@@ -707,7 +561,7 @@
         }
         else
         {
-            PurchasedProductDto newPP = new PurchasedProductDto( )
+            PurchasedProductDto newPP = new PurchasedProductDto()
                 {
                     PurchasedProductId = groupProduct.PurchasedProductId,
                     ProductName = groupProduct.ProductName,
@@ -720,12 +574,12 @@
                 purchasedProductDtos.Add(newPP);
             }
         }
-        StateHasChanged( );
+        StateHasChanged();
     }
 
     private void AddPurchasedQuantitiesToGroupProduct(GroupDto selectedGroup)
     {
-        if (purchasedProductDtos == null || !purchasedProductDtos.Any( ))
+        if (purchasedProductDtos == null || !purchasedProductDtos.Any())
         {
             return;
         }
@@ -757,13 +611,13 @@
                         InputProductQuantity = purchasedProduct.InputPurchasedtQuantity
                     };
 
-                selectedGroup.GroupProductsDto ??= new List<GroupProductDto>( );
+                selectedGroup.GroupProductsDto ??= new List<GroupProductDto>();
                 selectedGroup.GroupProductsDto.Add(newGroupProduct);
                 purchasedProduct.InputPurchasedtQuantity = 0;
             }
         }
 
-        StateHasChanged( );
+        StateHasChanged();
     }
 
     #endregion
@@ -773,7 +627,7 @@
     {
         if (group == null)
         {
-            return new GroupDto( );
+            return new GroupDto();
         }
 
         return new GroupDto
@@ -782,14 +636,14 @@
                 GroupName = group.GroupName,
                 EAN = group.EAN,
                 CustomerId = group.CustomerId,
-                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList( )
+                GroupProductsDto = group.GroupProducts.Select(gp => MapToGroupProductDto(gp)).ToList()
             };
     }
     private GroupProductDto MapToGroupProductDto(GroupProduct groupProduct)
     {
         if (groupProduct == null)
         {
-            return new GroupProductDto( );
+            return new GroupProductDto();
         }
 
         return new GroupProductDto
@@ -806,7 +660,7 @@
     {
         if (purchasedProduct == null)
         {
-            return new PurchasedProductDto( );
+            return new PurchasedProductDto();
         }
 
         return new PurchasedProductDto
@@ -846,7 +700,7 @@
         else
         {
             // Clear the selectedGroup and show the GroupProduct Table
-            selectedGroupDto = new GroupDto( );
+            selectedGroupDto = new GroupDto();
             displayGroupProducts = true;
         }
     }
@@ -857,26 +711,26 @@
         // Implement the logic to create a group here
         // For example, you can navigate to the CreateNewGroupPage with a route parameter
         //NavigationManager.NavigateTo($"/create-group/{customerId}", forceLoad: true);
-        createGroupDialog.ShowDialog( );
+        createGroupDialog.ShowDialog();
     }
 
     private async Task DeleteGroupWithAllItsGP(int groupId)
     {
         // check
         string msg = $"Du er ved at slette denne gruppe:\n(<strong>{selectedGroupDto.GroupName}</strong>) med alle dens ({selectedGroupDto.GroupProductsDto.Sum(gp => gp.AddedQty)}) licens , er du sikker?";
-        bool confirmed = await _notificationService.ShowConfirmation(msg,true);
+        bool confirmed = await _notificationService.ShowConfirmation(msg, true);
         //bool confirmed = await JSRuntime.InvokeAsync<bool>("showSweetAlertConfirmation", $"Er du sikker på at du vil selt gruppe\n{selectedGroupDto.GroupName}");
         if (confirmed)
         {
             bool result = await _IDeleteGroupWithProductsUC.ExecuteAsync(groupId);
             if (result)
             {
-                await _notificationService.ShowSuccessNotification("Update Successful","The group name has been updated successfully.");
-                await LoadData( );
+                await _notificationService.ShowSuccessNotification("Update Successful", "The group name has been updated successfully.");
+                await LoadData();
             }
             else
             {
-                await _notificationService.ShowErrorNotification("Update failed","The group name has not  updated successfully.");
+                await _notificationService.ShowErrorNotification("Update failed", "The group name has not  updated successfully.");
             }
         }
     }

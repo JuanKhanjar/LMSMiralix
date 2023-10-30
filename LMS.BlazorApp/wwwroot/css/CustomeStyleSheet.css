@@ -90,7 +90,6 @@ nav a {
 /* Left side Container ---------------------------------------------*/
 .lefSideLayOut {
     background: rgba(255, 255, 255, 1);
-    border: 1px linear-gradient(0deg, #d3d3d3, #d3d3d3), linear-gradient(0deg, #ffffff, #ffffff);
     box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
 }
 
@@ -449,17 +448,3 @@ hr {
     }
 }
 
-
-/* Standard user-select */
-element {
-    user-select: none; /* or auto, text, etc. */
-}
-
-/* -webkit-user-select for Safari and Safari on iOS */
-element {
-    -webkit-user-select: none; /* or auto, text, etc. */
-}
-/* Standard filter for Chrome and Chrome Android */
-.fa-rotate-90 {
-    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
-}
