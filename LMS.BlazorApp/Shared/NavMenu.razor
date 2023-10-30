@@ -49,7 +49,7 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="https://stackblitz.com/storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOWlnQ0E9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--66665db4c9e3ec08fdb2dce2daeb74a047bf4b14/logo.png"
+            <img src="/image/logo.png"
                  alt="Bootstrap"
                  width="123"
                  height="40" />
@@ -64,26 +64,27 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto ">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item p-0">
-                    <a class="nav-link" aria-current="page" href="#">
-                        <i class="bi bi-book icon-styled"></i>
+                    <NavLink class="nav-link" aria-current="page" href="/customer/1" Match=@NavLinkMatch.All>
+                        <i class="bi bi-book icon-styled"></i> <!-- Add mr-2 for right margin -->
                         Sager
-                    </a>
+                    </NavLink>
                 </li>
                 <li class="nav-item p-0">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-box icon-styled"></i>
+                    <NavLink class="nav-link" href="/customer/2" Match=@NavLinkMatch.All>
+                        <i class="bi bi-box icon-styled"></i> <!-- Add mr-2 for right margin -->
                         Din løsning
-                    </a>
+                    </NavLink>
                 </li>
                 <li class="nav-item p-0">
-                    <a class="nav-link active" href="/customer/1">
-                        <i class="bi bi-key-fill rotate-icon icon-styled"></i>
+                    <NavLink class="nav-link" href="/customer/3" Match=@NavLinkMatch.All>
+                        <i class="bi bi-key-fill rotate-icon icon-styled "></i> <!-- Add mr-2 for right margin -->
                         Licenser
-                    </a>
+                    </NavLink>
                 </li>
             </ul>
+
             <form class="d-flex">
                 <ul class="navbar-nav">
                     <li class="nav-item p-0">
