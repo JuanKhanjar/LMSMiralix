@@ -40,7 +40,7 @@
                                     <div class="row mb-4">
                                         <div class="col-5">@_customer.CustomerName</div>
                                         <div class="col">@group.GroupName</div>
-                                        <div class="col groupEan">@group.GroupName</div>
+                                        <div class="col groupEan">@group.EAN</div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
@@ -106,11 +106,10 @@
                         <!-- End of Collaps section Group Products -->
                     </div>
                 }
+                <LoadingSpinner IsLoading="IsLoading" />
             </div>
         }
-
         <!-- End Of Group 1 -->
-        <!-- End of Group Item -->
     </div>
     <!-- Right side 70% -->
     <div class="col-md-8 rightSideLayOut ">
@@ -132,34 +131,36 @@
                 </div>
 
                 <!-- Edit Group Headers  -->
-                <div class="row mb-2 ml-0">
+                <div class="row mb-2">
                     <div class="col-10 Headers d-flex justify-content-between">
                         <div class="col-6">Gruppenavn</div>
                         <div class="col-4">EAN number</div>
                     </div>
                 </div>
                 <!-- Edit Group Form  -->
-                <div class="row m-0">
+                <div class="row ">
                     <div class="col-md-12 d-flex justify-content-between">
                         <div class="col-md-10 d-flex justify-content-between">
-                            <form>
+
+                            <EditForm Model="selectedGroupDto" OnValidSubmit="UpdateGroupNameAsync">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
                                 <div class="col-md-6">
-                                    <input type="text"
-                                           class="groupNameInput"
-                                           name="groupName"
-                                           placeholder="Sundhed" />
+                                    <InputText type="text" @bind-Value="selectedGroupDto.GroupName" class="groupNameInput" />
+                                    <ValidationMessage For="@(() => selectedGroupDto.GroupName)" />
                                 </div>
-                            </form>
+                            </EditForm>
+
                             <div class="col-md-4">
                                 <input type="text"
                                        class="groupEanInput"
                                        name="eanNumber"
-                                       placeholder="EAN 123-23"
+                                       value="@selectedGroupDto.EAN"
                                        disabled />
                             </div>
                         </div>
                         <div class="col-md-2 d-flex justify-content-center">
-                            <button class="btn" onclick="document.getElementById('id01').style.display='block'">
+                            <button class="btn" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
                                 <i class="bi bi-trash text-danger Group-icon-styled"></i>
                             </button>
                         </div>
@@ -171,8 +172,7 @@
                     <p>Udvalgte licenser</p>
                 </div>
 
-                <!-- Customer Purchased Products will rendered here -->
-                <!-- Purchased Products Item Headers  -->
+                <!-- Group Products Headers  -->
                 <div class="row">
                     <div class="col-10 GroupProductHeader Headers d-flex justify-content-between">
                         <div class="col-4">Type</div>
@@ -180,15 +180,15 @@
                         <div class="col-2">Restende</div>
                         <div class="col-2">Antal</div>
                     </div>
-                    <!-- End of Purchased Products Item Headers  -->
-                    <!-- Purchased Products Item  -->
+                    <!-- End of Group Products Headers  -->
+                    <!-- Group Products Items  -->
                     <div class="row m-0">
                         <div class="col-12">
                             <table class="table table-borderless">
                                 <tbody>
                                     @foreach (GroupProductDto groupProduct in selectedGroupDto.GroupProductsDto)
                                     {
-                                        int PP = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
+                                        int PurchasedProductAvailability = groupProduct.GetPPAvailability(purchasedProductDtos ?? new List<PurchasedProductDto>( ),groupProduct.PurchasedProductId);
 
                                         <tr class="ProductItemText">
                                             <td class="col-4">@groupProduct.ProductName</td>
@@ -199,10 +199,9 @@
                                                        class="inputNumber"
                                                 @key="groupProduct.PurchasedProductId"
                                                        min="0"
-                                                       max="@PP"
+                                                       max="@PurchasedProductAvailability"
                                                        id="@($"inputNumber{groupProduct.PurchasedProductId}")"
-                                                @bind="groupProduct.InputProductQuantity"
-                                                @oninput="HandleInputProductQuantityChanged" />
+                                                @bind="groupProduct.InputProductQuantity" />
                                             </td>
                                             <td class=" col-2" style="border: 0; text-align: center">
                                                 <div>
@@ -216,9 +215,9 @@
 
                                 </tbody>
                                 <tfoot>
-                                    <tr class="row">
-                                        <td class="col-10 text-end">
-                                            <span class="ComponentMainHeaderFont">Total</span> &nbsp;&nbsp;&nbsp;<span class="antalGroup">2900 kr</span>&nbsp;/<span class="antalGroupCount">&nbsp;26 licenser</span>
+                                    <tr>
+                                        <td colspan="4" class="text-end">
+                                            <span class="ComponentMainHeaderFont">Total</span> &nbsp;&nbsp;&nbsp;<span class="antalGroup">@selectedGroupDto.GroupProductsDto.Sum(gp=>gp.ProductPrice*(gp.AddedQty+gp.InputProductQuantity)).ToString("c2")</span>&nbsp;/<span class="antalGroupCount">&nbsp; @selectedGroupDto.GroupProductsDto.Sum(gp=>gp.AddedQty+gp.InputProductQuantity)  licenser</span>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -227,12 +226,12 @@
                         </div>
                     </div>
                 </div>
-                <!-- End of Purached Products Items  -->
+                <!-- End of Group Products Items  -->
 
                 <div class="row m-4 GroupSecondaryHeaderFont">
                     <p>Vælg mellem licenser</p>
                 </div>
-                <!-- Customer Purchased Products will rendered here -->
+
                 <!-- Purchased Products Items -->
                 <div class="row">
                     <div class=" col-10 GroupProductHeader Headers d-flex justify-content-between">
@@ -251,19 +250,19 @@
                                     <tbody>
                                         @foreach (PurchasedProductDto Purchasedproduct in purchasedProductDtos)
                                         {
-                                            int GP = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto,Purchasedproduct.PurchasedProductId);
-                                            <tr class="ProductItemText">
+                                            int GroupProductAvailability = Purchasedproduct.GetGPAvailability(selectedGroupDto.GroupProductsDto,Purchasedproduct.PurchasedProductId);
+                                            <tr class="ProductItemText @((Purchasedproduct.PurchasedQty - (GroupProductAvailability + Purchasedproduct.InputPurchasedtQuantity) == 0) ? "disabled-row" : "")">
 
                                                 <td class="col-4">@Purchasedproduct.ProductName</td>
                                                 <td class="col-2 ProductItemNumber">@Purchasedproduct.ProductPrice.ToString("c2")</td>
                                                 <td class="col-2 ProductItemNumber">
-                                                    @($"{Purchasedproduct.PurchasedQty - (GP + Purchasedproduct.InputPurchasedtQuantity)}")
+                                                    @($"{Purchasedproduct.PurchasedQty - (GroupProductAvailability + Purchasedproduct.InputPurchasedtQuantity)}")
                                                 </td>
                                                 <td class="col-2">
                                                     <input type="number"
                                                            class="inputNumber"
                                                            min="0"
-                                                           max="@(Purchasedproduct.PurchasedQty - GP)"
+                                                           max="@(Purchasedproduct.PurchasedQty - GroupProductAvailability)"
                                                            id="@($"inputNumber{Purchasedproduct.PurchasedProductId}")"
                                                     @bind="Purchasedproduct.InputPurchasedtQuantity" />
                                                 </td>
@@ -272,13 +271,14 @@
                                         }
                                     </tbody>
                                 </table>
+                                <LoadingSpinner IsLoading="IsLoading" />
                             }
                             else
                             {
                                 <table class="table table-borderless">
                                     <tbody>
                                         <tr class="">
-                                            <td> No Purchased Product ...</td>
+                                            <td> Der er ingen licenser til tildelinger..</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -287,7 +287,7 @@
                         </div>
                         <div class="col-10">
                             <div class="text-end">
-                                <button class="btn AddBtn" @onclick="()=>AddPurchasedQuantitiesToGroupProduct(selectedGroupDto)">tilføje</button>
+                                <button class="btn addBtn" @onclick="()=>AddPurchasedQuantitiesToGroupProduct(selectedGroupDto)">tilføje</button>
                             </div>
                         </div>
                     </div>
@@ -296,10 +296,10 @@
                 <!-- Actions  -->
                 <div class="row m-5 d-flex justify-content-end">
                     <button class="btn UndoBtn"
-                            style="margin-right: 20px">
+                            style="margin-right: 20px" @onclick="undoChanges">
                         annullere
                     </button>
-                    <button class="btn SaveBtn">gem</button>
+                    <button class="btn SaveBtn" @onclick="()=>showChangesToUpdate(selectedGroupDto,purchasedProductDtos)">gem</button>
                 </div>
                 <!-- End of Actions  -->
             }
@@ -347,7 +347,7 @@
                     <!-- End of Purached Products Item  -->
                 </div>
                 <div class="m-4 text-end">
-                    <div class="btn rounded-pill px-5" style="background: rgba(39, 61, 32, 1);color: rgba(255, 255, 255, 1);">Opret gruppe</div>
+                    <button class="btn rounded-pill px-5" @onclick="()=>CreateGroup()" style="background: rgba(39, 61, 32, 1);color: rgba(255, 255, 255, 1);">Opret gruppe</button>
                 </div>
                 <!-- Customer Purchased Products -->
             }
@@ -360,7 +360,7 @@
 <Dialog Title="@( $"Ændringsoversigt: Kunde {_customer?.CustomerName?? string.Empty} - Gruppe {selectedGroupDto?.GroupName ?? string.Empty }")"
         ConfirmButtonText="OK"
         CancelButtonText="Annullere"
-@ref="dialog" SaveChnges="()=>SaveToDb(changedGPDtos)">
+        @ref="dialog" SaveChnges="(()=>SaveToDb(changedGPDtos))">
     <ChildContent>
         <ChangeSummary CustomerId="customerId"
                        SelectedGroupDto="selectedGroupDto"
@@ -477,7 +477,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData( );
+        IsLoading = false;
+        try
+        {
+            await LoadData( );
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
     private async Task undoChanges()
     {
@@ -522,13 +535,29 @@
             customerGroupsDto = customerGroups.Select(group => MapToGroupDto(group));
         }
     }
+
+    private bool IsLoading = false;
     private async Task LoadPurchasedProducts()
     {
-        _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
-        if (_PurchasedProducts != null)
+        IsLoading = true;
+        try
         {
-            purchasedProductDtos = _PurchasedProducts.Select(PP => MapToPurchasedProductDto(PP)).ToList( );
+            _PurchasedProducts = await _IGetPurchasedProductsByCustomerIdUC.ExecuteAsync(customerId);
+            if (_PurchasedProducts != null)
+            {
+                purchasedProductDtos = _PurchasedProducts.Select(PP => MapToPurchasedProductDto(PP)).ToList( );
+            }
         }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+
     }
 
 

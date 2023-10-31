@@ -1,32 +1,29 @@
-﻿
+﻿function showSweetAlertConfirmation(message, useHtml) {
+    return Swal.fire({
+        title: 'Confirmation',
+        html: useHtml ? message : undefined, // Enable HTML rendering if useHtml is true
+        text: !useHtml ? message : undefined, // Use plain text if useHtml is false
+        icon: 'question',
+        showCancelButton: true,
+    }).then((result) => {
+        return result.isConfirmed;
+    });
+}
 
-// Get the modal
-var modal = document.getElementById('id01');
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-};
-document.addEventListener('DOMContentLoaded', function () {
-    // Click event handler for the "Slet Gruppe" (delete) button
-    var deleteButton = document.getElementById('123');
-    if (deleteButton) {
-        deleteButton.addEventListener('click', function () {
-            // Perform your delete actions here (e.g., AJAX request to delete the group on the server)
-            // Simulating a 2-second delay for demonstration purposes
-            console.log('Group deleted successfully'); // Log a success message
-        });
-    }
+//Notification for Update
+function showSweetAlertSuccess(title, message) {
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'success'
+    });
+}
 
-    // Click event handler for the "Annullere" (cancel) button
-    var cancelButton = document.querySelector('.cancelbtn');
-    if (cancelButton) {
-        cancelButton.addEventListener('click', function () {
-            var modal = document.getElementById('id01');
-            if (modal) {
-                modal.style.display = 'none'; // Close the modal
-            }
-        });
-    }
-});
+function showValidationError(message) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Check Validation',
+        text: message,
+        confirmButtonText: 'OK'
+    });
+}
