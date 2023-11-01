@@ -431,3 +431,10 @@ nav a {
     white-space: nowrap;
     direction: ltr;
 }
+.centered-iframe {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    width: 80%; /* Adjust the width as needed */
+    height: 500px; /* Set the height as needed */
+}

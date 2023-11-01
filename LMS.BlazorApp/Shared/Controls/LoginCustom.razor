@@ -1,0 +1,39 @@
+﻿@page "/login"
+@inject NavigationManager NavigationManager
+<h3>Login</h3>
+<form @onsubmit="SubmitForm">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" class="form-control" @bind="email" />
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" class="form-control" @bind="password" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+@code {
+
+    private string email { get; set; }
+    private string password { get; set; }
+    private int userId { get; set; }
+    [Parameter] public int customerId { get; set; }
+
+    private async Task SubmitForm()
+    {
+        // Authenticate the user
+        if (email == "user@example.com" && password == "123")
+        {
+            // Get the customer Id
+            userId = 1;
+            customerId = userId;
+            NavigationManager.NavigateTo($"/customer/{customerId}");
+        }
+        else
+        {
+            // Display an error message for failed login.
+        }
+    }
+}
+
