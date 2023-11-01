@@ -112,26 +112,25 @@
         <!-- End Of Group 1 -->
     </div>
     <!-- Right side 70% -->
-    <div class="col-md-8 rightSideLayOut ">
+    <div class="col-md-8 rightSideLayOut">
         @if (selectedGroupDto != null)
         {
             @if (displayGroupProducts == false)
             {
-                <div class="m-4 GroupMainHeaderFont d-flex justify-content-between">
+                <div class=" GroupMainHeaderFont d-flex justify-content-between m-4">
                     <p>Licenser til tildeling (@purchasedProductDtos?.Sum(p=>p.PurchasedQty))</p>
                     <div data-toggle="tooltip" data-placement="top" title="Her er hvor mange afdelinger du har" class="">
                         <i class="bi bi-question-circle-fill"></i>
                     </div>
                 </div>
-                <div class="m-4 GroupSecondaryHeaderFont">
+                <div class="mb-4 GroupSecondaryHeaderFont">
                     <p>
                         <span><i class="bi bi-info-circle-fill text-primary"></i></span>
                         kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").
                     </p>
                 </div>
-
                 <!-- Edit Group Headers  -->
-                <div class="row mb-2">
+                <div class="row">
                     <div class="col-10 Headers d-flex justify-content-between">
                         <div class="col-6">Gruppenavn</div>
                         <div class="col-4">EAN number</div>
@@ -139,19 +138,18 @@
                 </div>
                 <!-- Edit Group Form  -->
                 <div class="row ">
-                    <div class="col-md-12 d-flex justify-content-between">
-                        <div class="col-md-10 d-flex justify-content-between">
+                    <div class="col-12 d-flex justify-content-between">
+                        <div class="col-10 d-flex justify-content-between">
+                            <div class="col-6">
+                                <EditForm Model="selectedGroupDto" OnValidSubmit="UpdateGroupNameAsync">
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary />
 
-                            <EditForm Model="selectedGroupDto" OnValidSubmit="UpdateGroupNameAsync">
-                                <DataAnnotationsValidator />
-                                <ValidationSummary />
-                                <div class="col-md-6">
                                     <InputText type="text" @bind-Value="selectedGroupDto.GroupName" class="groupNameInput" />
                                     <ValidationMessage For="@(() => selectedGroupDto.GroupName)" />
-                                </div>
-                            </EditForm>
-
-                            <div class="col-md-4">
+                                </EditForm>
+                            </div>
+                            <div class="col-4">
                                 <input type="text"
                                        class="groupEanInput"
                                        name="eanNumber"
@@ -159,7 +157,7 @@
                                        disabled />
                             </div>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-center">
+                        <div class="col-2 ">
                             <button class="btn" @onclick="()=>DeleteGroupWithAllItsGP(selectedGroupDto.GroupId)">
                                 <i class="bi bi-trash text-danger Group-icon-styled"></i>
                             </button>
@@ -168,12 +166,12 @@
                 </div>
                 <!--End of  Edit Group Form  -->
 
-                <div class="row m-4 GroupSecondaryHeaderFont">
+                <div class="row m-2 GroupSecondaryHeaderFont">
                     <p>Udvalgte licenser</p>
                 </div>
 
                 <!-- Group Products Headers  -->
-                <div class="row">
+                <div class="row ">
                     <div class="col-10 GroupProductHeader Headers d-flex justify-content-between">
                         <div class="col-4">Type</div>
                         <div class="col-2">Pris</div>
@@ -203,7 +201,7 @@
                                                        id="@($"inputNumber{groupProduct.PurchasedProductId}")"
                                                 @bind="groupProduct.InputProductQuantity" />
                                             </td>
-                                            <td class=" col-2" style="border: 0; text-align: center">
+                                            <td class=" col-2">
                                                 <div>
                                                     <button class="btn" @onclick="(()=>RemoveProduct(groupProduct))">
                                                         <i class="bi bi-trash text-danger Group-icon-styled"></i>
@@ -228,12 +226,12 @@
                 </div>
                 <!-- End of Group Products Items  -->
 
-                <div class="row m-4 GroupSecondaryHeaderFont">
+                <div class="row m-2 GroupSecondaryHeaderFont">
                     <p>Vælg mellem licenser</p>
                 </div>
 
                 <!-- Purchased Products Items -->
-                <div class="row">
+                <div class="row ">
                     <div class=" col-10 GroupProductHeader Headers d-flex justify-content-between">
                         <div class="col-4">Type</div>
                         <div class="col-2">Pris</div>
@@ -318,7 +316,7 @@
                     </p>
                 </div>
                 <!-- Customer Purchased Products will rendered here -->
-                <div class="groupLayOut m-0">
+                <div class=" m-5 ">
                     <!-- Purchased Products Item Headers  -->
                     <div class="row GroupProductHeader Headers d-flex justify-content-between m-0">
                         <div class="col-6">Type</div>
@@ -360,7 +358,7 @@
 <Dialog Title="@( $"Ændringsoversigt: Kunde {_customer?.CustomerName?? string.Empty} - Gruppe {selectedGroupDto?.GroupName ?? string.Empty }")"
         ConfirmButtonText="OK"
         CancelButtonText="Annullere"
-        @ref="dialog" SaveChnges="(()=>SaveToDb(changedGPDtos))">
+@ref="dialog" SaveChnges="(()=>SaveToDb(changedGPDtos))">
     <ChildContent>
         <ChangeSummary CustomerId="customerId"
                        SelectedGroupDto="selectedGroupDto"

@@ -86,12 +86,13 @@ nav a {
 /*End Navigation menu -------------------------------------------------- */
 /* Left side Container ---------------------------------------------*/
 .lefSideLayOut {
+    margin:0px;
     background: rgba(255, 255, 255, 1);
     box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
 }
 
 .groupLayOut {
-    margin: 20px;
+    margin: 10px;
     padding: 18px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 1);
@@ -209,16 +210,16 @@ nav a {
 
 .clickable-section {
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Add a background color transition effect */
+    transition: background-color 0.3s ease;
 }
 
     .clickable-section:hover {
-        background-color: rgba( 0, 0, 0, 0.034 ); /* Change the background color on hover */
+        background-color: rgba( 0, 0, 0, 0.034 );
     }
 
     .clickable-section.active {
-        background-color: rgba( 211, 211, 211, 0.137 ); /* Change background color when active (clicked) */
-        color: black; /* Change text color when active (clicked) */
+        background-color: rgba( 211, 211, 211, 0.137 ); 
+        color: black; 
         border-radius: 10px;
         border: 1px solid rgb(236, 227, 227);
     }
@@ -231,12 +232,16 @@ nav a {
     font-size: 14px;
 }
 /* End of Left side Container ------------------------------------------------------*/
-.rightSideLayOut {
+.rightSideLayOut {;
+    margin: 0px;
     padding: 0px;
-    border-radius: 10px;
     background: rgba(255, 255, 255, 1);
-    border: 1px solid linear-gradient(0deg, #d3d3d3, #d3d3d3), 1px solid linear-gradient(0deg, #ffffff, #ffffff);
-    box-shadow: -4px -4px 13px 0px rgba(201, 201, 201, 0.25);
+    font-family: rajdhani-regular;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 23px;
+    text-align: left;
+    border:1px solid;
 }
 
 /* Style the first span in the ProductItem */
@@ -412,4 +417,17 @@ nav a {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
-
+/* google icon */
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 25px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
