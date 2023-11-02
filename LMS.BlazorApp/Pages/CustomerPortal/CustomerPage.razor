@@ -24,10 +24,10 @@
         <!-- Group 1 -->
         @if (customerGroups != null)
         {
-            <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion " id="accordionPanelsStayOpenExample">
                 @foreach (Group group in customerGroups)
                 {
-                    <div class="accordion-item groupLayOut gap-3">
+                    <div class="accordion-item groupLayOut gap-3 clickable-section">
                         <!-- Group Overview -->
                         <div class="accordion-header" id="panelsStayOpen-heading_@(group.GroupId)">
                             <button class="accordion-button collapsed rounded-top p-2"
@@ -117,17 +117,19 @@
         {
             @if (displayGroupProducts == false)
             {
-                <div class=" GroupMainHeaderFont d-flex justify-content-between m-4">
-                    <p>Licenser til tildeling (@purchasedProductDtos?.Sum(p=>p.PurchasedQty))</p>
-                    <div data-toggle="tooltip" data-placement="top" title="Her er hvor mange afdelinger du har" class="">
-                        <i class="bi bi-question-circle-fill"></i>
+                <div class="m-5">
+                    <div class=" GroupMainHeaderFont d-flex justify-content-between">
+                        <p>Licenser til tildeling (@purchasedProductDtos?.Sum(p=>p.PurchasedQty))</p>
+                        <div data-toggle="tooltip" data-placement="top" title="Her er hvor mange afdelinger du har" class="">
+                            <i class="bi bi-question-circle-fill"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 GroupSecondaryHeaderFont">
-                    <p>
-                        <span><i class="bi bi-info-circle-fill text-primary"></i></span>
-                        kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").
-                    </p>
+                    <div class="GroupSecondaryHeaderFont">
+                        <p>
+                            <span><i class="bi bi-info-circle-fill text-primary"></i></span>
+                            kan redigeres til d.@DateTime.Now.ToString("dd MM yyyy").
+                        </p>
+                    </div>
                 </div>
                 <!-- Edit Group Headers  -->
                 <div class="row">
@@ -137,7 +139,7 @@
                     </div>
                 </div>
                 <!-- Edit Group Form  -->
-                <div class="row ">
+                <div class="row mb-3">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="col-10 d-flex justify-content-between">
                             <div class="col-6">
@@ -345,7 +347,7 @@
                     <!-- End of Purached Products Item  -->
                 </div>
                 <div class="m-4 text-end">
-                    <button class="btn rounded-pill px-5" @onclick="()=>CreateGroup()" style="background: rgba(39, 61, 32, 1);color: rgba(255, 255, 255, 1);">Opret gruppe</button>
+                    <button class="btn CreateGroupBtn" @onclick="()=>CreateGroup()">Opret gruppe</button>
                 </div>
                 <!-- Customer Purchased Products -->
             }

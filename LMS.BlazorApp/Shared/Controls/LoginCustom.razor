@@ -1,38 +1,55 @@
 ﻿@page "/login"
+ @using LMS.BlazorApp.Areas.Identity.Pages.Account
 @inject NavigationManager NavigationManager
-<h3>Login</h3>
-<form @onsubmit="SubmitForm">
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" class="form-control" @bind="email" />
-    </div>
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" class="form-control" @bind="password" />
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<div class="login-card">
+    <h3>Login</h3>
+    <EditForm Model="loginModel" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="loginModel.Email">Email:</label>
+            <InputText id="Email" class="form-control" @bind-Value="loginModel.Email" />
+            <ValidationMessage For="@(() => loginModel.Email)" />
+        </div>
+
+        <div class="form-group">
+            <label for="loginModel.Password">Password:</label>
+            <InputText id="Password" class="form-control" type="password" @bind-Value="loginModel.Password" />
+            <ValidationMessage For="@(() => loginModel.Password)" />
+        </div>
+
+        <div class="form-group">
+            <label for="loginModel.RememberMe">Remember me?</label>
+            <InputCheckbox id="RememberMe" @bind-Value="loginModel.RememberMe" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </EditForm>
+</div>
+
 
 @code {
-
+    private LoginModel.InputModel loginModel { get; set; } = new LoginModel.InputModel();
     private string email { get; set; }
     private string password { get; set; }
     private int userId { get; set; }
     [Parameter] public int customerId { get; set; }
+    private string errorMessage { get; set; } = string.Empty;
 
-    private async Task SubmitForm()
+    private async Task OnValidSubmit()
     {
-        // Authenticate the user
-        if (email == "user@example.com" && password == "123")
+        // Authenticate the user based on the form values
+        if (loginModel.Email == "user@example.com" && loginModel.Password == "123")
         {
-            // Get the customer Id
+            // Get the customer Id or perform any other authentication-related tasks
             userId = 1;
             customerId = userId;
             NavigationManager.NavigateTo($"/customer/{customerId}");
         }
         else
         {
-            // Display an error message for failed login.
+            errorMessage = "Invalid email or password. Please try again.";
         }
     }
 }

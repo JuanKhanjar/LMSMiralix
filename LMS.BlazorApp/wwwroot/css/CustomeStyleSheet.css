@@ -18,7 +18,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: rajdhani-regular, sans-serif;
+    font-family: rajdhani, sans-serif;
     color: black;
     background-color: white;
 }
@@ -32,12 +32,8 @@ nav a {
     text-decoration: none;
 }
 
-    nav a[aria-current='page'] {
-        color: #000;
-    }
-
 .navbar-nav .nav-link {
-    font-family: Rajdhani;
+    font-family: rajdhani;
     font-size: 22px;
     font-weight: 600;
     line-height: 28px;
@@ -45,7 +41,6 @@ nav a {
     text-align: left;
     color: rgba(165, 165, 165, 1);
 }
-
     .navbar-nav .nav-link.active,
     .navbar-nav .nav-link:focus {
         color: #ffffff;
@@ -65,8 +60,8 @@ nav a {
 .navbar {
     width: auto;
     height: auto;
-    padding: 3px;
-    margin: 3px;
+    padding: 1px;
+    margin: 0px;
     border-radius: 0px 0px 30px 30px;
     background: rgba(39, 61, 32, 1);
     box-shadow: 0px 2px 7px 0px rgba(153, 153, 153, 0.25);
@@ -75,7 +70,7 @@ nav a {
 .icon-styled {
     font-size: 25px;
     width: 25px;
-    margin-right:10px;
+    margin-right: 10px;
 }
 
 .toggleIcon {
@@ -86,7 +81,7 @@ nav a {
 /*End Navigation menu -------------------------------------------------- */
 /* Left side Container ---------------------------------------------*/
 .lefSideLayOut {
-    margin:0px;
+    margin: 0px;
     background: rgba(255, 255, 255, 1);
     box-shadow: 4px 4px 13px 0px rgba(201, 201, 201, 0.25);
 }
@@ -105,7 +100,6 @@ nav a {
 }
 
 .GroupMainHeaderFont {
-    font-family: rajdhani-bold;
     font-size: 20px;
     font-weight: 700;
     line-height: 26px;
@@ -115,7 +109,6 @@ nav a {
 }
 
 .GroupSecondaryHeaderFont {
-    font-family: rajdhani-regular;
     font-size: 16px;
     font-weight: 700;
     line-height: 16px;
@@ -125,7 +118,6 @@ nav a {
 }
 
 .ComponentMainHeaderFont {
-    font-family: rajdhani-bold;
     font-size: 18px;
     font-weight: 700;
     line-height: 22.97px;
@@ -143,7 +135,6 @@ nav a {
 
 .antalGroup {
     color: rgba(46, 119, 229, 1);
-    font-family: Rajdhani;
     font-size: 18px;
     font-weight: 700;
     line-height: 23px;
@@ -152,7 +143,6 @@ nav a {
 
 .antalGroupCount {
     color: rgba(183, 183, 183, 1);
-    font-family: Rajdhani;
     font-size: 18px;
     font-weight: 700;
     line-height: 23px;
@@ -199,7 +189,6 @@ nav a {
 }
 
 .Group-font-btn {
-    font-family: Rajdhani;
     font-size: 16px;
     font-weight: 700;
     line-height: 20px;
@@ -214,14 +203,14 @@ nav a {
 }
 
     .clickable-section:hover {
-        background-color: rgba( 0, 0, 0, 0.034 );
+        background-color: rgba( 0, 0, 0, 0.02 );
     }
 
     .clickable-section.active {
-        background-color: rgba( 211, 211, 211, 0.137 ); 
-        color: black; 
-        border-radius: 10px;
+        background-color: rgba( 211, 211, 211, 0.137 );
+        color: black;
         border: 1px solid rgb(236, 227, 227);
+        border-radius: 10px;
     }
 
 .custom-tooltip {
@@ -232,16 +221,18 @@ nav a {
     font-size: 14px;
 }
 /* End of Left side Container ------------------------------------------------------*/
-.rightSideLayOut {;
-    margin: 0px;
-    padding: 0px;
+.rightSideLayOut {
+    margin-right: 0px;
+    padding-left: 50px;
+    padding-right: 50px;
     background: rgba(255, 255, 255, 1);
     font-family: rajdhani-regular;
     font-size: 18px;
     font-weight: 700;
     line-height: 23px;
     text-align: left;
-    border:1px solid;
+    border: 0px solid;
+    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
 }
 
 /* Style the first span in the ProductItem */
@@ -271,6 +262,9 @@ nav a {
     border: 1px solid rgba(171, 171, 171, 1);
     border-radius: 10px;
     padding-left: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(60, 60, 60, 1);
 }
 
 .groupEanInput {
@@ -280,6 +274,9 @@ nav a {
     color: rgba(171, 171, 171, 1);
     border: 1px solid rgba(171, 171, 171, 1);
     padding-left: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(60, 60, 60, 1);
 }
 
 .inputNumber {
@@ -288,7 +285,6 @@ nav a {
     border-radius: 10px;
     color: rgba(46, 119, 229, 1);
     border: 1px solid rgba(46, 119, 229, 1);
-    font-family: Rajdhani;
     font-size: 16px;
     font-weight: 700;
     line-height: 20px;
@@ -302,7 +298,6 @@ nav a {
     height: 39px;
     border-radius: 10px;
     background: rgba(46, 119, 229, 1);
-    font-family: Rajdhani;
     font-size: 18px;
     font-weight: 600;
     line-height: 23px;
@@ -317,7 +312,6 @@ nav a {
     border-radius: 20px;
     color: white;
     background: rgba(39, 61, 32, 1);
-    font-family: Rajdhani;
     font-size: 18px;
     font-weight: 600;
     line-height: 23px;
@@ -331,7 +325,6 @@ nav a {
     border-radius: 20px;
     color: rgba(66, 66, 66, 1);
     background: rgba(241, 241, 241, 1);
-    font-family: Rajdhani;
     font-size: 18px;
     font-weight: 600;
     line-height: 23px;
@@ -345,7 +338,7 @@ nav a {
 }
 
 .SaveBtn:hover {
-    background: rgb(94, 2, 2);
+    background: rgb(17, 73, 1);
     color: rgb(255, 255, 255);
 }
 
@@ -359,6 +352,20 @@ nav a {
     color: #fff;
 }
 
+.CreateGroupBtn {
+    background: rgba(39, 61, 32, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 18px;
+    font-weight: 600;
+    width: 190px;
+    height: 39px;
+    border-radius: 20px;
+}
+
+    .CreateGroupBtn:hover {
+        background: rgb(17, 73, 2);
+        color: rgb(255, 255, 255);
+    }
 
 .disabled-row {
     /*color: red;*/
@@ -366,15 +373,15 @@ nav a {
 }
 
     .disabled-row input[type="number"] {
-        pointer-events: none; /* Prevent user interaction */
-        background-color: #f0f0f0; /* Change the background color to gray */
-        color: #888; /* Change the text color to a light gray */
+        pointer-events: none; 
+        background-color: #f0f0f0; 
+        color: #888; 
         cursor: not-allowed;
     }
 
 
 .spinner {
-    display: none; /* Hidden by default */
+    display: none;
     text-align: center;
     padding: 20px;
 }
@@ -420,21 +427,32 @@ nav a {
 /* google icon */
 .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
-    font-weight: normal;
+    font-weight: 600;
     font-style: normal;
-    font-size: 25px; /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
+    line-height: 0;
     text-transform: none;
     letter-spacing: normal;
     word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+    width: 27px; 
 }
+/* I frame Display */
 .centered-iframe {
     display: block;
     margin: 0 auto;
     border: 1px solid #ccc;
-    width: 80%; /* Adjust the width as needed */
-    height: 500px; /* Set the height as needed */
+    width: 80%;
+    height: 500px;
+}
+/* Custome log in page */
+.login-card {
+    font-family: rajdhani-bold;
+    width: 300px;
+    margin: 10px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    border-color: rgba(39, 61, 32, 1);
+    box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 0.25);
+    text-align: center;
+    background-color: #fff;
 }
